@@ -1,4 +1,4 @@
-import { getDashboardData } from "@/lib/queries";
+import { getDashboardData } from "@/lib/db";
 import DashboardClient from "@/components/Dashboard";
 
 export const dynamic = "force-dynamic";

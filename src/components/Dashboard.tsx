@@ -66,7 +66,7 @@ export default function Dashboard({ data, error }: Props) {
         </div>
         <p style={{ color: "#888", fontSize: 14, marginBottom: 8 }}>Database connection required</p>
         <p style={{ color: "#aaa", fontSize: 12 }}>
-          {error || "Set DATABASE_URL in .env.local pointing to your Supabase instance, apply db/schema.sql, then run npm run db:seed"}
+          {error || "Set SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY in your environment variables"}
         </p>
       </div>
     );

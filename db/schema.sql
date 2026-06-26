@@ -67,3 +67,30 @@ CREATE INDEX IF NOT EXISTS idx_regimens_tier ON regimens(tier);
 CREATE INDEX IF NOT EXISTS idx_trials_nct_id ON trials(nct_id);
 CREATE INDEX IF NOT EXISTS idx_regimen_trials_regimen ON regimen_trials(regimen_id);
 CREATE INDEX IF NOT EXISTS idx_regimen_trials_nct ON regimen_trials(nct_id);
+
+-- View for white space analysis: regimen counts and trial counts per biomarker × LOT
+CREATE OR REPLACE VIEW white_space AS
+with bio_lot as (
+  select biomarker, lot,
+         count(*) as total,
+         count(*) filter (where tier = 'Preferred') as preferred,
+         count(*) filter (where tier = 'UICC') as uicc,
+         count(*) filter (where tier = 'Subsequent') as subsequent
+  from regimens
+  group by biomarker, lot
+),
+bio_trials as (
+  select r.biomarker,
+         count(distinct rt.nct_id) as trials,
+         count(distinct rt.nct_id) filter (where t.status not in ('TERMINATED','WITHDRAWN','COMPLETED')) as active_trials
+  from regimens r
+  join regimen_trials rt on rt.regimen_id = r.id
+  join trials t on t.nct_id = rt.nct_id
+  group by r.biomarker
+)
+select bl.biomarker, bl.lot, bl.total, bl.preferred, bl.uicc, bl.subsequent,
+       coalesce(bt.trials, 0) as trials,
+       coalesce(bt.active_trials, 0) as active_trials
+from bio_lot bl
+left join bio_trials bt on bt.biomarker = bl.biomarker
+order by bl.biomarker, bl.lot;
