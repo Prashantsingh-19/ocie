@@ -472,6 +472,19 @@ export default function Dashboard({ data, error }: Props) {
                           <tr key={`${p.nct_id}-edit`} className="pl-edit-row">
                             <td colSpan={8}>
                               <div className="pl-inline-editor">
+                                {(() => {
+                                  const pp = data?.pipelineProfiles?.find((x) => x.nctId === p.nct_id);
+                                  const sponsor = pp?.sponsor;
+                                  const phaseStr = p.phases?.join("/").replace(/PHASE/g, "P") || "";
+                                  return (
+                                    <div className="pl-ie-header">
+                                      <span className="pl-ie-comp">Competitor</span>
+                                      <span className="pl-ie-drug">{p.drug}</span>
+                                      {sponsor && <span className="pl-ie-sponsor">{sponsor}</span>}
+                                      {phaseStr && <span className="pl-ie-phase">{phaseStr}</span>}
+                                    </div>
+                                  );
+                                })()}
                                 <div className="pl-ie-grid">
                                   <div className="pl-field">
                                     <span className="oc-filter-label">Endpoint</span>

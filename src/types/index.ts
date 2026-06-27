@@ -42,6 +42,9 @@ export interface PipelineProfile {
   nctId: string;
   drug: string;
   biomarker: string;
+  sponsor: string;
+  usBased: boolean;
+  phases: string[];
   designType: "RCT" | "SingleArm" | "Adaptive";
   endpoint: "PFS" | "ORR" | "OS";
   enrollmentRate: "Fast" | "Average" | "Slow";

@@ -304,6 +304,12 @@ body {
 .pl-break-total { border-top: 1px solid #E8E3D8; padding-top: 6px; margin-top: 4px; }
 .pl-break-total .pl-break-label { font-weight: 600; color: #141412; }
 .pl-break-total .pl-break-months { font-weight: 600; color: #141412; }
+.pl-ie-header { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid #E8E3D8; }
+.pl-ie-comp { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #B85C38; text-transform: uppercase; letter-spacing: 0.1em; background: #FDF5F1; padding: 2px 8px; border-radius: 4px; }
+.pl-ie-drug { font-family: 'Cormorant Garamond', serif; font-size: 16px; font-weight: 600; color: #141412; }
+.pl-ie-sponsor { font-size: 11px; color: #888; }
+.pl-ie-sponsor::before { content: "— "; }
+.pl-ie-phase { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #888; margin-left: auto; }
 .pl-drivers { display: flex; flex-direction: column; gap: 6px; }
 .pl-driver { display: flex; align-items: center; gap: 8px; font-size: 11px; padding: 5px 8px; border-radius: 4px; }
 .pl-driver-pos { background: #EFF8EC; }
