@@ -381,6 +381,9 @@ export default function Dashboard({ data, error }: Props) {
                   </select>
                 </div>
               </div>
+              {(profile.pathway !== "Standard" || profile.endpoint !== "PFS" || profile.enrollment !== "Fast" || profile.design !== "RCT" || !profile.btd || profile.aa || !profile.priorityReview) && (
+                <div className="pl-profile-note">Default values reflect typical trial characteristics for this indication. Changes adjust weights accordingly.</div>
+              )}
             </div>
 
             {/* ── FDA Designations ── */}

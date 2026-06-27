@@ -269,6 +269,7 @@ body {
 .pl-toggles { display: flex; gap: 14px; flex-wrap: wrap; }
 .pl-toggle { display: flex; align-items: center; gap: 6px; font-size: 12px; cursor: pointer; }
 .pl-toggle input { accent-color: #B85C38; }
+.pl-profile-note { font-size: 10px; color: #888; font-style: italic; margin-top: 8px; padding: 6px 10px; background: #FDFBF8; border: 1px solid #E8E3D8; border-radius: 4px; }
 .pl-risks { display: flex; flex-direction: column; gap: 8px; }
 .pl-risk-row { display: flex; align-items: center; gap: 10px; }
 .pl-risk-label { font-size: 11px; color: #555; width: 130px; flex-shrink: 0; }
