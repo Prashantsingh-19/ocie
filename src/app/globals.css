@@ -313,6 +313,42 @@ body {
 .pl-ie-weight-inputs .pl-control input { width: 48px; padding: 4px 6px; font-size: 11px; }
 .pl-ie-weight-inputs .pl-total { font-size: 11px; }
 .pl-ie-weight-inputs .oc-tab { font-size: 10px; padding: 4px 10px; }
+
+/* ── Insights Tab ── */
+.in-section { background: #F7F6F2; border: 1px solid #E8E3D8; border-radius: 6px; padding: 14px 16px; margin-bottom: 12px; }
+.in-section-label { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #B85C38; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 12px; }
+
+/* Gantt */
+.in-gantt { display: flex; flex-direction: column; gap: 16px; }
+.in-gantt-group { }
+.in-gantt-bm { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.in-gantt-count { font-size: 10px; color: #888; }
+.in-gantt-row { display: flex; align-items: center; gap: 8px; padding: 3px 0; }
+.in-gantt-bar-wrap { flex: 1; height: 16px; background: #E8E3D8; border-radius: 4px; overflow: hidden; }
+.in-gantt-bar { height: 100%; border-radius: 4px; min-width: 4px; transition: width 0.3s; }
+.in-gantt-drug { font-size: 11px; font-weight: 600; color: #141412; width: 120px; flex-shrink: 0; }
+.in-gantt-date { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #888; width: 95px; flex-shrink: 0; }
+.in-gantt-conf { font-size: 10px; width: 110px; flex-shrink: 0; }
+
+/* Overlay */
+.in-overlay-table td { vertical-align: top; }
+.in-incoming-cell { max-width: 240px; }
+.in-incoming-list { display: flex; flex-direction: column; gap: 3px; }
+.in-incoming-tag { font-size: 10px; background: #E8EEF4; color: #3a5a6a; padding: 2px 6px; border-radius: 3px; display: inline-flex; align-items: center; gap: 6px; }
+.in-incoming-date { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #888; }
+.in-incoming-none { font-size: 10px; font-style: italic; }
+
+/* Matrix */
+.in-matrix-cell { display: inline-block; min-width: 28px; padding: 2px 6px; border-radius: 4px; color: #fff; font-weight: 700; font-size: 13px; text-align: center; }
+.in-matrix-legend { display: flex; gap: 16px; margin-top: 8px; font-size: 10px; color: #888; align-items: center; }
+.in-legend-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 4px; vertical-align: middle; }
+
+/* Simulator */
+.in-sim-controls { margin-bottom: 4px; }
+.in-sim-slider-row { display: flex; align-items: center; gap: 10px; margin-top: 6px; }
+.in-sim-slider-row input[type="range"] { flex: 1; accent-color: #B85C38; }
+.in-sim-val { font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 600; color: #141412; min-width: 40px; }
+.in-sim-slider-row .oc-tab { font-size: 10px; padding: 4px 12px; }
 .pl-ie-header { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid #E8E3D8; }
 .pl-ie-comp { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #B85C38; text-transform: uppercase; letter-spacing: 0.1em; background: #FDF5F1; padding: 2px 8px; border-radius: 4px; }
 .pl-ie-drug { font-family: 'Cormorant Garamond', serif; font-size: 16px; font-weight: 600; color: #141412; }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
+import InsightsTab from "./InsightsTab";
 import type { Regimen, DashboardData, KpiData, WhiteSpaceRow, PipelineRow, TimelineWeights, TrialProfile, TrialEndpoint, TrialEnrollment, TrialDesign, TrialPathway, RiskSliders } from "@/types";
 import {
   computeKpis,
@@ -745,18 +746,13 @@ export default function Dashboard({ data, error }: Props) {
         )}
 
         {tab === "insights" && (
-          <div className="oc-main">
-            <div className="cs-wrap">
-              <div className="cs-eyebrow">Insights</div>
-              <div className="cs-title">Competitive Signals</div>
-              <div className="cs-sub">
-                AI-generated competitive pressure scores, threat rankings, and strategic narratives across your selected treatment cell.
-              </div>
-              <div className="cs-subtabs">
-                <div className="cs-subtab" style={{ width: 180 }}>Coming soon</div>
-              </div>
-            </div>
-          </div>
+          <InsightsTab
+            pipeline={filteredPipeline}
+            whiteSpace={filteredWhiteSpace}
+            regimens={filtered}
+            drugProfiles={drugProfiles}
+            drugWeights={drugWeights}
+          />
         )}
       </div>
     </div>
