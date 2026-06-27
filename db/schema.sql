@@ -94,3 +94,29 @@ select bl.biomarker, bl.lot, bl.total, bl.preferred, bl.uicc, bl.subsequent,
 from bio_lot bl
 left join bio_trials bt on bt.biomarker = bl.biomarker
 order by bl.biomarker, bl.lot;
+
+-- View for pipeline timeline: best (highest phase) trial per regimen
+CREATE OR REPLACE VIEW pipeline_drugs AS
+SELECT DISTINCT ON (r.id)
+  r.id as regimen_id,
+  r.drug,
+  r.biomarker,
+  r.lot,
+  r.tier,
+  t.nct_id,
+  t.phases,
+  t.status,
+  t.start_date,
+  t.primary_completion_date,
+  t.enrollment
+FROM regimens r
+JOIN regimen_trials rt ON rt.regimen_id = r.id
+JOIN trials t ON t.nct_id = rt.nct_id
+ORDER BY r.id,
+  CASE
+    WHEN t.phases @> ARRAY['PHASE3'] THEN 0
+    WHEN t.phases @> ARRAY['PHASE2'] THEN 1
+    WHEN t.phases @> ARRAY['PHASE1'] THEN 2
+    ELSE 3
+  END,
+  t.start_date DESC NULLS LAST;

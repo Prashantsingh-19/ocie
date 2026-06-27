@@ -34,6 +34,7 @@ export interface DashboardData {
   regimens: Regimen[];
   trials: Trial[];
   whiteSpace: WhiteSpaceRow[];
+  pipeline: PipelineRow[];
 }
 
 export interface WhiteSpaceRow {
@@ -127,6 +128,48 @@ export function cardBorderClass(tier: string): string {
   if (tier === "UICC") return "uicc";
   if (tier === "Subsequent") return "subsequent";
   return "";
+}
+
+export interface PipelineRow {
+  regimen_id: number;
+  drug: string;
+  biomarker: string;
+  lot: string;
+  tier: string;
+  nct_id: string;
+  phases: string[];
+  status: string;
+  start_date: string | null;
+  primary_completion_date: string | null;
+  enrollment: number | null;
+}
+
+export interface TimelineWeights {
+  submission: number;
+  review: number;
+  nccnLag: number;
+}
+
+export const DEFAULT_WEIGHTS: Record<string, TimelineWeights> = {
+  standard: { submission: 2, review: 8, nccnLag: 5 },
+  accelerated: { submission: 2, review: 4, nccnLag: 5 },
+};
+
+export function projectTimeline(
+  pcd: string | null,
+  weights: TimelineWeights
+): { projectedFDA: string; projectedSOC: string } | null {
+  if (!pcd) return null;
+  const d = new Date(pcd);
+  const add = (n: number) => {
+    const r = new Date(d);
+    r.setMonth(r.getMonth() + Math.round(n));
+    return r.toISOString().slice(0, 10);
+  };
+  return {
+    projectedFDA: add(weights.submission + weights.review),
+    projectedSOC: add(weights.submission + weights.review + weights.nccnLag),
+  };
 }
 
 export const BIOMARKERS = [

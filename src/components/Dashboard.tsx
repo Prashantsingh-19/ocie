@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import type { Regimen, DashboardData, KpiData, WhiteSpaceRow } from "@/types";
+import type { Regimen, DashboardData, KpiData, WhiteSpaceRow, PipelineRow, TimelineWeights } from "@/types";
 import {
   computeKpis,
   filterRegimens,
@@ -11,6 +11,8 @@ import {
   gapScore,
   gapLabel,
   gapColor,
+  projectTimeline,
+  DEFAULT_WEIGHTS,
   BIOMARKERS,
 } from "@/types";
 
@@ -31,6 +33,7 @@ interface Props {
 export default function Dashboard({ data, error }: Props) {
   const [tab, setTab] = useState<TabId>("soc");
   const [selected, setSelected] = useState<string | null>(null);
+  const [weights, setWeights] = useState<TimelineWeights>(DEFAULT_WEIGHTS.standard);
   const [filters, setFilters] = useState({
     biomarker: "All Biomarkers",
     combo: "All",
@@ -40,6 +43,7 @@ export default function Dashboard({ data, error }: Props) {
 
   const regimens = data?.regimens ?? [];
   const whiteSpace = data?.whiteSpace ?? [];
+  const pipeline = data?.pipeline ?? [];
   const kpis = useMemo(() => computeKpis(regimens), [regimens]);
   const filtered = useMemo(() => filterRegimens(regimens, filters), [regimens, filters]);
   const selectedRegimen = useMemo(
@@ -53,6 +57,14 @@ export default function Dashboard({ data, error }: Props) {
       return true;
     });
   }, [whiteSpace, filters]);
+
+  const filteredPipeline = useMemo(() => {
+    return pipeline.filter((p) => {
+      if (filters.biomarker !== "All Biomarkers" && p.biomarker !== filters.biomarker) return false;
+      if (filters.lot !== "All" && p.lot !== filters.lot) return false;
+      return true;
+    });
+  }, [pipeline, filters]);
 
   const setFilter = (key: string, val: string) => {
     setFilters((prev) => ({ ...prev, [key]: val }));
@@ -307,23 +319,92 @@ export default function Dashboard({ data, error }: Props) {
 
         {tab === "pipeline" && (
           <div className="oc-main">
-            <div className="cs-wrap">
-              <div className="cs-eyebrow">Pipeline · Trials</div>
-              <div className="cs-title">Pipeline Intelligence</div>
-              <div className="cs-sub">
-                This module will surface drugs currently in Phase 1–3 trials across your selected biomarker and histology filters. Global filters are active and will pre-populate results when this view launches.
-              </div>
-              <div className="cs-subtabs">
-                <div>
-                  <div className="cs-subtab">3-Year Horizon</div>
-                  <div className="cs-subtab-label">Coming soon</div>
+            <div className="oc-section-header">
+              <div className="oc-section-title">Pipeline — Projected SOC Timeline</div>
+              <span className="oc-count">{filteredPipeline.length} drugs</span>
+            </div>
+
+            {/* Weight controls */}
+            <div className="pl-controls">
+              <div className="pl-controls-title">Timeline Weights</div>
+              <div className="pl-controls-row">
+                <div className="pl-control">
+                  <label>Submission (mo)</label>
+                  <input type="number" min={0} max={6} value={weights.submission}
+                    onChange={(e) => setWeights({ ...weights, submission: +e.target.value })} />
                 </div>
-                <div>
-                  <div className="cs-subtab">5-Year Horizon</div>
-                  <div className="cs-subtab-label">Coming soon</div>
+                <div className="pl-control">
+                  <label>FDA Review (mo)</label>
+                  <input type="number" min={0} max={24} value={weights.review}
+                    onChange={(e) => setWeights({ ...weights, review: +e.target.value })} />
+                </div>
+                <div className="pl-control">
+                  <label>NCCN Lag (mo)</label>
+                  <input type="number" min={0} max={12} value={weights.nccnLag}
+                    onChange={(e) => setWeights({ ...weights, nccnLag: +e.target.value })} />
+                </div>
+                <div className="pl-presets">
+                  <button className={`oc-tab ${weights === DEFAULT_WEIGHTS.standard ? "active" : "nav-idle"}`}
+                    onClick={() => setWeights({ ...DEFAULT_WEIGHTS.standard })}>Standard</button>
+                  <button className={`oc-tab ${weights === DEFAULT_WEIGHTS.accelerated ? "active" : "nav-idle"}`}
+                    onClick={() => setWeights({ ...DEFAULT_WEIGHTS.accelerated })}>Accelerated</button>
                 </div>
               </div>
             </div>
+
+            {/* Pipeline table */}
+            <div className="pl-table-wrap">
+              <table className="pl-table">
+                <thead>
+                  <tr>
+                    <th>Drug</th>
+                    <th>Biomarker</th>
+                    <th>Phase</th>
+                    <th>Status</th>
+                    <th>Start</th>
+                    <th>PCD</th>
+                    <th>Projected FDA</th>
+                    <th>Projected SOC</th>
+                    <th>Horizon</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredPipeline.map((p) => {
+                    const proj = projectTimeline(p.primary_completion_date, weights);
+                    const horizon = proj ? Math.round(
+                      (new Date(proj.projectedSOC).getTime() - Date.now()) / (1000 * 60 * 60 * 24 * 30.44)
+                    ) : null;
+                    return (
+                      <tr key={p.nct_id} className="pl-row">
+                        <td className="pl-drug">{p.drug}</td>
+                        <td>
+                          <span className={`oc-card-bm ${biomarkerBadgeClass(p.biomarker)}`}>
+                            {p.biomarker}
+                          </span>
+                        </td>
+                        <td className="pl-phase">{p.phases?.join("/") || "—"}</td>
+                        <td className="pl-status">{p.status?.replace(/_/g, " ") || "—"}</td>
+                        <td className="pl-date">{p.start_date || "—"}</td>
+                        <td className="pl-date">{p.primary_completion_date || "—"}</td>
+                        <td className="pl-date">{proj?.projectedFDA || "—"}</td>
+                        <td className="pl-date">{proj?.projectedSOC || "—"}</td>
+                        <td className="pl-horizon">
+                          {horizon !== null ? (
+                            <span className={`pl-horizon-badge ${horizon < 36 ? "pl-hz-near" : horizon < 60 ? "pl-hz-mid" : "pl-hz-far"}`}>
+                              {horizon < 12 ? "<1yr" : horizon < 36 ? "1-3yr" : horizon < 60 ? "3-5yr" : ">5yr"}
+                            </span>
+                          ) : "—"}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+
+            {filteredPipeline.length === 0 && (
+              <div className="oc-empty">No pipeline data matches current filters.</div>
+            )}
           </div>
         )}
 

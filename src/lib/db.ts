@@ -1,5 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
-import type { DashboardData, Regimen, Trial, WhiteSpaceRow } from "@/types";
+import type { DashboardData, Regimen, Trial, WhiteSpaceRow, PipelineRow } from "@/types";
 
 function getSupabase() {
   const url = process.env.SUPABASE_URL;
@@ -13,7 +13,7 @@ function getSupabase() {
 export async function getDashboardData(): Promise<DashboardData> {
   const supabase = getSupabase();
 
-  const [regimensRes, trialsRes, whiteSpaceRes] = await Promise.all([
+  const [regimensRes, trialsRes, whiteSpaceRes, pipelineRes] = await Promise.all([
     supabase
       .from("regimens")
       .select("*")
@@ -26,15 +26,20 @@ export async function getDashboardData(): Promise<DashboardData> {
     supabase
       .from("white_space")
       .select("*"),
+    supabase
+      .from("pipeline_drugs")
+      .select("*"),
   ]);
 
   if (regimensRes.error) throw regimensRes.error;
   if (trialsRes.error) throw trialsRes.error;
   if (whiteSpaceRes.error) throw whiteSpaceRes.error;
+  if (pipelineRes.error) throw pipelineRes.error;
 
   return {
     regimens: regimensRes.data as Regimen[],
     trials: trialsRes.data as Trial[],
     whiteSpace: whiteSpaceRes.data as WhiteSpaceRow[],
+    pipeline: pipelineRes.data as PipelineRow[],
   };
 }
