@@ -14,6 +14,7 @@ const approved = [
   "crizotinib", "xalkori",
   "lorlatinib", "lorbrena",
   "tepotinib", "tepmekto",
+  "cemiplimab", "libtayo",
   "amivantamab", "rybrevant",
 ];
 
