@@ -50,7 +50,16 @@ function normalizeBiomarker(raw: string, rawPDL1: string): string {
   return mapped;
 }
 
-function extractLot(raw: string): string {
+const LOT_OVERRIDES: Record<string, string> = {
+  "amivantamab + hyaluronidase-lpuj": "1L",
+};
+
+function extractLot(raw: string, drugName?: string): string {
+  // Check explicit overrides first
+  if (drugName) {
+    const key = drugName.toLowerCase().trim();
+    if (LOT_OVERRIDES[key]) return LOT_OVERRIDES[key];
+  }
   const l = raw.toLowerCase();
   if (l.startsWith("1l")) return "1L";
   if (l.startsWith("2l")) return "2L+";
@@ -113,7 +122,7 @@ function parseXLSX(): RegimenRow[] {
       biomarker: normalizeBiomarker(rawBiomarker, rawPDL1),
       biomarker_detail: String(r[4] || "").trim(),
       histology: String(r[6] || "").trim(),
-      lot: extractLot(rawLot),
+      lot: extractLot(rawLot, cell0),
       tier: String(r[8] || "Other").trim(),
       setting: String(r[9] || "").trim(),
       route: String(r[12] || "").trim(),
