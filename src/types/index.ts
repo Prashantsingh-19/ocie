@@ -50,7 +50,6 @@ export interface PipelineProfile {
   endpoint: "PFS" | "ORR" | "OS";
   enrollmentRate: "Fast" | "Average" | "Slow";
   fda: { btd: boolean; aa: boolean; priorityReview: boolean };
-  inSOC?: boolean;
 }
 
 export interface WhiteSpaceRow {

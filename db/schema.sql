@@ -20,6 +20,7 @@ CREATE TABLE IF NOT EXISTS regimens (
   pd_l1_expression TEXT,
   patient_population TEXT,
   source_sheet TEXT,
+  fda_approved BOOLEAN DEFAULT FALSE,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
@@ -95,7 +96,7 @@ from bio_lot bl
 left join bio_trials bt on bt.biomarker = bl.biomarker
 order by bl.biomarker, bl.lot;
 
--- View for pipeline timeline: best (highest phase) trial per regimen
+-- View for pipeline timeline: best (highest phase) trial per non-approved regimen
 CREATE OR REPLACE VIEW pipeline_drugs AS
 SELECT DISTINCT ON (r.id)
   r.id as regimen_id,
@@ -112,6 +113,7 @@ SELECT DISTINCT ON (r.id)
 FROM regimens r
 JOIN regimen_trials rt ON rt.regimen_id = r.id
 JOIN trials t ON t.nct_id = rt.nct_id
+WHERE r.fda_approved = FALSE
 ORDER BY r.id,
   CASE
     WHEN t.phases @> ARRAY['PHASE3'] THEN 0

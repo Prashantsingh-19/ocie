@@ -416,7 +416,7 @@ async function main() {
     return a.projectedSOC.localeCompare(b.projectedSOC);
   });
 
-  const pipeline = entries.filter((e) => !e.inSOC).slice(0, 10);
+  const pipeline = entries.filter((e) => !e.inSOC).slice(0, 50);
   const approved = entries.filter((e) => e.inSOC).slice(0, 5);
 
   const output = {

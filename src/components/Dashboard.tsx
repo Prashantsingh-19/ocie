@@ -121,12 +121,10 @@ export default function Dashboard({ data, error }: Props) {
 
   const filteredPipeline = useMemo(() => {
     return pipeline.filter((p) => {
-      const pp = data?.pipelineProfiles?.find((x) => x.nctId === p.nct_id);
-      // Exclude drugs already in SOC (FDA-approved)
-      if (pp?.inSOC) return false;
       if (appliedFilters.biomarker !== "All Biomarkers" && p.biomarker !== appliedFilters.biomarker) return false;
       if (appliedFilters.lot !== "All" && p.lot !== appliedFilters.lot) return false;
       if (appliedFilters.hist !== "All") {
+        const pp = data?.pipelineProfiles?.find((x) => x.nctId === p.nct_id);
         const hist = pp?.histology || "Unknown";
         if (appliedFilters.hist !== hist && hist !== "Unknown") return false;
       }
