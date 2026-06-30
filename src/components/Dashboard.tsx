@@ -121,6 +121,11 @@ export default function Dashboard({ data, error }: Props) {
 
   const filteredPipeline = useMemo(() => {
     return pipeline.filter((p) => {
+      // Exclude drugs already in SOC regimens at the same LOT
+      const alreadySOC = regimens.some(
+        (r) => r.drug.toLowerCase() === p.drug.toLowerCase() && r.lot === p.lot
+      );
+      if (alreadySOC) return false;
       if (appliedFilters.biomarker !== "All Biomarkers" && p.biomarker !== appliedFilters.biomarker) return false;
       if (appliedFilters.lot !== "All" && p.lot !== appliedFilters.lot) return false;
       if (appliedFilters.hist !== "All") {
@@ -130,7 +135,7 @@ export default function Dashboard({ data, error }: Props) {
       }
       return true;
     });
-  }, [pipeline, appliedFilters, data?.pipelineProfiles]);
+  }, [pipeline, regimens, appliedFilters, data?.pipelineProfiles]);
 
   const pipelineYearFiltered = useMemo(() => {
     return filteredPipeline.filter((p) => {
