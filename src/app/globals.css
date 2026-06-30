@@ -372,24 +372,36 @@ body {
 .pl-val-summary { font-size: 11px; color: #888; margin-top: 8px; text-align: center; }
 .pl-val-summary strong { color: #141412; font-weight: 600; }
 
-/* ── Welcome Overlay ── */
-.oc-welcome-overlay {
-  position: fixed; top: 42px; left: 0; right: 0; bottom: 0; z-index: 50;
-  background: #141412;
+/* ── Landing Page ── */
+.oc-landing {
+  min-height: 100vh; background: #F7F6F2;
   display: flex; align-items: center; justify-content: center;
 }
-.oc-welcome-btn { width: auto; padding: 10px 40px; margin-top: 20px; font-size: 14px; }
-.oc-welcome-content { text-align: center; }
-.oc-welcome-title {
-  font-family: 'Cormorant Garamond', serif; font-size: 44px; font-weight: 600;
-  color: #F7F6F2; letter-spacing: 0.06em;
+.oc-landing-content { text-align: center; }
+.oc-landing-logo {
+  font-family: 'Cormorant Garamond', serif; font-size: 56px; font-weight: 600;
+  color: #141412; letter-spacing: 0.06em;
 }
-.oc-welcome-title::before { content: "OC"; color: #F7F6F2; }
-.oc-welcome-title::after { content: "IE"; color: #B85C38; }
-.oc-welcome-sub {
-  font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 400;
-  color: #C8BFA8; margin-top: 10px; font-style: italic;
+.oc-landing-logo span { color: #B85C38; }
+.oc-landing-sub {
+  font-family: 'Cormorant Garamond', serif; font-size: 16px; font-weight: 400;
+  color: #888; margin-top: 6px; letter-spacing: 0.08em; text-transform: uppercase;
 }
+.oc-landing-tag {
+  font-family: 'Cormorant Garamond', serif; font-size: 20px; font-style: italic;
+  color: #aaa; margin-top: 24px; line-height: 1.4;
+}
+.oc-landing-btn {
+  margin-top: 32px; padding: 12px 48px;
+  font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 500;
+  background: #B85C38; color: #fff; border: none; border-radius: 30px;
+  cursor: pointer; transition: background 0.15s;
+}
+.oc-landing-btn:hover { background: #9a4a2e; }
+
+/* ── SOC Prompt ── */
+.oc-soc-prompt { display: flex; align-items: center; justify-content: center; height: 60vh; }
+.oc-soc-prompt-text { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 400; color: #bbb; font-style: italic; }
 
 /* ── Apply Button ── */
 .oc-apply-btn {
@@ -442,6 +454,17 @@ body {
 .ws-min-incoming, .ws-min-regimens { display: flex; align-items: center; justify-content: space-between; font-size: 11px; }
 .ws-min-label { color: #888; }
 .ws-min-count { font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 600; color: #141412; }
+.ws-min-expand-icon { margin-left: auto; font-size: 11px; color: #C8BFA8; }
+.ws-min-card-click { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.ws-min-detail { border-top: 1px solid #E8E3D8; margin-top: 10px; padding-top: 10px; }
+.ws-min-detail-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 6px; margin-bottom: 10px; }
+.ws-min-detail-field { display: flex; flex-direction: column; gap: 2px; }
+.ws-min-detail-field span:last-child { font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 600; color: #141412; }
+.ws-min-incoming-list { }
+.ws-min-incoming-title { margin-bottom: 6px; }
+.ws-min-incoming-item { display: flex; align-items: center; gap: 8px; font-size: 11px; padding: 3px 0; }
+.ws-min-incoming-drug { font-weight: 500; color: #141412; }
+.ws-min-incoming-date { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #888; margin-left: auto; }
 
 /* ── Combined Insights (SOC+Pipeline) ── */
 .in-group { background: #F7F6F2; border: 1px solid #E8E3D8; border-radius: 6px; padding: 14px 16px; margin-bottom: 12px; }

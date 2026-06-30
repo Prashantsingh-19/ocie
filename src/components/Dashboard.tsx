@@ -50,8 +50,10 @@ export default function Dashboard({ data, error }: Props) {
   const [drugRisks, setDrugRisks] = useState<Record<string, RiskSliders>>({});
   const [drugWeights, setDrugWeights] = useState<Record<string, TimelineWeights>>({});
   const [expandedDrug, setExpandedDrug] = useState<string | null>(null);
+  const [expandedWS, setExpandedWS] = useState<string | null>(null);
   const [inferredDone, setInferredDone] = useState(false);
-  const [welcomeDismissed, setWelcomeDismissed] = useState(false);
+  const [landingMode, setLandingMode] = useState(true);
+  const [hasApplied, setHasApplied] = useState(false);
   const [pendingFilters, setPendingFilters] = useState({
     biomarker: "All Biomarkers",
     combo: "All",
@@ -64,8 +66,11 @@ export default function Dashboard({ data, error }: Props) {
     hist: "All",
     lot: "All",
   });
-  const [yearMin, setYearMin] = useState<number | null>(null);
-  const [yearMax, setYearMax] = useState<number | null>(null);
+
+  const YEAR_MIN = 2026;
+  const YEAR_MAX = 2033;
+  const [yearMin, setYearMin] = useState<number>(YEAR_MIN);
+  const [yearMax, setYearMax] = useState<number>(YEAR_MAX);
 
   const regimens = data?.regimens ?? [];
   const whiteSpace = data?.whiteSpace ?? [];
@@ -101,25 +106,6 @@ export default function Dashboard({ data, error }: Props) {
       setInferredDone(true);
     }
   }, [pipeline, inferredDone, data?.pipelineProfiles]);
-
-  // Initialize year range from pipeline data
-  const yearRange = useMemo(() => {
-    const years = pipeline
-      .map((p) => {
-        const dp = drugProfiles[p.nct_id] || inferProfile(p.phases || []);
-        const dw = drugWeights[p.nct_id] || profileToWeights(dp);
-        const proj = projectTimeline(p.primary_completion_date, dw);
-        return proj ? new Date(proj.projectedSOC).getFullYear() : null;
-      })
-      .filter((y) => y !== null) as number[];
-    if (years.length === 0) return { min: 2026, max: 2031 };
-    return { min: Math.min(...years), max: Math.max(...years) };
-  }, [pipeline, drugProfiles, drugWeights]);
-
-  useEffect(() => {
-    if (yearMin === null) setYearMin(yearRange.min);
-    if (yearMax === null) setYearMax(yearRange.max);
-  }, [yearRange, yearMin, yearMax]);
 
   const kpis = useMemo(() => computeKpis(regimens), [regimens]);
   const filtered = useMemo(() => filterRegimens(regimens, appliedFilters), [regimens, appliedFilters]);
@@ -178,6 +164,21 @@ export default function Dashboard({ data, error }: Props) {
     );
   }
 
+  if (landingMode) {
+    return (
+      <div className="oc-landing">
+        <div className="oc-landing-content">
+          <div className="oc-landing-logo">OC<span>IE</span></div>
+          <div className="oc-landing-sub">Oncology Competitive Intelligence Engine</div>
+          <div className="oc-landing-tag">The Only Analytical solution you need to stay Updated !</div>
+          <button className="oc-landing-btn" onClick={() => setLandingMode(false)}>
+            Dive In
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="oc-root">
       {/* ── Header ── */}
@@ -191,22 +192,6 @@ export default function Dashboard({ data, error }: Props) {
           <div className="oc-source">NCCN 2025 · ASCO</div>
         </div>
       </header>
-
-      {/* ── Welcome Overlay ── */}
-      {!welcomeDismissed && (
-        <div className="oc-welcome-overlay">
-          <div className="oc-welcome-content">
-            <div className="oc-welcome-title">Welcome to OCIE</div>
-            <div className="oc-welcome-sub">The Only Analytical solution you need to stay Updated !</div>
-            <button className="oc-apply-btn oc-welcome-btn" onClick={() => {
-              setAppliedFilters(pendingFilters);
-              setWelcomeDismissed(true);
-            }}>
-              Apply
-            </button>
-          </div>
-        </div>
-      )}
 
       {/* ── Tabs ── */}
       <nav className="oc-nav">
@@ -318,7 +303,7 @@ export default function Dashboard({ data, error }: Props) {
 
           <button className="oc-apply-btn" onClick={() => {
             setAppliedFilters(pendingFilters);
-            setWelcomeDismissed(true);
+            setHasApplied(true);
           }}>
             Apply
           </button>
@@ -333,6 +318,12 @@ export default function Dashboard({ data, error }: Props) {
         {/* Main content */}
         {tab === "soc" && (
           <div className="oc-main">
+            {!hasApplied ? (
+              <div className="oc-soc-prompt">
+                <div className="oc-soc-prompt-text">Please select a cancer type and apply filters to begin.</div>
+              </div>
+            ) : (
+            <>
             <div className="oc-section-header">
               <div className="oc-section-title">
                 Current SOC — <em>{appliedFilters.biomarker === "All Biomarkers" ? "All Biomarkers" : appliedFilters.biomarker}</em>
@@ -431,6 +422,8 @@ export default function Dashboard({ data, error }: Props) {
                 </div>
               </div>
             )}
+            </>
+            )}
           </div>
         )}
 
@@ -452,23 +445,23 @@ export default function Dashboard({ data, error }: Props) {
               </div>
               <div className="pl-year-sliders">
                 <input type="range" className="pl-range pl-range-min"
-                  min={yearRange.min} max={yearRange.max} step={1}
-                  value={yearMin ?? yearRange.min}
+                  min={YEAR_MIN} max={YEAR_MAX} step={1}
+                  value={yearMin}
                   onChange={(e) => {
                     const v = +e.target.value;
-                    setYearMin(Math.min(v, yearMax ?? yearRange.max));
+                    setYearMin(Math.min(v, yearMax ?? YEAR_MAX));
                   }} />
                 <input type="range" className="pl-range pl-range-max"
-                  min={yearRange.min} max={yearRange.max} step={1}
-                  value={yearMax ?? yearRange.max}
+                  min={YEAR_MIN} max={YEAR_MAX} step={1}
+                  value={yearMax}
                   onChange={(e) => {
                     const v = +e.target.value;
-                    setYearMax(Math.max(v, yearMin ?? yearRange.min));
+                    setYearMax(Math.max(v, yearMin ?? YEAR_MIN));
                   }} />
               </div>
               <div className="pl-year-labels">
-                <span>{yearRange.min}</span>
-                <span>{yearRange.max}</span>
+                <span>{YEAR_MIN}</span>
+                <span>{YEAR_MAX}</span>
               </div>
             </div>
 
@@ -671,25 +664,57 @@ export default function Dashboard({ data, error }: Props) {
                 <div className="oc-empty">No white space data matches current filters.</div>
               ) : (
                 filteredWhiteSpace.map((w) => {
+                  const wsKey = `${w.biomarker}|${w.lot}`;
                   const score = gapScore(w);
-                  const incoming = pipeline.filter((p) => p.biomarker === w.biomarker && p.lot === w.lot).length;
+                  const isExpanded = expandedWS === wsKey;
+                  const incoming = pipeline.filter((p) => p.biomarker === w.biomarker && p.lot === w.lot);
                   return (
-                    <div key={`${w.biomarker}-${w.lot}`} className="ws-min-card">
-                      <div className="ws-min-bm">
-                        <span className={`oc-card-bm ${biomarkerBadgeClass(w.biomarker)}`}>{w.biomarker}</span>
+                    <div key={wsKey} className={`ws-min-card ${isExpanded ? "ws-min-expanded" : ""}`}>
+                      <div className="ws-min-card-click" onClick={() => setExpandedWS(isExpanded ? null : wsKey)} style={{ cursor: "pointer" }}>
+                        <div className="ws-min-bm">
+                          <span className={`oc-card-bm ${biomarkerBadgeClass(w.biomarker)}`}>{w.biomarker}</span>
+                        </div>
+                        <div className="ws-min-lot">{w.lot}</div>
+                        <div className="ws-min-gap">
+                          <span className="ws-gap-badge" style={{ backgroundColor: gapColor(score) }}>{gapLabel(score)}</span>
+                        </div>
+                        <div className="ws-min-incoming">
+                          <span className="ws-min-label">Incoming</span>
+                          <span className="ws-min-count">{incoming.length}</span>
+                        </div>
+                        <div className="ws-min-regimens">
+                          <span className="ws-min-label">Regimens</span>
+                          <span className="ws-min-count">{w.total}</span>
+                        </div>
+                        <span className="ws-min-expand-icon">{isExpanded ? "▲" : "▸"}</span>
                       </div>
-                      <div className="ws-min-lot">{w.lot}</div>
-                      <div className="ws-min-gap">
-                        <span className="ws-gap-badge" style={{ backgroundColor: gapColor(score) }}>{gapLabel(score)}</span>
-                      </div>
-                      <div className="ws-min-incoming">
-                        <span className="ws-min-label">Incoming</span>
-                        <span className="ws-min-count">{incoming}</span>
-                      </div>
-                      <div className="ws-min-regimens">
-                        <span className="ws-min-label">Regimens</span>
-                        <span className="ws-min-count">{w.total}</span>
-                      </div>
+                      {isExpanded && (
+                        <div className="ws-min-detail">
+                          <div className="ws-min-detail-grid">
+                            <div className="ws-min-detail-field"><span className="oc-filter-label">Preferred</span><span>{w.preferred}</span></div>
+                            <div className="ws-min-detail-field"><span className="oc-filter-label">UICC</span><span>{w.uicc}</span></div>
+                            <div className="ws-min-detail-field"><span className="oc-filter-label">Subsequent</span><span>{w.subsequent}</span></div>
+                            <div className="ws-min-detail-field"><span className="oc-filter-label">Trials</span><span>{w.trials}</span></div>
+                            <div className="ws-min-detail-field"><span className="oc-filter-label">Active</span><span>{w.activeTrials}</span></div>
+                          </div>
+                          {incoming.length > 0 && (
+                            <div className="ws-min-incoming-list">
+                              <div className="oc-filter-label ws-min-incoming-title">Incoming pipeline drugs</div>
+                              {incoming.map((p) => {
+                                const dpp = drugProfiles[p.nct_id] || inferProfile(p.phases || []);
+                                const dww = drugWeights[p.nct_id] || profileToWeights(dpp);
+                                const proj = projectTimeline(p.primary_completion_date, dww);
+                                return (
+                                  <div key={p.nct_id} className="ws-min-incoming-item">
+                                    <span className="ws-min-incoming-drug">{p.drug}</span>
+                                    <span className="ws-min-incoming-date">{proj?.projectedSOC || "—"}</span>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          )}
+                        </div>
+                      )}
                     </div>
                   );
                 })
