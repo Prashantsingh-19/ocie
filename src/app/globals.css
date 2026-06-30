@@ -208,6 +208,11 @@ body {
 .oc-modal-soon { background: #E8EEF4; border: 1px solid #C8D8E4; border-radius: 4px; padding: 10px 12px; margin-bottom: 10px; }
 .oc-soon-label { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #7a8fa0; text-transform: uppercase; margin-bottom: 4px; }
 .oc-soon-val { font-size: 12px; color: #7a8fa0; font-style: italic; }
+.oc-modal-trial { background: #fff; border: 1px solid #E0DBD0; border-radius: 4px; padding: 10px 12px; margin-bottom: 8px; }
+.oc-modal-trial-title { font-size: 11px; color: #141412; font-weight: 500; margin-bottom: 6px; line-height: 1.4; }
+.oc-modal-trial-field { font-size: 11px; color: #555; margin-top: 4px; }
+.oc-modal-trial-field span { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #888; text-transform: uppercase; }
+.oc-modal-trial-list { margin: 2px 0 0 14px; padding: 0; font-size: 11px; color: #555; line-height: 1.4; display: flex; flex-direction: column; gap: 2px; }
 
 /* ── Coming soon ── */
 .cs-wrap { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; padding: 40px; text-align: center; gap: 16px; }
@@ -366,6 +371,40 @@ body {
 .pl-driver-neg .pl-driver-icon { color: #d00000; }
 .pl-driver-text { color: #555; flex-shrink: 0; }
 .pl-driver-effect { color: #888; font-style: italic; }
+/* ── Pipeline Clinical Data (Patient Population, Criteria) ── */
+.pl-ie-clinical {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid #E8E3D8;
+}
+.pl-ie-clinical-text {
+  font-size: 12px;
+  color: #141412;
+  line-height: 1.5;
+  margin-top: 4px;
+}
+.pl-ie-clinical-list {
+  margin: 4px 0 0;
+  padding: 0 0 0 16px;
+  font-size: 12px;
+  color: #141412;
+  line-height: 1.5;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.pl-ie-clinical-list li {
+  margin: 0;
+}
+.pl-ie-clinical-more {
+  list-style: none;
+  margin-left: -16px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: #888;
+  font-style: italic;
+}
+
 .pl-val-offset { font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 600; }
 .pl-val-pass { color: #2d6a4f; font-weight: 700; font-size: 13px; }
 .pl-val-fail { color: #d00000; font-weight: 700; font-size: 13px; }

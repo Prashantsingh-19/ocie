@@ -13,7 +13,7 @@ const PDL1_MAP: Record<string, string> = {
   "< 1% (Negative Expressor)": "<1%",
   "1% - 49% (Low Expressor)": "1-49%",
   "1% - 49% (Low Expressor) | < 1% (Negative Expressor)": "1-49%",
-  ">= 50% (High Expressor) | 1% - 49% (Low Expressor) | < 1% (Negative Expressor)": ">=50%",
+  ">= 50% (High Expressor) | 1% - 49% (Low Expressor) | < 1% (Negative Expressor)": "All PD-L1",
   "N/A": "N/A",
 };
 
@@ -39,9 +39,15 @@ function normalizePDL1(raw: string): string {
   return PDL1_MAP[trimmed] || trimmed;
 }
 
-function normalizeBiomarker(raw: string): string {
+function normalizeBiomarker(raw: string, rawPDL1: string): string {
   const trimmed = raw.trim();
-  return BIOMARKER_MAP[trimmed] || "No Driver";
+  const mapped = BIOMARKER_MAP[trimmed] || "No Driver";
+  // Rows with "No"/"Fallback"/"Histology-based;" biomarker but explicit PD-L1 value
+  // are PD-L1 pathway options (chemo for PD-L1 negatives, etc.)
+  if (mapped === "No Driver" && rawPDL1.trim() && rawPDL1.trim() !== "N/A") {
+    return "PD-L1";
+  }
+  return mapped;
 }
 
 function extractLot(raw: string): string {
@@ -104,7 +110,7 @@ function parseXLSX(): RegimenRow[] {
       single_or_combination: rawCombo,
       drug_class: String(r[2] || "").trim(),
       mechanism: String(r[3] || "").trim(),
-      biomarker: normalizeBiomarker(rawBiomarker),
+      biomarker: normalizeBiomarker(rawBiomarker, rawPDL1),
       biomarker_detail: String(r[4] || "").trim(),
       histology: String(r[6] || "").trim(),
       lot: extractLot(rawLot),

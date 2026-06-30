@@ -28,6 +28,13 @@ export interface Trial {
   start_date: string;
   primary_completion_date: string;
   enrollment: number | null;
+  patient_population?: string;
+}
+
+export interface Criterion {
+  id: number;
+  nct_id: string;
+  criterion: string;
 }
 
 export interface DashboardData {
@@ -36,6 +43,8 @@ export interface DashboardData {
   whiteSpace: WhiteSpaceRow[];
   pipeline: PipelineRow[];
   pipelineProfiles?: PipelineProfile[];
+  inclusionCriteria?: Criterion[];
+  exclusionCriteria?: Criterion[];
 }
 
 export interface PipelineProfile {

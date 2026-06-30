@@ -493,6 +493,38 @@ export default function Dashboard({ data, error }: Props) {
                       <div className="oc-soon-val">{selectedRegimen.patient_population}</div>
                     </div>
                   )}
+
+                  {(() => {
+                    const fw = selectedRegimen.drug.split(" ")[0].toLowerCase();
+                    const relatedTrials = data?.trials.filter((t) => {
+                      const tfw = t.drug_name?.split(/[;+/,]/)[0]?.trim().toLowerCase();
+                      return tfw && (tfw.includes(fw) || fw.includes(tfw));
+                    }) || [];
+                    if (relatedTrials.length === 0) return null;
+                    return relatedTrials.slice(0, 3).map((t) => {
+                      const incC = data?.inclusionCriteria?.filter((c) => c.nct_id === t.nct_id) || [];
+                      const excC = data?.exclusionCriteria?.filter((c) => c.nct_id === t.nct_id) || [];
+                      return (
+                        <div key={t.nct_id} className="oc-modal-trial">
+                          <div className="oc-soon-label">{t.nct_id} — {t.status}</div>
+                          <div className="oc-modal-trial-title">{t.title}</div>
+                          {t.patient_population && <div className="oc-modal-trial-field"><span>Population:</span> {t.patient_population}</div>}
+                          {incC.length > 0 && (
+                            <div className="oc-modal-trial-field">
+                              <span>Inclusion ({incC.length}):</span>
+                              <ul className="oc-modal-trial-list">{incC.slice(0, 5).map((c) => <li key={c.id}>{c.criterion}</li>)}</ul>
+                            </div>
+                          )}
+                          {excC.length > 0 && (
+                            <div className="oc-modal-trial-field">
+                              <span>Exclusion ({excC.length}):</span>
+                              <ul className="oc-modal-trial-list">{excC.slice(0, 5).map((c) => <li key={c.id}>{c.criterion}</li>)}</ul>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    });
+                  })()}
                 </div>
               </div>
             )}
@@ -539,6 +571,9 @@ export default function Dashboard({ data, error }: Props) {
                   const pp = data?.pipelineProfiles?.find((x) => x.nctId === p.nct_id);
                   const sponsor = pp?.sponsor;
                   const phaseStr = p.phases?.join("/").replace(/PHASE/g, "P") || "";
+                  const trial = data?.trials.find((t) => t.nct_id === p.nct_id);
+                  const incCriteria = data?.inclusionCriteria?.filter((c) => c.nct_id === p.nct_id) || [];
+                  const excCriteria = data?.exclusionCriteria?.filter((c) => c.nct_id === p.nct_id) || [];
 
                   return (
                     <div key={p.nct_id} className={`pl-tile ${isExpanded ? "pl-tile-expanded" : ""}`}>
@@ -690,6 +725,37 @@ export default function Dashboard({ data, error }: Props) {
                                     <span className="pl-driver-effect">{d.effect}</span>
                                   </div>
                                 ))}
+                              </div>
+                            )}
+
+                            {trial?.patient_population && (
+                              <div className="pl-ie-clinical">
+                                <span className="oc-filter-label">Patient Population</span>
+                                <p className="pl-ie-clinical-text">{trial.patient_population}</p>
+                              </div>
+                            )}
+
+                            {incCriteria.length > 0 && (
+                              <div className="pl-ie-clinical">
+                                <span className="oc-filter-label">Inclusion Criteria ({incCriteria.length})</span>
+                                <ul className="pl-ie-clinical-list">
+                                  {incCriteria.slice(0, 10).map((c) => (
+                                    <li key={c.id}>{c.criterion}</li>
+                                  ))}
+                                  {incCriteria.length > 10 && <li className="pl-ie-clinical-more">+{incCriteria.length - 10} more</li>}
+                                </ul>
+                              </div>
+                            )}
+
+                            {excCriteria.length > 0 && (
+                              <div className="pl-ie-clinical">
+                                <span className="oc-filter-label">Exclusion Criteria ({excCriteria.length})</span>
+                                <ul className="pl-ie-clinical-list">
+                                  {excCriteria.slice(0, 10).map((c) => (
+                                    <li key={c.id}>{c.criterion}</li>
+                                  ))}
+                                  {excCriteria.length > 10 && <li className="pl-ie-clinical-more">+{excCriteria.length - 10} more</li>}
+                                </ul>
                               </div>
                             )}
                           </div>
