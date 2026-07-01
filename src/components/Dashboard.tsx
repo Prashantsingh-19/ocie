@@ -76,8 +76,18 @@ export default function Dashboard({ data, error }: Props) {
     const pp = data?.pipelineProfiles;
     if (!pp || pp.length === 0) return [];
     const socDrugs = new Set(regimens.map((r) => r.drug.toLowerCase()));
+    const today = new Date();
     return pp
-      .filter((p) => !socDrugs.has(p.drug.toLowerCase()))
+      .filter((p) => {
+        if (socDrugs.has(p.drug.toLowerCase())) return false;
+        if (p.pcd) {
+          const d = new Date(p.pcd);
+          if (isNaN(d.getTime())) return true;
+          if (d.getFullYear() <= 1970) return true;
+          return d > today;
+        }
+        return true;
+      })
       .map((p) => ({
         regimen_id: 0,
         drug: p.drug,
