@@ -139,7 +139,7 @@ export default function InsightsTab({ pipeline, regimens, drugProfiles, drugWeig
                               <div key={p.nct_id} className="in-pipe-tag">
                                 <span className="in-pipe-drug">{p.drug}</span>
                                 <span className="in-pipe-horizon" style={{
-                                  color: p.horizonMo !== null && p.horizonMo < 12 ? "#2d6a4f" : p.horizonMo !== null && p.horizonMo < 36 ? "#e09f3e" : "#d00000",
+                                  color: p.horizonMo !== null && p.horizonMo < 12 ? "#2d6a4f" : p.horizonMo !== null && p.horizonMo < 24 ? "#e09f3e" : p.horizonMo !== null && p.horizonMo < 48 ? "#d00000" : "#aa80a0",
                                 }}>
                                   {p.projSOC || "—"}
                                 </span>
@@ -177,7 +177,7 @@ export default function InsightsTab({ pipeline, regimens, drugProfiles, drugWeig
                               <div key={p.nct_id} className="in-pipe-tag">
                                 <span className="in-pipe-drug">{p.drug}</span>
                                 <span className="in-pipe-horizon" style={{
-                                  color: p.horizonMo !== null && p.horizonMo < 12 ? "#2d6a4f" : p.horizonMo !== null && p.horizonMo < 36 ? "#e09f3e" : "#d00000",
+                                  color: p.horizonMo !== null && p.horizonMo < 12 ? "#2d6a4f" : p.horizonMo !== null && p.horizonMo < 24 ? "#e09f3e" : p.horizonMo !== null && p.horizonMo < 48 ? "#d00000" : "#aa80a0",
                                 }}>
                                   {p.projSOC || "—"}
                                 </span>

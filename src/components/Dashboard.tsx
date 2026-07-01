@@ -48,7 +48,7 @@ export default function Dashboard({ data, error }: Props) {
   const [drugProfiles, setDrugProfiles] = useState<Record<string, TrialProfile>>({});
   const [drugRisks, setDrugRisks] = useState<Record<string, RiskSliders>>({});
   const [drugWeights, setDrugWeights] = useState<Record<string, TimelineWeights>>({});
-  const [expandedDrug, setExpandedDrug] = useState<string | null>(null);
+  const [expandedTile, setExpandedTile] = useState<string | null>(null);
   const [inferredDone, setInferredDone] = useState(false);
   const [landingMode, setLandingMode] = useState(true);
   const [hasApplied, setHasApplied] = useState(false);
@@ -162,7 +162,7 @@ export default function Dashboard({ data, error }: Props) {
       const proj = projectTimeline(p.primary_completion_date, dw);
       if (!proj) return false;
       const projected = new Date(proj.projectedSOC);
-      const horizonMo = Math.round((projected.getTime() - Date.now()) / (1000 * 60 * 60 * 24 * 30.44));
+      const horizonMo = (projected.getTime() - Date.now()) / (1000 * 60 * 60 * 24 * 30.44);
       if (horizonFilter === "<1yr") return horizonMo < 12;
       if (horizonFilter === "1-2yr") return horizonMo >= 12 && horizonMo < 24;
       if (horizonFilter === "2-4yr") return horizonMo >= 24 && horizonMo < 48;
@@ -552,8 +552,8 @@ export default function Dashboard({ data, error }: Props) {
                   const dw = drugWeights[p.nct_id] || computedW;
                   const isCustomW = drugWeights[p.nct_id] !== undefined && (drugWeights[p.nct_id].submission !== computedW.submission || drugWeights[p.nct_id].review !== computedW.review || drugWeights[p.nct_id].nccnLag !== computedW.nccnLag);
                   const proj = projectTimeline(p.primary_completion_date, dw);
-                  const horizonMo = proj ? Math.round((new Date(proj.projectedSOC).getTime() - Date.now()) / (1000 * 60 * 60 * 24 * 30.44)) : null;
-                  const isExpanded = expandedDrug === p.nct_id;
+                  const horizonMo = proj ? (new Date(proj.projectedSOC).getTime() - Date.now()) / (1000 * 60 * 60 * 24 * 30.44) : null;
+                  const isExpanded = expandedTile === p.drug;
                   const conf = isExpanded ? monteCarloConfidence(dw, dp, drugRisks[p.nct_id] || DEFAULT_RISK) : null;
                   const phases = isExpanded ? computePhaseBreakdown(dp, dw) : [];
                   const drivers = isExpanded ? computeDrivers(dp, dw) : [];
@@ -562,10 +562,10 @@ export default function Dashboard({ data, error }: Props) {
                   const phaseStr = p.phases?.join("/").replace(/PHASE/g, "P") || "";
 
                   return (
-                    <div key={p.nct_id} className={`pl-tile ${isExpanded ? "pl-tile-expanded" : ""}`}>
-                      <div className="oc-card" onClick={() => setExpandedDrug(isExpanded ? null : p.nct_id)} style={{ cursor: "pointer" }}>
+                    <div key={`${p.drug}-${p.nct_id}`} className={`pl-tile ${isExpanded ? "pl-tile-expanded" : ""}`}>
+                      <div className="oc-card" onClick={() => setExpandedTile(isExpanded ? null : p.drug)} style={{ cursor: "pointer" }}>
                         <span className="pl-tile-horizon" style={{
-                          backgroundColor: horizonMo !== null && horizonMo < 12 ? "#2d6a4f" : horizonMo !== null && horizonMo < 36 ? "#e09f3e" : "#aa80a0",
+                          backgroundColor: horizonMo !== null && horizonMo < 12 ? "#2d6a4f" : horizonMo !== null && horizonMo < 24 ? "#e09f3e" : horizonMo !== null && horizonMo < 48 ? "#d00000" : "#aa80a0",
                         }}>
                           {horizonMo !== null
                             ? horizonMo < 12 ? "<1yr" : horizonMo < 24 ? "1-2yr" : horizonMo < 48 ? "2-4yr" : ">4yr"
