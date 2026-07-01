@@ -362,6 +362,7 @@ async function main() {
 
   // ── Step 5: Build entries with full extraction ──
   console.log("\n5. Computing profiles, cross-referencing approval, projecting timelines...");
+  const today = new Date();
   const entries: DrugEntry[] = [];
   for (const [drugName, trial] of drugMap) {
     const dl = drugName.toLowerCase();
@@ -407,6 +408,18 @@ async function main() {
       horizon: hz,
     });
   }
+
+  // ── Step 5b: Filter trials with past PCD ──
+  const before = entries.length;
+  const filtered = entries.filter((e) => {
+    if (!e.pcd) return true;
+    const d = new Date(e.pcd);
+    if (isNaN(d.getTime())) return true;
+    if (d.getFullYear() <= 1970) return true;
+    return d > today;
+  });
+  console.log(`   PCD > today: ${filtered.length}/${before} entries kept`);
+  entries.length = 0; entries.push(...filtered);
 
   // ── Step 6: Sort & select ──
   entries.sort((a, b) => {

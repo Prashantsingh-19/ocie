@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-07-01T02:40:31.384Z",
+  "fetchedAt": "2026-07-01T04:15:30.333Z",
   "config": {
     "sponsorFilter": "INDUSTRY",
     "usLocationFilter": true,
@@ -10,598 +10,10 @@
   "totalDrugs": 301,
   "pipeline": [
     {
-      "drug": "Medi4736 (durvalumab)",
-      "nctId": "NCT02453282",
-      "biomarker": "PD-L1",
-      "sponsor": "AstraZeneca",
-      "sponsorClass": "INDUSTRY",
-      "usBased": true,
-      "phases": [
-        "PHASE3"
-      ],
-      "status": "ACTIVE_NOT_RECRUITING",
-      "startDate": "2015-07-21",
-      "pcd": "2018-10-04",
-      "histology": "Unknown",
-      "designType": "RCT",
-      "endpoint": "PFS",
-      "enrollmentRate": "Fast",
-      "fda": {
-        "btd": false,
-        "aa": false,
-        "priorityReview": false
-      },
-      "inSOC": false,
-      "socTier": null,
-      "projectedFDA": "2019-08-04",
-      "projectedSOC": "2020-01-04",
-      "horizon": "<1yr"
-    },
-    {
-      "drug": "Medi4736 (durvalumab)+tremelimumab",
-      "nctId": "NCT02453282",
-      "biomarker": "PD-L1",
-      "sponsor": "AstraZeneca",
-      "sponsorClass": "INDUSTRY",
-      "usBased": true,
-      "phases": [
-        "PHASE3"
-      ],
-      "status": "ACTIVE_NOT_RECRUITING",
-      "startDate": "2015-07-21",
-      "pcd": "2018-10-04",
-      "histology": "Unknown",
-      "designType": "RCT",
-      "endpoint": "PFS",
-      "enrollmentRate": "Fast",
-      "fda": {
-        "btd": false,
-        "aa": false,
-        "priorityReview": false
-      },
-      "inSOC": false,
-      "socTier": null,
-      "projectedFDA": "2019-08-04",
-      "projectedSOC": "2020-01-04",
-      "horizon": "<1yr"
-    },
-    {
-      "drug": "Paclitaxel + carboplatin",
-      "nctId": "NCT02453282",
-      "biomarker": "PD-L1",
-      "sponsor": "AstraZeneca",
-      "sponsorClass": "INDUSTRY",
-      "usBased": true,
-      "phases": [
-        "PHASE3"
-      ],
-      "status": "ACTIVE_NOT_RECRUITING",
-      "startDate": "2015-07-21",
-      "pcd": "2018-10-04",
-      "histology": "Unknown",
-      "designType": "RCT",
-      "endpoint": "PFS",
-      "enrollmentRate": "Fast",
-      "fda": {
-        "btd": false,
-        "aa": false,
-        "priorityReview": false
-      },
-      "inSOC": false,
-      "socTier": null,
-      "projectedFDA": "2019-08-04",
-      "projectedSOC": "2020-01-04",
-      "horizon": "<1yr"
-    },
-    {
-      "drug": "Ramucirumab",
-      "nctId": "NCT02411448",
+      "drug": "Oric-114",
+      "nctId": "NCT05315700",
       "biomarker": "EGFR Exon 20",
-      "sponsor": "Eli Lilly and Company",
-      "sponsorClass": "INDUSTRY",
-      "usBased": true,
-      "phases": [
-        "PHASE3"
-      ],
-      "status": "ACTIVE_NOT_RECRUITING",
-      "startDate": "2015-05-06",
-      "pcd": "2019-01-23",
-      "histology": "Unknown",
-      "designType": "RCT",
-      "endpoint": "PFS",
-      "enrollmentRate": "Average",
-      "fda": {
-        "btd": false,
-        "aa": false,
-        "priorityReview": false
-      },
-      "inSOC": false,
-      "socTier": null,
-      "projectedFDA": "2019-12-23",
-      "projectedSOC": "2020-05-23",
-      "horizon": "<1yr"
-    },
-    {
-      "drug": "Nab-paclitaxel+carboplatin",
-      "nctId": "NCT03775486",
-      "biomarker": "ALK",
-      "sponsor": "AstraZeneca",
-      "sponsorClass": "INDUSTRY",
-      "usBased": true,
-      "phases": [
-        "PHASE2"
-      ],
-      "status": "ACTIVE_NOT_RECRUITING",
-      "startDate": "2018-12-21",
-      "pcd": "2021-01-11",
-      "histology": "Unknown",
-      "designType": "RCT",
-      "endpoint": "PFS",
-      "enrollmentRate": "Average",
-      "fda": {
-        "btd": false,
-        "aa": false,
-        "priorityReview": false
-      },
-      "inSOC": false,
-      "socTier": null,
-      "projectedFDA": "2021-12-11",
-      "projectedSOC": "2022-05-11",
-      "horizon": "<1yr"
-    },
-    {
-      "drug": "Gemcitabine+carboplatin",
-      "nctId": "NCT03775486",
-      "biomarker": "ALK",
-      "sponsor": "AstraZeneca",
-      "sponsorClass": "INDUSTRY",
-      "usBased": true,
-      "phases": [
-        "PHASE2"
-      ],
-      "status": "ACTIVE_NOT_RECRUITING",
-      "startDate": "2018-12-21",
-      "pcd": "2021-01-11",
-      "histology": "Unknown",
-      "designType": "RCT",
-      "endpoint": "PFS",
-      "enrollmentRate": "Average",
-      "fda": {
-        "btd": false,
-        "aa": false,
-        "priorityReview": false
-      },
-      "inSOC": false,
-      "socTier": null,
-      "projectedFDA": "2021-12-11",
-      "projectedSOC": "2022-05-11",
-      "horizon": "<1yr"
-    },
-    {
-      "drug": "Gemcitabine+cisplatin",
-      "nctId": "NCT03775486",
-      "biomarker": "ALK",
-      "sponsor": "AstraZeneca",
-      "sponsorClass": "INDUSTRY",
-      "usBased": true,
-      "phases": [
-        "PHASE2"
-      ],
-      "status": "ACTIVE_NOT_RECRUITING",
-      "startDate": "2018-12-21",
-      "pcd": "2021-01-11",
-      "histology": "Unknown",
-      "designType": "RCT",
-      "endpoint": "PFS",
-      "enrollmentRate": "Average",
-      "fda": {
-        "btd": false,
-        "aa": false,
-        "priorityReview": false
-      },
-      "inSOC": false,
-      "socTier": null,
-      "projectedFDA": "2021-12-11",
-      "projectedSOC": "2022-05-11",
-      "horizon": "<1yr"
-    },
-    {
-      "drug": "Pemetrexed+cisplatin",
-      "nctId": "NCT03775486",
-      "biomarker": "ALK",
-      "sponsor": "AstraZeneca",
-      "sponsorClass": "INDUSTRY",
-      "usBased": true,
-      "phases": [
-        "PHASE2"
-      ],
-      "status": "ACTIVE_NOT_RECRUITING",
-      "startDate": "2018-12-21",
-      "pcd": "2021-01-11",
-      "histology": "Unknown",
-      "designType": "RCT",
-      "endpoint": "PFS",
-      "enrollmentRate": "Average",
-      "fda": {
-        "btd": false,
-        "aa": false,
-        "priorityReview": false
-      },
-      "inSOC": false,
-      "socTier": null,
-      "projectedFDA": "2021-12-11",
-      "projectedSOC": "2022-05-11",
-      "horizon": "<1yr"
-    },
-    {
-      "drug": "Tremelimumab",
-      "nctId": "NCT03164616",
-      "biomarker": "ALK",
-      "sponsor": "AstraZeneca",
-      "sponsorClass": "INDUSTRY",
-      "usBased": true,
-      "phases": [
-        "PHASE3"
-      ],
-      "status": "ACTIVE_NOT_RECRUITING",
-      "startDate": "2017-06-01",
-      "pcd": "2021-03-12",
-      "histology": "Unknown",
-      "designType": "RCT",
-      "endpoint": "PFS",
-      "enrollmentRate": "Fast",
-      "fda": {
-        "btd": false,
-        "aa": false,
-        "priorityReview": false
-      },
-      "inSOC": false,
-      "socTier": null,
-      "projectedFDA": "2022-01-12",
-      "projectedSOC": "2022-06-12",
-      "horizon": "<1yr"
-    },
-    {
-      "drug": "Abraxane + carboplatin",
-      "nctId": "NCT03164616",
-      "biomarker": "ALK",
-      "sponsor": "AstraZeneca",
-      "sponsorClass": "INDUSTRY",
-      "usBased": true,
-      "phases": [
-        "PHASE3"
-      ],
-      "status": "ACTIVE_NOT_RECRUITING",
-      "startDate": "2017-06-01",
-      "pcd": "2021-03-12",
-      "histology": "Unknown",
-      "designType": "RCT",
-      "endpoint": "PFS",
-      "enrollmentRate": "Fast",
-      "fda": {
-        "btd": false,
-        "aa": false,
-        "priorityReview": false
-      },
-      "inSOC": false,
-      "socTier": null,
-      "projectedFDA": "2022-01-12",
-      "projectedSOC": "2022-06-12",
-      "horizon": "<1yr"
-    },
-    {
-      "drug": "Gemcitabine + cisplatin",
-      "nctId": "NCT03164616",
-      "biomarker": "ALK",
-      "sponsor": "AstraZeneca",
-      "sponsorClass": "INDUSTRY",
-      "usBased": true,
-      "phases": [
-        "PHASE3"
-      ],
-      "status": "ACTIVE_NOT_RECRUITING",
-      "startDate": "2017-06-01",
-      "pcd": "2021-03-12",
-      "histology": "Unknown",
-      "designType": "RCT",
-      "endpoint": "PFS",
-      "enrollmentRate": "Fast",
-      "fda": {
-        "btd": false,
-        "aa": false,
-        "priorityReview": false
-      },
-      "inSOC": false,
-      "socTier": null,
-      "projectedFDA": "2022-01-12",
-      "projectedSOC": "2022-06-12",
-      "horizon": "<1yr"
-    },
-    {
-      "drug": "Gemcitabine + carboplatin",
-      "nctId": "NCT03164616",
-      "biomarker": "ALK",
-      "sponsor": "AstraZeneca",
-      "sponsorClass": "INDUSTRY",
-      "usBased": true,
-      "phases": [
-        "PHASE3"
-      ],
-      "status": "ACTIVE_NOT_RECRUITING",
-      "startDate": "2017-06-01",
-      "pcd": "2021-03-12",
-      "histology": "Unknown",
-      "designType": "RCT",
-      "endpoint": "PFS",
-      "enrollmentRate": "Fast",
-      "fda": {
-        "btd": false,
-        "aa": false,
-        "priorityReview": false
-      },
-      "inSOC": false,
-      "socTier": null,
-      "projectedFDA": "2022-01-12",
-      "projectedSOC": "2022-06-12",
-      "horizon": "<1yr"
-    },
-    {
-      "drug": "Pemetrexed + carboplatin",
-      "nctId": "NCT03164616",
-      "biomarker": "ALK",
-      "sponsor": "AstraZeneca",
-      "sponsorClass": "INDUSTRY",
-      "usBased": true,
-      "phases": [
-        "PHASE3"
-      ],
-      "status": "ACTIVE_NOT_RECRUITING",
-      "startDate": "2017-06-01",
-      "pcd": "2021-03-12",
-      "histology": "Unknown",
-      "designType": "RCT",
-      "endpoint": "PFS",
-      "enrollmentRate": "Fast",
-      "fda": {
-        "btd": false,
-        "aa": false,
-        "priorityReview": false
-      },
-      "inSOC": false,
-      "socTier": null,
-      "projectedFDA": "2022-01-12",
-      "projectedSOC": "2022-06-12",
-      "horizon": "<1yr"
-    },
-    {
-      "drug": "Pemetrexed + cisplatin",
-      "nctId": "NCT03164616",
-      "biomarker": "ALK",
-      "sponsor": "AstraZeneca",
-      "sponsorClass": "INDUSTRY",
-      "usBased": true,
-      "phases": [
-        "PHASE3"
-      ],
-      "status": "ACTIVE_NOT_RECRUITING",
-      "startDate": "2017-06-01",
-      "pcd": "2021-03-12",
-      "histology": "Unknown",
-      "designType": "RCT",
-      "endpoint": "PFS",
-      "enrollmentRate": "Fast",
-      "fda": {
-        "btd": false,
-        "aa": false,
-        "priorityReview": false
-      },
-      "inSOC": false,
-      "socTier": null,
-      "projectedFDA": "2022-01-12",
-      "projectedSOC": "2022-06-12",
-      "horizon": "<1yr"
-    },
-    {
-      "drug": "Amg 510",
-      "nctId": "NCT04303780",
-      "biomarker": "KRAS G12C",
-      "sponsor": "Amgen",
-      "sponsorClass": "INDUSTRY",
-      "usBased": true,
-      "phases": [
-        "PHASE3"
-      ],
-      "status": "ACTIVE_NOT_RECRUITING",
-      "startDate": "2020-06-04",
-      "pcd": "2022-08-02",
-      "histology": "Unknown",
-      "designType": "RCT",
-      "endpoint": "PFS",
-      "enrollmentRate": "Average",
-      "fda": {
-        "btd": false,
-        "aa": false,
-        "priorityReview": false
-      },
-      "inSOC": false,
-      "socTier": null,
-      "projectedFDA": "2023-07-02",
-      "projectedSOC": "2023-12-02",
-      "horizon": "<1yr"
-    },
-    {
-      "drug": "Patritumab deruxtecan (fixed dose)",
-      "nctId": "NCT04619004",
-      "biomarker": "EGFR Exon 20",
-      "sponsor": "Daiichi Sankyo",
-      "sponsorClass": "INDUSTRY",
-      "usBased": true,
-      "phases": [
-        "PHASE2"
-      ],
-      "status": "ACTIVE_NOT_RECRUITING",
-      "startDate": "2021-02-02",
-      "pcd": "2022-11-21",
-      "histology": "Unknown",
-      "designType": "RCT",
-      "endpoint": "PFS",
-      "enrollmentRate": "Average",
-      "fda": {
-        "btd": false,
-        "aa": false,
-        "priorityReview": false
-      },
-      "inSOC": false,
-      "socTier": null,
-      "projectedFDA": "2023-10-21",
-      "projectedSOC": "2024-03-21",
-      "horizon": "<1yr"
-    },
-    {
-      "drug": "Patritumab deruxtecan (up-titration)",
-      "nctId": "NCT04619004",
-      "biomarker": "EGFR Exon 20",
-      "sponsor": "Daiichi Sankyo",
-      "sponsorClass": "INDUSTRY",
-      "usBased": true,
-      "phases": [
-        "PHASE2"
-      ],
-      "status": "ACTIVE_NOT_RECRUITING",
-      "startDate": "2021-02-02",
-      "pcd": "2022-11-21",
-      "histology": "Unknown",
-      "designType": "RCT",
-      "endpoint": "PFS",
-      "enrollmentRate": "Average",
-      "fda": {
-        "btd": false,
-        "aa": false,
-        "priorityReview": false
-      },
-      "inSOC": false,
-      "socTier": null,
-      "projectedFDA": "2023-10-21",
-      "projectedSOC": "2024-03-21",
-      "horizon": "<1yr"
-    },
-    {
-      "drug": "Amivantamab",
-      "nctId": "NCT04988295",
-      "biomarker": "EGFR",
-      "sponsor": "Janssen Research & Development, LLC",
-      "sponsorClass": "INDUSTRY",
-      "usBased": true,
-      "phases": [
-        "PHASE3"
-      ],
-      "status": "ACTIVE_NOT_RECRUITING",
-      "startDate": "2021-11-17",
-      "pcd": "2023-07-10",
-      "histology": "Non-squamous",
-      "designType": "RCT",
-      "endpoint": "PFS",
-      "enrollmentRate": "Fast",
-      "fda": {
-        "btd": false,
-        "aa": false,
-        "priorityReview": false
-      },
-      "inSOC": false,
-      "socTier": null,
-      "projectedFDA": "2024-05-10",
-      "projectedSOC": "2024-10-10",
-      "horizon": "<1yr"
-    },
-    {
-      "drug": "Placebo",
-      "nctId": "NCT04487080",
-      "biomarker": "EGFR Exon 20",
-      "sponsor": "Janssen Research & Development, LLC",
-      "sponsorClass": "INDUSTRY",
-      "usBased": true,
-      "phases": [
-        "PHASE3"
-      ],
-      "status": "ACTIVE_NOT_RECRUITING",
-      "startDate": "2020-09-30",
-      "pcd": "2023-08-11",
-      "histology": "Unknown",
-      "designType": "RCT",
-      "endpoint": "PFS",
-      "enrollmentRate": "Fast",
-      "fda": {
-        "btd": false,
-        "aa": false,
-        "priorityReview": false
-      },
-      "inSOC": false,
-      "socTier": null,
-      "projectedFDA": "2024-06-11",
-      "projectedSOC": "2024-11-11",
-      "horizon": "<1yr"
-    },
-    {
-      "drug": "Fulvestrant",
-      "nctId": "NCT04579380",
-      "biomarker": "HER2",
-      "sponsor": "Seagen, a wholly owned subsidiary of Pfizer",
-      "sponsorClass": "INDUSTRY",
-      "usBased": true,
-      "phases": [
-        "PHASE2"
-      ],
-      "status": "ACTIVE_NOT_RECRUITING",
-      "startDate": "2021-01-11",
-      "pcd": "2023-11-01",
-      "histology": "Non-squamous",
-      "designType": "SingleArm",
-      "endpoint": "PFS",
-      "enrollmentRate": "Average",
-      "fda": {
-        "btd": true,
-        "aa": false,
-        "priorityReview": true
-      },
-      "inSOC": false,
-      "socTier": null,
-      "projectedFDA": "2024-09-01",
-      "projectedSOC": "2025-02-01",
-      "horizon": "<1yr"
-    },
-    {
-      "drug": "Tucatinib",
-      "nctId": "NCT04579380",
-      "biomarker": "HER2",
-      "sponsor": "Seagen, a wholly owned subsidiary of Pfizer",
-      "sponsorClass": "INDUSTRY",
-      "usBased": true,
-      "phases": [
-        "PHASE2"
-      ],
-      "status": "ACTIVE_NOT_RECRUITING",
-      "startDate": "2021-01-11",
-      "pcd": "2023-11-01",
-      "histology": "Non-squamous",
-      "designType": "SingleArm",
-      "endpoint": "PFS",
-      "enrollmentRate": "Average",
-      "fda": {
-        "btd": true,
-        "aa": false,
-        "priorityReview": true
-      },
-      "inSOC": false,
-      "socTier": null,
-      "projectedFDA": "2024-09-01",
-      "projectedSOC": "2025-02-01",
-      "horizon": "<1yr"
-    },
-    {
-      "drug": "Glumetinib",
-      "nctId": "NCT04270591",
-      "biomarker": "MET",
-      "sponsor": "Haihe Biopharma Co., Ltd.",
+      "sponsor": "ORIC Pharmaceuticals",
       "sponsorClass": "INDUSTRY",
       "usBased": true,
       "phases": [
@@ -609,9 +21,66 @@
         "PHASE2"
       ],
       "status": "RECRUITING",
-      "startDate": "2019-07-15",
-      "pcd": "2023-10-25",
+      "startDate": "2022-03-10",
+      "pcd": "2026-09",
       "histology": "Unknown",
+      "designType": "RCT",
+      "endpoint": "PFS",
+      "enrollmentRate": "Average",
+      "fda": {
+        "btd": false,
+        "aa": false,
+        "priorityReview": false
+      },
+      "inSOC": false,
+      "socTier": null,
+      "projectedFDA": "2027-08-01",
+      "projectedSOC": "2028-01-01",
+      "horizon": "1-3yr"
+    },
+    {
+      "drug": "Chemotherapy drug",
+      "nctId": "NCT05315700",
+      "biomarker": "EGFR Exon 20",
+      "sponsor": "ORIC Pharmaceuticals",
+      "sponsorClass": "INDUSTRY",
+      "usBased": true,
+      "phases": [
+        "PHASE1",
+        "PHASE2"
+      ],
+      "status": "RECRUITING",
+      "startDate": "2022-03-10",
+      "pcd": "2026-09",
+      "histology": "Unknown",
+      "designType": "RCT",
+      "endpoint": "PFS",
+      "enrollmentRate": "Average",
+      "fda": {
+        "btd": false,
+        "aa": false,
+        "priorityReview": false
+      },
+      "inSOC": false,
+      "socTier": null,
+      "projectedFDA": "2027-08-01",
+      "projectedSOC": "2028-01-01",
+      "horizon": "1-3yr"
+    },
+    {
+      "drug": "Cisplatin or carboplatin; pemetrexed or paclitaxel",
+      "nctId": "NCT06194448",
+      "biomarker": "EGFR",
+      "sponsor": "AstraZeneca",
+      "sponsorClass": "INDUSTRY",
+      "usBased": true,
+      "phases": [
+        "PHASE2"
+      ],
+      "status": "ACTIVE_NOT_RECRUITING",
+      "startDate": "2024-04-21",
+      "pcd": "2026-07-07",
+      "histology": "Non-squamous",
       "designType": "SingleArm",
       "endpoint": "PFS",
       "enrollmentRate": "Slow",
@@ -622,23 +91,51 @@
       },
       "inSOC": false,
       "socTier": null,
-      "projectedFDA": "2024-11-25",
-      "projectedSOC": "2025-04-25",
-      "horizon": "<1yr"
+      "projectedFDA": "2027-08-07",
+      "projectedSOC": "2028-01-07",
+      "horizon": "1-3yr"
     },
     {
-      "drug": "Mrtx849",
-      "nctId": "NCT04685135",
-      "biomarker": "KRAS G12C",
-      "sponsor": "Mirati Therapeutics Inc.",
+      "drug": "Radiation",
+      "nctId": "NCT06194448",
+      "biomarker": "EGFR",
+      "sponsor": "AstraZeneca",
+      "sponsorClass": "INDUSTRY",
+      "usBased": true,
+      "phases": [
+        "PHASE2"
+      ],
+      "status": "ACTIVE_NOT_RECRUITING",
+      "startDate": "2024-04-21",
+      "pcd": "2026-07-07",
+      "histology": "Non-squamous",
+      "designType": "SingleArm",
+      "endpoint": "PFS",
+      "enrollmentRate": "Slow",
+      "fda": {
+        "btd": true,
+        "aa": false,
+        "priorityReview": true
+      },
+      "inSOC": false,
+      "socTier": null,
+      "projectedFDA": "2027-08-07",
+      "projectedSOC": "2028-01-07",
+      "horizon": "1-3yr"
+    },
+    {
+      "drug": "Oleclumab",
+      "nctId": "NCT05221840",
+      "biomarker": "PD-L1",
+      "sponsor": "AstraZeneca",
       "sponsorClass": "INDUSTRY",
       "usBased": true,
       "phases": [
         "PHASE3"
       ],
       "status": "ACTIVE_NOT_RECRUITING",
-      "startDate": "2021-02-23",
-      "pcd": "2023-12-30",
+      "startDate": "2022-02-07",
+      "pcd": "2026-09-30",
       "histology": "Unknown",
       "designType": "RCT",
       "endpoint": "PFS",
@@ -650,23 +147,51 @@
       },
       "inSOC": false,
       "socTier": null,
-      "projectedFDA": "2024-11-30",
-      "projectedSOC": "2025-04-30",
-      "horizon": "<1yr"
+      "projectedFDA": "2027-08-30",
+      "projectedSOC": "2028-01-30",
+      "horizon": "1-3yr"
     },
     {
-      "drug": "Elzovantinib (tpx-0022)",
-      "nctId": "NCT03993873",
-      "biomarker": "MET",
-      "sponsor": "Turning Point Therapeutics, Inc.",
+      "drug": "Monalizumab",
+      "nctId": "NCT05221840",
+      "biomarker": "PD-L1",
+      "sponsor": "AstraZeneca",
+      "sponsorClass": "INDUSTRY",
+      "usBased": true,
+      "phases": [
+        "PHASE3"
+      ],
+      "status": "ACTIVE_NOT_RECRUITING",
+      "startDate": "2022-02-07",
+      "pcd": "2026-09-30",
+      "histology": "Unknown",
+      "designType": "RCT",
+      "endpoint": "PFS",
+      "enrollmentRate": "Average",
+      "fda": {
+        "btd": false,
+        "aa": false,
+        "priorityReview": false
+      },
+      "inSOC": false,
+      "socTier": null,
+      "projectedFDA": "2027-08-30",
+      "projectedSOC": "2028-01-30",
+      "horizon": "1-3yr"
+    },
+    {
+      "drug": "Tt125-802",
+      "nctId": "NCT06403436",
+      "biomarker": "KRAS G12C",
+      "sponsor": "TOLREMO therapeutics AG",
       "sponsorClass": "INDUSTRY",
       "usBased": true,
       "phases": [
         "PHASE1"
       ],
       "status": "ACTIVE_NOT_RECRUITING",
-      "startDate": "2019-09-05",
-      "pcd": "2024-01-08",
+      "startDate": "2023-11-07",
+      "pcd": "2026-08",
       "histology": "Squamous",
       "designType": "SingleArm",
       "endpoint": "PFS",
@@ -678,71 +203,15 @@
       },
       "inSOC": false,
       "socTier": null,
-      "projectedFDA": "2025-02-08",
-      "projectedSOC": "2025-07-08",
-      "horizon": "<1yr"
+      "projectedFDA": "2027-09-01",
+      "projectedSOC": "2028-02-01",
+      "horizon": "1-3yr"
     },
     {
-      "drug": "Dpx-survivac",
-      "nctId": "NCT03836352",
-      "biomarker": "No Driver",
-      "sponsor": "ImmunoVaccine Technologies, Inc. (IMV Inc.)",
-      "sponsorClass": "INDUSTRY",
-      "usBased": true,
-      "phases": [
-        "PHASE2"
-      ],
-      "status": "ACTIVE_NOT_RECRUITING",
-      "startDate": "2018-12-21",
-      "pcd": "2023-12-31",
-      "histology": "Unknown",
-      "designType": "RCT",
-      "endpoint": "PFS",
-      "enrollmentRate": "Slow",
-      "fda": {
-        "btd": false,
-        "aa": false,
-        "priorityReview": false
-      },
-      "inSOC": false,
-      "socTier": null,
-      "projectedFDA": "2025-03-03",
-      "projectedSOC": "2025-07-31",
-      "horizon": "<1yr"
-    },
-    {
-      "drug": "Cyclophosphamide",
-      "nctId": "NCT03836352",
-      "biomarker": "No Driver",
-      "sponsor": "ImmunoVaccine Technologies, Inc. (IMV Inc.)",
-      "sponsorClass": "INDUSTRY",
-      "usBased": true,
-      "phases": [
-        "PHASE2"
-      ],
-      "status": "ACTIVE_NOT_RECRUITING",
-      "startDate": "2018-12-21",
-      "pcd": "2023-12-31",
-      "histology": "Unknown",
-      "designType": "RCT",
-      "endpoint": "PFS",
-      "enrollmentRate": "Slow",
-      "fda": {
-        "btd": false,
-        "aa": false,
-        "priorityReview": false
-      },
-      "inSOC": false,
-      "socTier": null,
-      "projectedFDA": "2025-03-03",
-      "projectedSOC": "2025-07-31",
-      "horizon": "<1yr"
-    },
-    {
-      "drug": "D-1553",
-      "nctId": "NCT04585035",
-      "biomarker": "KRAS G12C",
-      "sponsor": "InventisBio Co., Ltd",
+      "drug": "Lp-184",
+      "nctId": "NCT05933265",
+      "biomarker": "HER2",
+      "sponsor": "Lantern Pharma Inc.",
       "sponsorClass": "INDUSTRY",
       "usBased": true,
       "phases": [
@@ -750,9 +219,9 @@
         "PHASE2"
       ],
       "status": "ACTIVE_NOT_RECRUITING",
-      "startDate": "2020-10-02",
-      "pcd": "2024-04-30",
-      "histology": "Unknown",
+      "startDate": "2023-06-09",
+      "pcd": "2026-07-28",
+      "histology": "Non-squamous",
       "designType": "RCT",
       "endpoint": "PFS",
       "enrollmentRate": "Slow",
@@ -763,15 +232,15 @@
       },
       "inSOC": false,
       "socTier": null,
-      "projectedFDA": "2025-06-30",
-      "projectedSOC": "2025-11-30",
-      "horizon": "<1yr"
+      "projectedFDA": "2027-09-28",
+      "projectedSOC": "2028-02-28",
+      "horizon": "1-3yr"
     },
     {
-      "drug": "D-1553 in combination with drug: pembrolizumab, drug:keytruda® , drug: cetuximab, drug: other",
-      "nctId": "NCT04585035",
-      "biomarker": "KRAS G12C",
-      "sponsor": "InventisBio Co., Ltd",
+      "drug": "Nivolumab & ipilimumab",
+      "nctId": "NCT05933265",
+      "biomarker": "HER2",
+      "sponsor": "Lantern Pharma Inc.",
       "sponsorClass": "INDUSTRY",
       "usBased": true,
       "phases": [
@@ -779,8 +248,239 @@
         "PHASE2"
       ],
       "status": "ACTIVE_NOT_RECRUITING",
-      "startDate": "2020-10-02",
-      "pcd": "2024-04-30",
+      "startDate": "2023-06-09",
+      "pcd": "2026-07-28",
+      "histology": "Non-squamous",
+      "designType": "RCT",
+      "endpoint": "PFS",
+      "enrollmentRate": "Slow",
+      "fda": {
+        "btd": false,
+        "aa": false,
+        "priorityReview": false
+      },
+      "inSOC": false,
+      "socTier": null,
+      "projectedFDA": "2027-09-28",
+      "projectedSOC": "2028-02-28",
+      "horizon": "1-3yr"
+    },
+    {
+      "drug": "Tas6417",
+      "nctId": "NCT05973773",
+      "biomarker": "EGFR Exon 20",
+      "sponsor": "Taiho Oncology, Inc.",
+      "sponsorClass": "INDUSTRY",
+      "usBased": true,
+      "phases": [
+        "PHASE3"
+      ],
+      "status": "ACTIVE_NOT_RECRUITING",
+      "startDate": "2023-12-18",
+      "pcd": "2026-10-29",
+      "histology": "Non-squamous",
+      "designType": "RCT",
+      "endpoint": "PFS",
+      "enrollmentRate": "Average",
+      "fda": {
+        "btd": false,
+        "aa": false,
+        "priorityReview": false
+      },
+      "inSOC": false,
+      "socTier": null,
+      "projectedFDA": "2027-09-29",
+      "projectedSOC": "2028-02-29",
+      "horizon": "1-3yr"
+    },
+    {
+      "drug": "Gemcitabine",
+      "nctId": "NCT03178552",
+      "biomarker": "EGFR",
+      "sponsor": "Hoffmann-La Roche",
+      "sponsorClass": "INDUSTRY",
+      "usBased": true,
+      "phases": [
+        "PHASE2",
+        "PHASE3"
+      ],
+      "status": "ACTIVE_NOT_RECRUITING",
+      "startDate": "2017-09-22",
+      "pcd": "2026-10-31",
+      "histology": "Unknown",
+      "designType": "RCT",
+      "endpoint": "PFS",
+      "enrollmentRate": "Average",
+      "fda": {
+        "btd": false,
+        "aa": false,
+        "priorityReview": false
+      },
+      "inSOC": false,
+      "socTier": null,
+      "projectedFDA": "2027-10-01",
+      "projectedSOC": "2028-03-02",
+      "horizon": "1-3yr"
+    },
+    {
+      "drug": "Cobimetinib",
+      "nctId": "NCT03178552",
+      "biomarker": "EGFR",
+      "sponsor": "Hoffmann-La Roche",
+      "sponsorClass": "INDUSTRY",
+      "usBased": true,
+      "phases": [
+        "PHASE2",
+        "PHASE3"
+      ],
+      "status": "ACTIVE_NOT_RECRUITING",
+      "startDate": "2017-09-22",
+      "pcd": "2026-10-31",
+      "histology": "Unknown",
+      "designType": "RCT",
+      "endpoint": "PFS",
+      "enrollmentRate": "Average",
+      "fda": {
+        "btd": false,
+        "aa": false,
+        "priorityReview": false
+      },
+      "inSOC": false,
+      "socTier": null,
+      "projectedFDA": "2027-10-01",
+      "projectedSOC": "2028-03-02",
+      "horizon": "1-3yr"
+    },
+    {
+      "drug": "Vemurafenib",
+      "nctId": "NCT03178552",
+      "biomarker": "EGFR",
+      "sponsor": "Hoffmann-La Roche",
+      "sponsorClass": "INDUSTRY",
+      "usBased": true,
+      "phases": [
+        "PHASE2",
+        "PHASE3"
+      ],
+      "status": "ACTIVE_NOT_RECRUITING",
+      "startDate": "2017-09-22",
+      "pcd": "2026-10-31",
+      "histology": "Unknown",
+      "designType": "RCT",
+      "endpoint": "PFS",
+      "enrollmentRate": "Average",
+      "fda": {
+        "btd": false,
+        "aa": false,
+        "priorityReview": false
+      },
+      "inSOC": false,
+      "socTier": null,
+      "projectedFDA": "2027-10-01",
+      "projectedSOC": "2028-03-02",
+      "horizon": "1-3yr"
+    },
+    {
+      "drug": "Bevacizumab",
+      "nctId": "NCT03178552",
+      "biomarker": "EGFR",
+      "sponsor": "Hoffmann-La Roche",
+      "sponsorClass": "INDUSTRY",
+      "usBased": true,
+      "phases": [
+        "PHASE2",
+        "PHASE3"
+      ],
+      "status": "ACTIVE_NOT_RECRUITING",
+      "startDate": "2017-09-22",
+      "pcd": "2026-10-31",
+      "histology": "Unknown",
+      "designType": "RCT",
+      "endpoint": "PFS",
+      "enrollmentRate": "Average",
+      "fda": {
+        "btd": false,
+        "aa": false,
+        "priorityReview": false
+      },
+      "inSOC": false,
+      "socTier": null,
+      "projectedFDA": "2027-10-01",
+      "projectedSOC": "2028-03-02",
+      "horizon": "1-3yr"
+    },
+    {
+      "drug": "Divarasib",
+      "nctId": "NCT03178552",
+      "biomarker": "EGFR",
+      "sponsor": "Hoffmann-La Roche",
+      "sponsorClass": "INDUSTRY",
+      "usBased": true,
+      "phases": [
+        "PHASE2",
+        "PHASE3"
+      ],
+      "status": "ACTIVE_NOT_RECRUITING",
+      "startDate": "2017-09-22",
+      "pcd": "2026-10-31",
+      "histology": "Unknown",
+      "designType": "RCT",
+      "endpoint": "PFS",
+      "enrollmentRate": "Average",
+      "fda": {
+        "btd": false,
+        "aa": false,
+        "priorityReview": false
+      },
+      "inSOC": false,
+      "socTier": null,
+      "projectedFDA": "2027-10-01",
+      "projectedSOC": "2028-03-02",
+      "horizon": "1-3yr"
+    },
+    {
+      "drug": "Docetaxel",
+      "nctId": "NCT03178552",
+      "biomarker": "EGFR",
+      "sponsor": "Hoffmann-La Roche",
+      "sponsorClass": "INDUSTRY",
+      "usBased": true,
+      "phases": [
+        "PHASE2",
+        "PHASE3"
+      ],
+      "status": "ACTIVE_NOT_RECRUITING",
+      "startDate": "2017-09-22",
+      "pcd": "2026-10-31",
+      "histology": "Unknown",
+      "designType": "RCT",
+      "endpoint": "PFS",
+      "enrollmentRate": "Average",
+      "fda": {
+        "btd": false,
+        "aa": false,
+        "priorityReview": false
+      },
+      "inSOC": false,
+      "socTier": null,
+      "projectedFDA": "2027-10-01",
+      "projectedSOC": "2028-03-02",
+      "horizon": "1-3yr"
+    },
+    {
+      "drug": "Rezatapopt",
+      "nctId": "NCT04585750",
+      "biomarker": "HER2",
+      "sponsor": "PMV Pharmaceuticals, Inc",
+      "sponsorClass": "INDUSTRY",
+      "usBased": true,
+      "phases": [
+        "PHASE1",
+        "PHASE2"
+      ],
+      "status": "RECRUITING",
+      "startDate": "2020-10-29",
+      "pcd": "2026-08-15",
       "histology": "Unknown",
       "designType": "RCT",
       "endpoint": "PFS",
@@ -792,23 +492,52 @@
       },
       "inSOC": false,
       "socTier": null,
-      "projectedFDA": "2025-06-30",
-      "projectedSOC": "2025-11-30",
-      "horizon": "<1yr"
+      "projectedFDA": "2027-10-15",
+      "projectedSOC": "2028-03-15",
+      "horizon": "1-3yr"
     },
     {
-      "drug": "Danvatirsen",
-      "nctId": "NCT03334617",
-      "biomarker": "EGFR",
-      "sponsor": "AstraZeneca",
+      "drug": "Jdq443",
+      "nctId": "NCT05132075",
+      "biomarker": "KRAS G12C",
+      "sponsor": "Novartis Pharmaceuticals",
       "sponsorClass": "INDUSTRY",
       "usBased": true,
       "phases": [
-        "PHASE2"
+        "PHASE3"
       ],
       "status": "ACTIVE_NOT_RECRUITING",
-      "startDate": "2017-12-18",
-      "pcd": "2024-09-13",
+      "startDate": "2022-06-15",
+      "pcd": "2026-08-25",
+      "histology": "Unknown",
+      "designType": "RCT",
+      "endpoint": "PFS",
+      "enrollmentRate": "Slow",
+      "fda": {
+        "btd": false,
+        "aa": false,
+        "priorityReview": false
+      },
+      "inSOC": false,
+      "socTier": null,
+      "projectedFDA": "2027-10-25",
+      "projectedSOC": "2028-03-25",
+      "horizon": "1-3yr"
+    },
+    {
+      "drug": "Bay2927088_formulation a",
+      "nctId": "NCT05099172",
+      "biomarker": "HER2",
+      "sponsor": "Bayer",
+      "sponsorClass": "INDUSTRY",
+      "usBased": true,
+      "phases": [
+        "PHASE1",
+        "PHASE2"
+      ],
+      "status": "RECRUITING",
+      "startDate": "2021-10-25",
+      "pcd": "2026-11-30",
       "histology": "Unknown",
       "designType": "RCT",
       "endpoint": "PFS",
@@ -820,23 +549,24 @@
       },
       "inSOC": false,
       "socTier": null,
-      "projectedFDA": "2025-08-13",
-      "projectedSOC": "2026-01-13",
-      "horizon": "<1yr"
+      "projectedFDA": "2027-10-30",
+      "projectedSOC": "2028-03-30",
+      "horizon": "1-3yr"
     },
     {
-      "drug": "Ceralasertib",
-      "nctId": "NCT03334617",
-      "biomarker": "EGFR",
-      "sponsor": "AstraZeneca",
+      "drug": "Bay2927088_formulation b_1",
+      "nctId": "NCT05099172",
+      "biomarker": "HER2",
+      "sponsor": "Bayer",
       "sponsorClass": "INDUSTRY",
       "usBased": true,
       "phases": [
+        "PHASE1",
         "PHASE2"
       ],
-      "status": "ACTIVE_NOT_RECRUITING",
-      "startDate": "2017-12-18",
-      "pcd": "2024-09-13",
+      "status": "RECRUITING",
+      "startDate": "2021-10-25",
+      "pcd": "2026-11-30",
       "histology": "Unknown",
       "designType": "RCT",
       "endpoint": "PFS",
@@ -848,23 +578,24 @@
       },
       "inSOC": false,
       "socTier": null,
-      "projectedFDA": "2025-08-13",
-      "projectedSOC": "2026-01-13",
-      "horizon": "<1yr"
+      "projectedFDA": "2027-10-30",
+      "projectedSOC": "2028-03-30",
+      "horizon": "1-3yr"
     },
     {
-      "drug": "Vistusertib",
-      "nctId": "NCT03334617",
-      "biomarker": "EGFR",
-      "sponsor": "AstraZeneca",
+      "drug": "Bay2927088_formulation b_2",
+      "nctId": "NCT05099172",
+      "biomarker": "HER2",
+      "sponsor": "Bayer",
       "sponsorClass": "INDUSTRY",
       "usBased": true,
       "phases": [
+        "PHASE1",
         "PHASE2"
       ],
-      "status": "ACTIVE_NOT_RECRUITING",
-      "startDate": "2017-12-18",
-      "pcd": "2024-09-13",
+      "status": "RECRUITING",
+      "startDate": "2021-10-25",
+      "pcd": "2026-11-30",
       "histology": "Unknown",
       "designType": "RCT",
       "endpoint": "PFS",
@@ -876,23 +607,24 @@
       },
       "inSOC": false,
       "socTier": null,
-      "projectedFDA": "2025-08-13",
-      "projectedSOC": "2026-01-13",
-      "horizon": "<1yr"
+      "projectedFDA": "2027-10-30",
+      "projectedSOC": "2028-03-30",
+      "horizon": "1-3yr"
     },
     {
-      "drug": "Cediranib",
-      "nctId": "NCT03334617",
-      "biomarker": "EGFR",
-      "sponsor": "AstraZeneca",
+      "drug": "Bay2927088_formulation b_3",
+      "nctId": "NCT05099172",
+      "biomarker": "HER2",
+      "sponsor": "Bayer",
       "sponsorClass": "INDUSTRY",
       "usBased": true,
       "phases": [
+        "PHASE1",
         "PHASE2"
       ],
-      "status": "ACTIVE_NOT_RECRUITING",
-      "startDate": "2017-12-18",
-      "pcd": "2024-09-13",
+      "status": "RECRUITING",
+      "startDate": "2021-10-25",
+      "pcd": "2026-11-30",
       "histology": "Unknown",
       "designType": "RCT",
       "endpoint": "PFS",
@@ -904,15 +636,128 @@
       },
       "inSOC": false,
       "socTier": null,
-      "projectedFDA": "2025-08-13",
-      "projectedSOC": "2026-01-13",
-      "horizon": "<1yr"
+      "projectedFDA": "2027-10-30",
+      "projectedSOC": "2028-03-30",
+      "horizon": "1-3yr"
     },
     {
-      "drug": "Loxo-292",
-      "nctId": "NCT03157128",
+      "drug": "Ep0031",
+      "nctId": "NCT05443126",
       "biomarker": "RET",
-      "sponsor": "Eli Lilly and Company",
+      "sponsor": "Ellipses Pharma",
+      "sponsorClass": "INDUSTRY",
+      "usBased": true,
+      "phases": [
+        "PHASE1",
+        "PHASE2"
+      ],
+      "status": "RECRUITING",
+      "startDate": "2022-09-30",
+      "pcd": "2026-12",
+      "histology": "Unknown",
+      "designType": "RCT",
+      "endpoint": "PFS",
+      "enrollmentRate": "Average",
+      "fda": {
+        "btd": false,
+        "aa": false,
+        "priorityReview": false
+      },
+      "inSOC": false,
+      "socTier": null,
+      "projectedFDA": "2027-11-01",
+      "projectedSOC": "2028-04-01",
+      "horizon": "1-3yr"
+    },
+    {
+      "drug": "Adagrasib oral dose of 400 mg twice daily tablets",
+      "nctId": "NCT05609578",
+      "biomarker": "KRAS G12C",
+      "sponsor": "Mirati Therapeutics Inc.",
+      "sponsorClass": "INDUSTRY",
+      "usBased": true,
+      "phases": [
+        "PHASE2"
+      ],
+      "status": "ACTIVE_NOT_RECRUITING",
+      "startDate": "2022-11-22",
+      "pcd": "2026-09-30",
+      "histology": "Non-squamous",
+      "designType": "RCT",
+      "endpoint": "PFS",
+      "enrollmentRate": "Slow",
+      "fda": {
+        "btd": false,
+        "aa": false,
+        "priorityReview": false
+      },
+      "inSOC": false,
+      "socTier": null,
+      "projectedFDA": "2027-11-30",
+      "projectedSOC": "2028-04-30",
+      "horizon": "1-3yr"
+    },
+    {
+      "drug": "Chemotherapy: pemetrexed",
+      "nctId": "NCT05609578",
+      "biomarker": "KRAS G12C",
+      "sponsor": "Mirati Therapeutics Inc.",
+      "sponsorClass": "INDUSTRY",
+      "usBased": true,
+      "phases": [
+        "PHASE2"
+      ],
+      "status": "ACTIVE_NOT_RECRUITING",
+      "startDate": "2022-11-22",
+      "pcd": "2026-09-30",
+      "histology": "Non-squamous",
+      "designType": "RCT",
+      "endpoint": "PFS",
+      "enrollmentRate": "Slow",
+      "fda": {
+        "btd": false,
+        "aa": false,
+        "priorityReview": false
+      },
+      "inSOC": false,
+      "socTier": null,
+      "projectedFDA": "2027-11-30",
+      "projectedSOC": "2028-04-30",
+      "horizon": "1-3yr"
+    },
+    {
+      "drug": "Cisplatin/carboplatin",
+      "nctId": "NCT05609578",
+      "biomarker": "KRAS G12C",
+      "sponsor": "Mirati Therapeutics Inc.",
+      "sponsorClass": "INDUSTRY",
+      "usBased": true,
+      "phases": [
+        "PHASE2"
+      ],
+      "status": "ACTIVE_NOT_RECRUITING",
+      "startDate": "2022-11-22",
+      "pcd": "2026-09-30",
+      "histology": "Non-squamous",
+      "designType": "RCT",
+      "endpoint": "PFS",
+      "enrollmentRate": "Slow",
+      "fda": {
+        "btd": false,
+        "aa": false,
+        "priorityReview": false
+      },
+      "inSOC": false,
+      "socTier": null,
+      "projectedFDA": "2027-11-30",
+      "projectedSOC": "2028-04-30",
+      "horizon": "1-3yr"
+    },
+    {
+      "drug": "Trametinib",
+      "nctId": "NCT05358249",
+      "biomarker": "KRAS G12C",
+      "sponsor": "Novartis Pharmaceuticals",
       "sponsorClass": "INDUSTRY",
       "usBased": true,
       "phases": [
@@ -920,28 +765,393 @@
         "PHASE2"
       ],
       "status": "ACTIVE_NOT_RECRUITING",
-      "startDate": "2017-05-02",
-      "pcd": "2025-02-14",
+      "startDate": "2022-10-24",
+      "pcd": "2026-09-30",
+      "histology": "Unknown",
+      "designType": "RCT",
+      "endpoint": "PFS",
+      "enrollmentRate": "Slow",
+      "fda": {
+        "btd": false,
+        "aa": false,
+        "priorityReview": false
+      },
+      "inSOC": false,
+      "socTier": null,
+      "projectedFDA": "2027-11-30",
+      "projectedSOC": "2028-04-30",
+      "horizon": "1-3yr"
+    },
+    {
+      "drug": "Ribociclib",
+      "nctId": "NCT05358249",
+      "biomarker": "KRAS G12C",
+      "sponsor": "Novartis Pharmaceuticals",
+      "sponsorClass": "INDUSTRY",
+      "usBased": true,
+      "phases": [
+        "PHASE1",
+        "PHASE2"
+      ],
+      "status": "ACTIVE_NOT_RECRUITING",
+      "startDate": "2022-10-24",
+      "pcd": "2026-09-30",
+      "histology": "Unknown",
+      "designType": "RCT",
+      "endpoint": "PFS",
+      "enrollmentRate": "Slow",
+      "fda": {
+        "btd": false,
+        "aa": false,
+        "priorityReview": false
+      },
+      "inSOC": false,
+      "socTier": null,
+      "projectedFDA": "2027-11-30",
+      "projectedSOC": "2028-04-30",
+      "horizon": "1-3yr"
+    },
+    {
+      "drug": "Darlifarnib",
+      "nctId": "NCT06026410",
+      "biomarker": "KRAS G12C",
+      "sponsor": "Kura Oncology, Inc.",
+      "sponsorClass": "INDUSTRY",
+      "usBased": true,
+      "phases": [
+        "PHASE1"
+      ],
+      "status": "RECRUITING",
+      "startDate": "2023-10-18",
+      "pcd": "2027-01",
+      "histology": "Non-squamous",
+      "designType": "RCT",
+      "endpoint": "PFS",
+      "enrollmentRate": "Average",
+      "fda": {
+        "btd": false,
+        "aa": false,
+        "priorityReview": false
+      },
+      "inSOC": false,
+      "socTier": null,
+      "projectedFDA": "2027-12-01",
+      "projectedSOC": "2028-05-01",
+      "horizon": "1-3yr"
+    },
+    {
+      "drug": "Abbv-cls-484",
+      "nctId": "NCT04777994",
+      "biomarker": "PD-L1",
+      "sponsor": "Calico Life Sciences LLC",
+      "sponsorClass": "INDUSTRY",
+      "usBased": true,
+      "phases": [
+        "PHASE1"
+      ],
+      "status": "RECRUITING",
+      "startDate": "2021-03-09",
+      "pcd": "2026-10",
+      "histology": "Unknown",
+      "designType": "RCT",
+      "endpoint": "PFS",
+      "enrollmentRate": "Slow",
+      "fda": {
+        "btd": false,
+        "aa": false,
+        "priorityReview": false
+      },
+      "inSOC": false,
+      "socTier": null,
+      "projectedFDA": "2027-12-01",
+      "projectedSOC": "2028-05-01",
+      "horizon": "1-3yr"
+    },
+    {
+      "drug": "Vascular endothelial growth factor receptor (vegfr) tyrosine kinase inhibitor (tki)",
+      "nctId": "NCT04777994",
+      "biomarker": "PD-L1",
+      "sponsor": "Calico Life Sciences LLC",
+      "sponsorClass": "INDUSTRY",
+      "usBased": true,
+      "phases": [
+        "PHASE1"
+      ],
+      "status": "RECRUITING",
+      "startDate": "2021-03-09",
+      "pcd": "2026-10",
+      "histology": "Unknown",
+      "designType": "RCT",
+      "endpoint": "PFS",
+      "enrollmentRate": "Slow",
+      "fda": {
+        "btd": false,
+        "aa": false,
+        "priorityReview": false
+      },
+      "inSOC": false,
+      "socTier": null,
+      "projectedFDA": "2027-12-01",
+      "projectedSOC": "2028-05-01",
+      "horizon": "1-3yr"
+    },
+    {
+      "drug": "Programmed cell death-1 (pd-1) inhibitor",
+      "nctId": "NCT04777994",
+      "biomarker": "PD-L1",
+      "sponsor": "Calico Life Sciences LLC",
+      "sponsorClass": "INDUSTRY",
+      "usBased": true,
+      "phases": [
+        "PHASE1"
+      ],
+      "status": "RECRUITING",
+      "startDate": "2021-03-09",
+      "pcd": "2026-10",
+      "histology": "Unknown",
+      "designType": "RCT",
+      "endpoint": "PFS",
+      "enrollmentRate": "Slow",
+      "fda": {
+        "btd": false,
+        "aa": false,
+        "priorityReview": false
+      },
+      "inSOC": false,
+      "socTier": null,
+      "projectedFDA": "2027-12-01",
+      "projectedSOC": "2028-05-01",
+      "horizon": "1-3yr"
+    },
+    {
+      "drug": "Tak-788",
+      "nctId": "NCT04129502",
+      "biomarker": "EGFR Exon 20",
+      "sponsor": "Takeda",
+      "sponsorClass": "INDUSTRY",
+      "usBased": true,
+      "phases": [
+        "PHASE3"
+      ],
+      "status": "ACTIVE_NOT_RECRUITING",
+      "startDate": "2020-01-10",
+      "pcd": "2026-10-31",
+      "histology": "Non-squamous",
+      "designType": "RCT",
+      "endpoint": "PFS",
+      "enrollmentRate": "Slow",
+      "fda": {
+        "btd": false,
+        "aa": false,
+        "priorityReview": false
+      },
+      "inSOC": false,
+      "socTier": null,
+      "projectedFDA": "2027-12-31",
+      "projectedSOC": "2028-05-31",
+      "horizon": "1-3yr"
+    },
+    {
+      "drug": "Yl202",
+      "nctId": "NCT05653752",
+      "biomarker": "EGFR",
+      "sponsor": "MediLink Therapeutics (Suzhou) Co., Ltd.",
+      "sponsorClass": "INDUSTRY",
+      "usBased": true,
+      "phases": [
+        "PHASE1"
+      ],
+      "status": "ACTIVE_NOT_RECRUITING",
+      "startDate": "2022-12-20",
+      "pcd": "2026-12",
       "histology": "Unknown",
       "designType": "SingleArm",
       "endpoint": "PFS",
-      "enrollmentRate": "Average",
+      "enrollmentRate": "Slow",
       "fda": {
-        "btd": true,
+        "btd": false,
         "aa": false,
-        "priorityReview": true
+        "priorityReview": false
       },
       "inSOC": false,
       "socTier": null,
-      "projectedFDA": "2025-12-14",
-      "projectedSOC": "2026-05-14",
-      "horizon": "<1yr"
+      "projectedFDA": "2028-01-01",
+      "projectedSOC": "2028-06-01",
+      "horizon": "1-3yr"
     },
     {
-      "drug": "Ba3071",
-      "nctId": "NCT05180799",
-      "biomarker": "PD-L1",
-      "sponsor": "BioAtla, Inc.",
+      "drug": "Sbrt",
+      "nctId": "NCT04302025",
+      "biomarker": "KRAS G12C",
+      "sponsor": "Genentech, Inc.",
+      "sponsorClass": "INDUSTRY",
+      "usBased": true,
+      "phases": [
+        "PHASE2"
+      ],
+      "status": "RECRUITING",
+      "startDate": "2020-11-06",
+      "pcd": "2026-11-30",
+      "histology": "Non-squamous",
+      "designType": "RCT",
+      "endpoint": "PFS",
+      "enrollmentRate": "Slow",
+      "fda": {
+        "btd": false,
+        "aa": false,
+        "priorityReview": false
+      },
+      "inSOC": false,
+      "socTier": null,
+      "projectedFDA": "2028-01-30",
+      "projectedSOC": "2028-06-30",
+      "horizon": "1-3yr"
+    },
+    {
+      "drug": "Resection",
+      "nctId": "NCT04302025",
+      "biomarker": "KRAS G12C",
+      "sponsor": "Genentech, Inc.",
+      "sponsorClass": "INDUSTRY",
+      "usBased": true,
+      "phases": [
+        "PHASE2"
+      ],
+      "status": "RECRUITING",
+      "startDate": "2020-11-06",
+      "pcd": "2026-11-30",
+      "histology": "Non-squamous",
+      "designType": "RCT",
+      "endpoint": "PFS",
+      "enrollmentRate": "Slow",
+      "fda": {
+        "btd": false,
+        "aa": false,
+        "priorityReview": false
+      },
+      "inSOC": false,
+      "socTier": null,
+      "projectedFDA": "2028-01-30",
+      "projectedSOC": "2028-06-30",
+      "horizon": "1-3yr"
+    },
+    {
+      "drug": "Oric-114 dose 1 + amivantamab",
+      "nctId": "NCT06816992",
+      "biomarker": "EGFR",
+      "sponsor": "ORIC Pharmaceuticals",
+      "sponsorClass": "INDUSTRY",
+      "usBased": true,
+      "phases": [
+        "PHASE1"
+      ],
+      "status": "RECRUITING",
+      "startDate": "2025-02-27",
+      "pcd": "2026-12",
+      "histology": "Unknown",
+      "designType": "RCT",
+      "endpoint": "PFS",
+      "enrollmentRate": "Slow",
+      "fda": {
+        "btd": false,
+        "aa": false,
+        "priorityReview": false
+      },
+      "inSOC": false,
+      "socTier": null,
+      "projectedFDA": "2028-02-01",
+      "projectedSOC": "2028-07-01",
+      "horizon": "1-3yr"
+    },
+    {
+      "drug": "Oric-114 dose 2 + amivantamab",
+      "nctId": "NCT06816992",
+      "biomarker": "EGFR",
+      "sponsor": "ORIC Pharmaceuticals",
+      "sponsorClass": "INDUSTRY",
+      "usBased": true,
+      "phases": [
+        "PHASE1"
+      ],
+      "status": "RECRUITING",
+      "startDate": "2025-02-27",
+      "pcd": "2026-12",
+      "histology": "Unknown",
+      "designType": "RCT",
+      "endpoint": "PFS",
+      "enrollmentRate": "Slow",
+      "fda": {
+        "btd": false,
+        "aa": false,
+        "priorityReview": false
+      },
+      "inSOC": false,
+      "socTier": null,
+      "projectedFDA": "2028-02-01",
+      "projectedSOC": "2028-07-01",
+      "horizon": "1-3yr"
+    },
+    {
+      "drug": "Oric-114 dose 3 + amivantamab",
+      "nctId": "NCT06816992",
+      "biomarker": "EGFR",
+      "sponsor": "ORIC Pharmaceuticals",
+      "sponsorClass": "INDUSTRY",
+      "usBased": true,
+      "phases": [
+        "PHASE1"
+      ],
+      "status": "RECRUITING",
+      "startDate": "2025-02-27",
+      "pcd": "2026-12",
+      "histology": "Unknown",
+      "designType": "RCT",
+      "endpoint": "PFS",
+      "enrollmentRate": "Slow",
+      "fda": {
+        "btd": false,
+        "aa": false,
+        "priorityReview": false
+      },
+      "inSOC": false,
+      "socTier": null,
+      "projectedFDA": "2028-02-01",
+      "projectedSOC": "2028-07-01",
+      "horizon": "1-3yr"
+    },
+    {
+      "drug": "Hbi-2438",
+      "nctId": "NCT05485974",
+      "biomarker": "KRAS G12C",
+      "sponsor": "HUYABIO International, LLC.",
+      "sponsorClass": "INDUSTRY",
+      "usBased": true,
+      "phases": [
+        "PHASE1"
+      ],
+      "status": "ACTIVE_NOT_RECRUITING",
+      "startDate": "2022-08-01",
+      "pcd": "2026-12-31",
+      "histology": "Squamous",
+      "designType": "SingleArm",
+      "endpoint": "PFS",
+      "enrollmentRate": "Slow",
+      "fda": {
+        "btd": false,
+        "aa": false,
+        "priorityReview": false
+      },
+      "inSOC": false,
+      "socTier": null,
+      "projectedFDA": "2028-01-31",
+      "projectedSOC": "2028-07-01",
+      "horizon": "1-3yr"
+    },
+    {
+      "drug": "Tno155",
+      "nctId": "NCT04699188",
+      "biomarker": "KRAS G12C",
+      "sponsor": "Novartis Pharmaceuticals",
       "sponsorClass": "INDUSTRY",
       "usBased": true,
       "phases": [
@@ -949,8 +1159,262 @@
         "PHASE2"
       ],
       "status": "ACTIVE_NOT_RECRUITING",
-      "startDate": "2022-08-03",
-      "pcd": "2025-03-19",
+      "startDate": "2021-02-24",
+      "pcd": "2027-01-25",
+      "histology": "Unknown",
+      "designType": "RCT",
+      "endpoint": "PFS",
+      "enrollmentRate": "Slow",
+      "fda": {
+        "btd": false,
+        "aa": false,
+        "priorityReview": false
+      },
+      "inSOC": false,
+      "socTier": null,
+      "projectedFDA": "2028-03-25",
+      "projectedSOC": "2028-08-25",
+      "horizon": "1-3yr"
+    },
+    {
+      "drug": "Tislelizumab",
+      "nctId": "NCT04699188",
+      "biomarker": "KRAS G12C",
+      "sponsor": "Novartis Pharmaceuticals",
+      "sponsorClass": "INDUSTRY",
+      "usBased": true,
+      "phases": [
+        "PHASE1",
+        "PHASE2"
+      ],
+      "status": "ACTIVE_NOT_RECRUITING",
+      "startDate": "2021-02-24",
+      "pcd": "2027-01-25",
+      "histology": "Unknown",
+      "designType": "RCT",
+      "endpoint": "PFS",
+      "enrollmentRate": "Slow",
+      "fda": {
+        "btd": false,
+        "aa": false,
+        "priorityReview": false
+      },
+      "inSOC": false,
+      "socTier": null,
+      "projectedFDA": "2028-03-25",
+      "projectedSOC": "2028-08-25",
+      "horizon": "1-3yr"
+    },
+    {
+      "drug": "Cetrelimab",
+      "nctId": "NCT05908734",
+      "biomarker": "PD-L1",
+      "sponsor": "Janssen Research & Development, LLC",
+      "sponsorClass": "INDUSTRY",
+      "usBased": true,
+      "phases": [
+        "PHASE1",
+        "PHASE2"
+      ],
+      "status": "ACTIVE_NOT_RECRUITING",
+      "startDate": "2023-05-18",
+      "pcd": "2027-01-31",
+      "histology": "Unknown",
+      "designType": "RCT",
+      "endpoint": "PFS",
+      "enrollmentRate": "Slow",
+      "fda": {
+        "btd": false,
+        "aa": false,
+        "priorityReview": false
+      },
+      "inSOC": false,
+      "socTier": null,
+      "projectedFDA": "2028-03-31",
+      "projectedSOC": "2028-08-31",
+      "horizon": "1-3yr"
+    },
+    {
+      "drug": "Absk112",
+      "nctId": "NCT06225804",
+      "biomarker": "No Driver",
+      "sponsor": "Abbisko Therapeutics Co, Ltd",
+      "sponsorClass": "INDUSTRY",
+      "usBased": true,
+      "phases": [
+        "PHASE1"
+      ],
+      "status": "RECRUITING",
+      "startDate": "2024-02-22",
+      "pcd": "2027-03",
+      "histology": "Unknown",
+      "designType": "SingleArm",
+      "endpoint": "PFS",
+      "enrollmentRate": "Slow",
+      "fda": {
+        "btd": false,
+        "aa": false,
+        "priorityReview": false
+      },
+      "inSOC": false,
+      "socTier": null,
+      "projectedFDA": "2028-04-01",
+      "projectedSOC": "2028-09-01",
+      "horizon": "1-3yr"
+    },
+    {
+      "drug": "Olaparib",
+      "nctId": "NCT04380636",
+      "biomarker": "PD-L1",
+      "sponsor": "Merck Sharp & Dohme LLC",
+      "sponsorClass": "INDUSTRY",
+      "usBased": true,
+      "phases": [
+        "PHASE3"
+      ],
+      "status": "ACTIVE_NOT_RECRUITING",
+      "startDate": "2020-07-06",
+      "pcd": "2027-05-05",
+      "histology": "Squamous",
+      "designType": "RCT",
+      "endpoint": "PFS",
+      "enrollmentRate": "Average",
+      "fda": {
+        "btd": false,
+        "aa": false,
+        "priorityReview": false
+      },
+      "inSOC": false,
+      "socTier": null,
+      "projectedFDA": "2028-04-05",
+      "projectedSOC": "2028-09-05",
+      "horizon": "1-3yr"
+    },
+    {
+      "drug": "Etoposide",
+      "nctId": "NCT04380636",
+      "biomarker": "PD-L1",
+      "sponsor": "Merck Sharp & Dohme LLC",
+      "sponsorClass": "INDUSTRY",
+      "usBased": true,
+      "phases": [
+        "PHASE3"
+      ],
+      "status": "ACTIVE_NOT_RECRUITING",
+      "startDate": "2020-07-06",
+      "pcd": "2027-05-05",
+      "histology": "Squamous",
+      "designType": "RCT",
+      "endpoint": "PFS",
+      "enrollmentRate": "Average",
+      "fda": {
+        "btd": false,
+        "aa": false,
+        "priorityReview": false
+      },
+      "inSOC": false,
+      "socTier": null,
+      "projectedFDA": "2028-04-05",
+      "projectedSOC": "2028-09-05",
+      "horizon": "1-3yr"
+    },
+    {
+      "drug": "Placebo for olaparib",
+      "nctId": "NCT04380636",
+      "biomarker": "PD-L1",
+      "sponsor": "Merck Sharp & Dohme LLC",
+      "sponsorClass": "INDUSTRY",
+      "usBased": true,
+      "phases": [
+        "PHASE3"
+      ],
+      "status": "ACTIVE_NOT_RECRUITING",
+      "startDate": "2020-07-06",
+      "pcd": "2027-05-05",
+      "histology": "Squamous",
+      "designType": "RCT",
+      "endpoint": "PFS",
+      "enrollmentRate": "Average",
+      "fda": {
+        "btd": false,
+        "aa": false,
+        "priorityReview": false
+      },
+      "inSOC": false,
+      "socTier": null,
+      "projectedFDA": "2028-04-05",
+      "projectedSOC": "2028-09-05",
+      "horizon": "1-3yr"
+    },
+    {
+      "drug": "Thoracic radiotherapy",
+      "nctId": "NCT04380636",
+      "biomarker": "PD-L1",
+      "sponsor": "Merck Sharp & Dohme LLC",
+      "sponsorClass": "INDUSTRY",
+      "usBased": true,
+      "phases": [
+        "PHASE3"
+      ],
+      "status": "ACTIVE_NOT_RECRUITING",
+      "startDate": "2020-07-06",
+      "pcd": "2027-05-05",
+      "histology": "Squamous",
+      "designType": "RCT",
+      "endpoint": "PFS",
+      "enrollmentRate": "Average",
+      "fda": {
+        "btd": false,
+        "aa": false,
+        "priorityReview": false
+      },
+      "inSOC": false,
+      "socTier": null,
+      "projectedFDA": "2028-04-05",
+      "projectedSOC": "2028-09-05",
+      "horizon": "1-3yr"
+    },
+    {
+      "drug": "Sacituzumab tirumotecan",
+      "nctId": "NCT06074588",
+      "biomarker": "EGFR Exon 20",
+      "sponsor": "Merck Sharp & Dohme LLC",
+      "sponsorClass": "INDUSTRY",
+      "usBased": true,
+      "phases": [
+        "PHASE3"
+      ],
+      "status": "ACTIVE_NOT_RECRUITING",
+      "startDate": "2023-11-12",
+      "pcd": "2027-05-10",
+      "histology": "Non-squamous",
+      "designType": "RCT",
+      "endpoint": "PFS",
+      "enrollmentRate": "Average",
+      "fda": {
+        "btd": false,
+        "aa": false,
+        "priorityReview": false
+      },
+      "inSOC": false,
+      "socTier": null,
+      "projectedFDA": "2028-04-10",
+      "projectedSOC": "2028-09-10",
+      "horizon": "1-3yr"
+    },
+    {
+      "drug": "Amivantamab iv",
+      "nctId": "NCT06120140",
+      "biomarker": "EGFR",
+      "sponsor": "Janssen Research & Development, LLC",
+      "sponsorClass": "INDUSTRY",
+      "usBased": true,
+      "phases": [
+        "PHASE2"
+      ],
+      "status": "ACTIVE_NOT_RECRUITING",
+      "startDate": "2024-02-16",
+      "pcd": "2027-05-31",
       "histology": "Unknown",
       "designType": "RCT",
       "endpoint": "PFS",
@@ -962,474 +1426,54 @@
       },
       "inSOC": false,
       "socTier": null,
-      "projectedFDA": "2026-02-19",
-      "projectedSOC": "2026-07-19",
-      "horizon": "<1yr"
-    },
-    {
-      "drug": "Pemetrexed (alimta)",
-      "nctId": "NCT05180799",
-      "biomarker": "PD-L1",
-      "sponsor": "BioAtla, Inc.",
-      "sponsorClass": "INDUSTRY",
-      "usBased": true,
-      "phases": [
-        "PHASE1",
-        "PHASE2"
-      ],
-      "status": "ACTIVE_NOT_RECRUITING",
-      "startDate": "2022-08-03",
-      "pcd": "2025-03-19",
-      "histology": "Unknown",
-      "designType": "RCT",
-      "endpoint": "PFS",
-      "enrollmentRate": "Average",
-      "fda": {
-        "btd": false,
-        "aa": false,
-        "priorityReview": false
-      },
-      "inSOC": false,
-      "socTier": null,
-      "projectedFDA": "2026-02-19",
-      "projectedSOC": "2026-07-19",
-      "horizon": "<1yr"
-    },
-    {
-      "drug": "Administration of ceralasertib",
-      "nctId": "NCT02264678",
-      "biomarker": "HER2",
-      "sponsor": "AstraZeneca",
-      "sponsorClass": "INDUSTRY",
-      "usBased": true,
-      "phases": [
-        "PHASE1"
-      ],
-      "status": "ACTIVE_NOT_RECRUITING",
-      "startDate": "2014-10-31",
-      "pcd": "2025-03-04",
-      "histology": "Mixed",
-      "designType": "RCT",
-      "endpoint": "PFS",
-      "enrollmentRate": "Slow",
-      "fda": {
-        "btd": false,
-        "aa": false,
-        "priorityReview": false
-      },
-      "inSOC": false,
-      "socTier": null,
-      "projectedFDA": "2026-05-04",
-      "projectedSOC": "2026-10-04",
-      "horizon": "<1yr"
-    },
-    {
-      "drug": "Administration of ceralasertib in combination with olaparib",
-      "nctId": "NCT02264678",
-      "biomarker": "HER2",
-      "sponsor": "AstraZeneca",
-      "sponsorClass": "INDUSTRY",
-      "usBased": true,
-      "phases": [
-        "PHASE1"
-      ],
-      "status": "ACTIVE_NOT_RECRUITING",
-      "startDate": "2014-10-31",
-      "pcd": "2025-03-04",
-      "histology": "Mixed",
-      "designType": "RCT",
-      "endpoint": "PFS",
-      "enrollmentRate": "Slow",
-      "fda": {
-        "btd": false,
-        "aa": false,
-        "priorityReview": false
-      },
-      "inSOC": false,
-      "socTier": null,
-      "projectedFDA": "2026-05-04",
-      "projectedSOC": "2026-10-04",
-      "horizon": "<1yr"
-    },
-    {
-      "drug": "Administation of ceralasertib in combination with durvalumab",
-      "nctId": "NCT02264678",
-      "biomarker": "HER2",
-      "sponsor": "AstraZeneca",
-      "sponsorClass": "INDUSTRY",
-      "usBased": true,
-      "phases": [
-        "PHASE1"
-      ],
-      "status": "ACTIVE_NOT_RECRUITING",
-      "startDate": "2014-10-31",
-      "pcd": "2025-03-04",
-      "histology": "Mixed",
-      "designType": "RCT",
-      "endpoint": "PFS",
-      "enrollmentRate": "Slow",
-      "fda": {
-        "btd": false,
-        "aa": false,
-        "priorityReview": false
-      },
-      "inSOC": false,
-      "socTier": null,
-      "projectedFDA": "2026-05-04",
-      "projectedSOC": "2026-10-04",
-      "horizon": "<1yr"
-    },
-    {
-      "drug": "Administration of ceralasertib monotherapy",
-      "nctId": "NCT02264678",
-      "biomarker": "HER2",
-      "sponsor": "AstraZeneca",
-      "sponsorClass": "INDUSTRY",
-      "usBased": true,
-      "phases": [
-        "PHASE1"
-      ],
-      "status": "ACTIVE_NOT_RECRUITING",
-      "startDate": "2014-10-31",
-      "pcd": "2025-03-04",
-      "histology": "Mixed",
-      "designType": "RCT",
-      "endpoint": "PFS",
-      "enrollmentRate": "Slow",
-      "fda": {
-        "btd": false,
-        "aa": false,
-        "priorityReview": false
-      },
-      "inSOC": false,
-      "socTier": null,
-      "projectedFDA": "2026-05-04",
-      "projectedSOC": "2026-10-04",
-      "horizon": "<1yr"
-    },
-    {
-      "drug": "Administration of ceralasertib and olaparib",
-      "nctId": "NCT02264678",
-      "biomarker": "HER2",
-      "sponsor": "AstraZeneca",
-      "sponsorClass": "INDUSTRY",
-      "usBased": true,
-      "phases": [
-        "PHASE1"
-      ],
-      "status": "ACTIVE_NOT_RECRUITING",
-      "startDate": "2014-10-31",
-      "pcd": "2025-03-04",
-      "histology": "Mixed",
-      "designType": "RCT",
-      "endpoint": "PFS",
-      "enrollmentRate": "Slow",
-      "fda": {
-        "btd": false,
-        "aa": false,
-        "priorityReview": false
-      },
-      "inSOC": false,
-      "socTier": null,
-      "projectedFDA": "2026-05-04",
-      "projectedSOC": "2026-10-04",
-      "horizon": "<1yr"
-    },
-    {
-      "drug": "Administration of ceralasertib and durvalumab",
-      "nctId": "NCT02264678",
-      "biomarker": "HER2",
-      "sponsor": "AstraZeneca",
-      "sponsorClass": "INDUSTRY",
-      "usBased": true,
-      "phases": [
-        "PHASE1"
-      ],
-      "status": "ACTIVE_NOT_RECRUITING",
-      "startDate": "2014-10-31",
-      "pcd": "2025-03-04",
-      "histology": "Mixed",
-      "designType": "RCT",
-      "endpoint": "PFS",
-      "enrollmentRate": "Slow",
-      "fda": {
-        "btd": false,
-        "aa": false,
-        "priorityReview": false
-      },
-      "inSOC": false,
-      "socTier": null,
-      "projectedFDA": "2026-05-04",
-      "projectedSOC": "2026-10-04",
-      "horizon": "<1yr"
-    },
-    {
-      "drug": "Administration of ceralasertib in combination with azd5305",
-      "nctId": "NCT02264678",
-      "biomarker": "HER2",
-      "sponsor": "AstraZeneca",
-      "sponsorClass": "INDUSTRY",
-      "usBased": true,
-      "phases": [
-        "PHASE1"
-      ],
-      "status": "ACTIVE_NOT_RECRUITING",
-      "startDate": "2014-10-31",
-      "pcd": "2025-03-04",
-      "histology": "Mixed",
-      "designType": "RCT",
-      "endpoint": "PFS",
-      "enrollmentRate": "Slow",
-      "fda": {
-        "btd": false,
-        "aa": false,
-        "priorityReview": false
-      },
-      "inSOC": false,
-      "socTier": null,
-      "projectedFDA": "2026-05-04",
-      "projectedSOC": "2026-10-04",
-      "horizon": "<1yr"
-    },
-    {
-      "drug": "Administration of ceralasertib in combination with carboplatin",
-      "nctId": "NCT02264678",
-      "biomarker": "HER2",
-      "sponsor": "AstraZeneca",
-      "sponsorClass": "INDUSTRY",
-      "usBased": true,
-      "phases": [
-        "PHASE1"
-      ],
-      "status": "ACTIVE_NOT_RECRUITING",
-      "startDate": "2014-10-31",
-      "pcd": "2025-03-04",
-      "histology": "Mixed",
-      "designType": "RCT",
-      "endpoint": "PFS",
-      "enrollmentRate": "Slow",
-      "fda": {
-        "btd": false,
-        "aa": false,
-        "priorityReview": false
-      },
-      "inSOC": false,
-      "socTier": null,
-      "projectedFDA": "2026-05-04",
-      "projectedSOC": "2026-10-04",
-      "horizon": "<1yr"
-    },
-    {
-      "drug": "Cobolimab",
-      "nctId": "NCT04655976",
-      "biomarker": "PD-L1",
-      "sponsor": "GlaxoSmithKline",
-      "sponsorClass": "INDUSTRY",
-      "usBased": true,
-      "phases": [
-        "PHASE3"
-      ],
-      "status": "ACTIVE_NOT_RECRUITING",
-      "startDate": "2020-12-08",
-      "pcd": "2025-06-05",
-      "histology": "Non-squamous",
-      "designType": "RCT",
-      "endpoint": "PFS",
-      "enrollmentRate": "Average",
-      "fda": {
-        "btd": false,
-        "aa": false,
-        "priorityReview": false
-      },
-      "inSOC": false,
-      "socTier": null,
-      "projectedFDA": "2026-05-05",
-      "projectedSOC": "2026-10-05",
-      "horizon": "<1yr"
-    },
-    {
-      "drug": "Dostarlimab",
-      "nctId": "NCT04655976",
-      "biomarker": "PD-L1",
-      "sponsor": "GlaxoSmithKline",
-      "sponsorClass": "INDUSTRY",
-      "usBased": true,
-      "phases": [
-        "PHASE3"
-      ],
-      "status": "ACTIVE_NOT_RECRUITING",
-      "startDate": "2020-12-08",
-      "pcd": "2025-06-05",
-      "histology": "Non-squamous",
-      "designType": "RCT",
-      "endpoint": "PFS",
-      "enrollmentRate": "Average",
-      "fda": {
-        "btd": false,
-        "aa": false,
-        "priorityReview": false
-      },
-      "inSOC": false,
-      "socTier": null,
-      "projectedFDA": "2026-05-05",
-      "projectedSOC": "2026-10-05",
-      "horizon": "<1yr"
-    },
-    {
-      "drug": "Savolitinib",
-      "nctId": "NCT03944772",
-      "biomarker": "EGFR Exon 20",
-      "sponsor": "AstraZeneca",
-      "sponsorClass": "INDUSTRY",
-      "usBased": true,
-      "phases": [
-        "PHASE2"
-      ],
-      "status": "ACTIVE_NOT_RECRUITING",
-      "startDate": "2019-06-25",
-      "pcd": "2025-05-06",
-      "histology": "Non-squamous",
-      "designType": "RCT",
-      "endpoint": "PFS",
-      "enrollmentRate": "Slow",
-      "fda": {
-        "btd": false,
-        "aa": false,
-        "priorityReview": false
-      },
-      "inSOC": false,
-      "socTier": null,
-      "projectedFDA": "2026-07-06",
-      "projectedSOC": "2026-12-06",
-      "horizon": "<1yr"
-    },
-    {
-      "drug": "Necitumumab",
-      "nctId": "NCT03944772",
-      "biomarker": "EGFR Exon 20",
-      "sponsor": "AstraZeneca",
-      "sponsorClass": "INDUSTRY",
-      "usBased": true,
-      "phases": [
-        "PHASE2"
-      ],
-      "status": "ACTIVE_NOT_RECRUITING",
-      "startDate": "2019-06-25",
-      "pcd": "2025-05-06",
-      "histology": "Non-squamous",
-      "designType": "RCT",
-      "endpoint": "PFS",
-      "enrollmentRate": "Slow",
-      "fda": {
-        "btd": false,
-        "aa": false,
-        "priorityReview": false
-      },
-      "inSOC": false,
-      "socTier": null,
-      "projectedFDA": "2026-07-06",
-      "projectedSOC": "2026-12-06",
-      "horizon": "<1yr"
-    },
-    {
-      "drug": "Selumetinib",
-      "nctId": "NCT03944772",
-      "biomarker": "EGFR Exon 20",
-      "sponsor": "AstraZeneca",
-      "sponsorClass": "INDUSTRY",
-      "usBased": true,
-      "phases": [
-        "PHASE2"
-      ],
-      "status": "ACTIVE_NOT_RECRUITING",
-      "startDate": "2019-06-25",
-      "pcd": "2025-05-06",
-      "histology": "Non-squamous",
-      "designType": "RCT",
-      "endpoint": "PFS",
-      "enrollmentRate": "Slow",
-      "fda": {
-        "btd": false,
-        "aa": false,
-        "priorityReview": false
-      },
-      "inSOC": false,
-      "socTier": null,
-      "projectedFDA": "2026-07-06",
-      "projectedSOC": "2026-12-06",
-      "horizon": "<1yr"
-    },
-    {
-      "drug": "Platinum-based chemotherapy",
-      "nctId": "NCT05607550",
-      "biomarker": "EGFR Exon 20",
-      "sponsor": "ArriVent BioPharma, Inc.",
-      "sponsorClass": "INDUSTRY",
-      "usBased": true,
-      "phases": [
-        "PHASE3"
-      ],
-      "status": "ACTIVE_NOT_RECRUITING",
-      "startDate": "2023-06-01",
-      "pcd": "2025-08-15",
-      "histology": "Non-squamous",
-      "designType": "RCT",
-      "endpoint": "PFS",
-      "enrollmentRate": "Average",
-      "fda": {
-        "btd": false,
-        "aa": false,
-        "priorityReview": false
-      },
-      "inSOC": false,
-      "socTier": null,
-      "projectedFDA": "2026-07-15",
-      "projectedSOC": "2026-12-15",
-      "horizon": "<1yr"
-    },
-    {
-      "drug": "Furmonertinib 240 mg oral, daily",
-      "nctId": "NCT05607550",
-      "biomarker": "EGFR Exon 20",
-      "sponsor": "ArriVent BioPharma, Inc.",
-      "sponsorClass": "INDUSTRY",
-      "usBased": true,
-      "phases": [
-        "PHASE3"
-      ],
-      "status": "ACTIVE_NOT_RECRUITING",
-      "startDate": "2023-06-01",
-      "pcd": "2025-08-15",
-      "histology": "Non-squamous",
-      "designType": "RCT",
-      "endpoint": "PFS",
-      "enrollmentRate": "Average",
-      "fda": {
-        "btd": false,
-        "aa": false,
-        "priorityReview": false
-      },
-      "inSOC": false,
-      "socTier": null,
-      "projectedFDA": "2026-07-15",
-      "projectedSOC": "2026-12-15",
-      "horizon": "<1yr"
+      "projectedFDA": "2028-05-01",
+      "projectedSOC": "2028-10-01",
+      "horizon": "1-3yr"
     }
   ],
   "approved": [
     {
-      "drug": "Gefitinib",
-      "nctId": "NCT02411448",
-      "biomarker": "EGFR Exon 20",
-      "sponsor": "Eli Lilly and Company",
+      "drug": "Zongertinib",
+      "nctId": "NCT06151574",
+      "biomarker": "HER2",
+      "sponsor": "Boehringer Ingelheim",
       "sponsorClass": "INDUSTRY",
       "usBased": true,
       "phases": [
         "PHASE3"
       ],
       "status": "ACTIVE_NOT_RECRUITING",
-      "startDate": "2015-05-06",
-      "pcd": "2019-01-23",
+      "startDate": "2024-02-09",
+      "pcd": "2026-09-02",
+      "histology": "Non-squamous",
+      "designType": "RCT",
+      "endpoint": "PFS",
+      "enrollmentRate": "Average",
+      "fda": {
+        "btd": false,
+        "aa": false,
+        "priorityReview": false
+      },
+      "inSOC": true,
+      "socTier": "Approved",
+      "projectedFDA": "2027-08-02",
+      "projectedSOC": "2028-01-02",
+      "horizon": "1-3yr"
+    },
+    {
+      "drug": "Alectinib",
+      "nctId": "NCT03178552",
+      "biomarker": "EGFR",
+      "sponsor": "Hoffmann-La Roche",
+      "sponsorClass": "INDUSTRY",
+      "usBased": true,
+      "phases": [
+        "PHASE2",
+        "PHASE3"
+      ],
+      "status": "ACTIVE_NOT_RECRUITING",
+      "startDate": "2017-09-22",
+      "pcd": "2026-10-31",
       "histology": "Unknown",
       "designType": "RCT",
       "endpoint": "PFS",
@@ -1441,23 +1485,24 @@
       },
       "inSOC": true,
       "socTier": "Approved",
-      "projectedFDA": "2019-12-23",
-      "projectedSOC": "2020-05-23",
-      "horizon": "<1yr"
+      "projectedFDA": "2027-10-01",
+      "projectedSOC": "2028-03-02",
+      "horizon": "1-3yr"
     },
     {
-      "drug": "Erlotinib",
-      "nctId": "NCT02411448",
-      "biomarker": "EGFR Exon 20",
-      "sponsor": "Eli Lilly and Company",
+      "drug": "Atezolizumab",
+      "nctId": "NCT03178552",
+      "biomarker": "EGFR",
+      "sponsor": "Hoffmann-La Roche",
       "sponsorClass": "INDUSTRY",
       "usBased": true,
       "phases": [
+        "PHASE2",
         "PHASE3"
       ],
       "status": "ACTIVE_NOT_RECRUITING",
-      "startDate": "2015-05-06",
-      "pcd": "2019-01-23",
+      "startDate": "2017-09-22",
+      "pcd": "2026-10-31",
       "histology": "Unknown",
       "designType": "RCT",
       "endpoint": "PFS",
@@ -1469,23 +1514,24 @@
       },
       "inSOC": true,
       "socTier": "Approved",
-      "projectedFDA": "2019-12-23",
-      "projectedSOC": "2020-05-23",
-      "horizon": "<1yr"
+      "projectedFDA": "2027-10-01",
+      "projectedSOC": "2028-03-02",
+      "horizon": "1-3yr"
     },
     {
-      "drug": "Lorlatinib",
-      "nctId": "NCT03052608",
-      "biomarker": "ALK",
-      "sponsor": "Pfizer",
+      "drug": "Entrectinib",
+      "nctId": "NCT03178552",
+      "biomarker": "EGFR",
+      "sponsor": "Hoffmann-La Roche",
       "sponsorClass": "INDUSTRY",
       "usBased": true,
       "phases": [
+        "PHASE2",
         "PHASE3"
       ],
       "status": "ACTIVE_NOT_RECRUITING",
-      "startDate": "2017-04-27",
-      "pcd": "2020-03-20",
+      "startDate": "2017-09-22",
+      "pcd": "2026-10-31",
       "histology": "Unknown",
       "designType": "RCT",
       "endpoint": "PFS",
@@ -1497,24 +1543,24 @@
       },
       "inSOC": true,
       "socTier": "Approved",
-      "projectedFDA": "2021-02-20",
-      "projectedSOC": "2021-07-20",
-      "horizon": "<1yr"
+      "projectedFDA": "2027-10-01",
+      "projectedSOC": "2028-03-02",
+      "horizon": "1-3yr"
     },
     {
-      "drug": "Crizotinib",
-      "nctId": "NCT03052608",
-      "biomarker": "ALK",
-      "sponsor": "Pfizer",
+      "drug": "Cabozantinib",
+      "nctId": "NCT06026410",
+      "biomarker": "KRAS G12C",
+      "sponsor": "Kura Oncology, Inc.",
       "sponsorClass": "INDUSTRY",
       "usBased": true,
       "phases": [
-        "PHASE3"
+        "PHASE1"
       ],
-      "status": "ACTIVE_NOT_RECRUITING",
-      "startDate": "2017-04-27",
-      "pcd": "2020-03-20",
-      "histology": "Unknown",
+      "status": "RECRUITING",
+      "startDate": "2023-10-18",
+      "pcd": "2027-01",
+      "histology": "Non-squamous",
       "designType": "RCT",
       "endpoint": "PFS",
       "enrollmentRate": "Average",
@@ -1525,37 +1571,9 @@
       },
       "inSOC": true,
       "socTier": "Approved",
-      "projectedFDA": "2021-02-20",
-      "projectedSOC": "2021-07-20",
-      "horizon": "<1yr"
-    },
-    {
-      "drug": "Tepotinib",
-      "nctId": "NCT02864992",
-      "biomarker": "MET",
-      "sponsor": "EMD Serono Research & Development Institute, Inc.",
-      "sponsorClass": "INDUSTRY",
-      "usBased": true,
-      "phases": [
-        "PHASE2"
-      ],
-      "status": "ACTIVE_NOT_RECRUITING",
-      "startDate": "2016-09-13",
-      "pcd": "2022-05-16",
-      "histology": "Mixed",
-      "designType": "SingleArm",
-      "endpoint": "PFS",
-      "enrollmentRate": "Slow",
-      "fda": {
-        "btd": true,
-        "aa": false,
-        "priorityReview": true
-      },
-      "inSOC": true,
-      "socTier": "Approved",
-      "projectedFDA": "2023-06-16",
-      "projectedSOC": "2023-11-16",
-      "horizon": "<1yr"
+      "projectedFDA": "2027-12-01",
+      "projectedSOC": "2028-05-01",
+      "horizon": "1-3yr"
     }
   ]
 }
