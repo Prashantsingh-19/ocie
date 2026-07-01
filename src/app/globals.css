@@ -225,15 +225,13 @@ body {
 .oc-empty { text-align: center; padding: 40px; color: #aaa; font-size: 13px; }
 
 /* ── White Space Table ── */
-.ws-table-wrap { overflow-x: auto; }
-.ws-table { width: 100%; border-collapse: collapse; font-size: 12px; }
-.ws-table th { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #888; text-transform: uppercase; letter-spacing: 0.06em; text-align: left; padding: 8px 6px; border-bottom: 1px solid #E8E3D8; }
-.ws-table td { padding: 8px 6px; border-bottom: 1px solid #F0EDE4; }
-.ws-table tbody tr:hover { background: #FBF9F5; }
-.ws-lot { font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 600; color: #141412; }
-.ws-num { font-family: 'JetBrains Mono', monospace; font-size: 11px; text-align: center; }
-.ws-zero { color: #d00000; font-weight: 600; }
-.ws-gap-badge { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #fff; padding: 2px 8px; border-radius: 4px; font-weight: 600; text-transform: uppercase; }
+.ws-table { width: 100%; display: table; border-collapse: collapse; font-size: 12px; }
+.ws-tr { display: table-row; }
+.ws-tr-header { display: table-row; }
+.ws-th { display: table-cell; font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #888; text-transform: uppercase; letter-spacing: 0.06em; padding: 10px 8px; border-bottom: 1px solid #E8E3D8; font-weight: 400; }
+.ws-td { display: table-cell; padding: 12px 8px; border-bottom: 1px solid #F0EDE4; vertical-align: middle; }
+.ws-tr:not(.ws-tr-header):hover { background: #FBF9F5; }
+.ws-opp-badge { display: inline-flex; align-items: center; font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 600; color: #fff; padding: 4px 12px; border-radius: 6px; }
 
 /* ── Pipeline Controls ── */
 .pl-controls { background: #F7F6F2; border: 1px solid #E8E3D8; border-radius: 6px; padding: 16px; margin-bottom: 16px; }
@@ -478,29 +476,7 @@ body {
 .pl-tile-date-field { display: flex; flex-direction: column; gap: 3px; }
 .pl-tile-date-field span:last-child { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #141412; }
 
-/* ── Minimal White Space ── */
-.ws-minimal { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; }
-.ws-min-card {
-  background: #fff; border: 1px solid #E0DBD0; border-radius: 6px; padding: 12px;
-  display: flex; flex-direction: column; gap: 6px;
-}
-.ws-min-bm { }
-.ws-min-lot { font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 600; color: #141412; }
-.ws-min-gap { }
-.ws-min-incoming, .ws-min-regimens { display: flex; align-items: center; justify-content: space-between; font-size: 11px; }
-.ws-min-label { color: #888; }
-.ws-min-count { font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 600; color: #141412; }
-.ws-min-expand-icon { margin-left: auto; font-size: 11px; color: #C8BFA8; }
-.ws-min-card-click { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
-.ws-min-detail { border-top: 1px solid #E8E3D8; margin-top: 10px; padding-top: 10px; }
-.ws-min-detail-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 6px; margin-bottom: 10px; }
-.ws-min-detail-field { display: flex; flex-direction: column; gap: 2px; }
-.ws-min-detail-field span:last-child { font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 600; color: #141412; }
-.ws-min-incoming-list { }
-.ws-min-incoming-title { margin-bottom: 6px; }
-.ws-min-incoming-item { display: flex; align-items: center; gap: 8px; font-size: 11px; padding: 3px 0; }
-.ws-min-incoming-drug { font-weight: 500; color: #141412; }
-.ws-min-incoming-date { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #888; margin-left: auto; }
+
 
 /* ── PD-L1 expression badge on SOC card ── */
 .oc-card-pdl1 {

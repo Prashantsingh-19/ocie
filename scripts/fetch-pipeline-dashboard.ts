@@ -171,7 +171,7 @@ function hasUSLocation(locations: any[] | null): boolean {
 
 async function searchBiomarker(biomarker: string, term: string, pageSize = 100): Promise<any[]> {
   const url = `${CTGOV_BASE}?query.cond=NSCLC&query.term=${encodeURIComponent(term)}` +
-    `&filter.overallStatus=RECRUITING,ACTIVE_NOT_RECRUITING,NOT_YET_RECRUITING,ENROLLING_BY_INVITATION` +
+    `&filter.overallStatus=RECRUITING,ACTIVE_NOT_RECRUITING` +
     `&pageSize=${pageSize}`;
 
   const res = await fetch(url);

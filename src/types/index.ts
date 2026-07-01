@@ -54,11 +54,16 @@ export interface PipelineProfile {
   sponsor: string;
   usBased: boolean;
   phases: string[];
+  status: string;
+  startDate: string | null;
+  pcd: string | null;
   histology?: "Squamous" | "Non-squamous" | "Mixed" | "Unknown";
   designType: "RCT" | "SingleArm" | "Adaptive";
   endpoint: "PFS" | "ORR" | "OS";
   enrollmentRate: "Fast" | "Average" | "Slow";
   fda: { btd: boolean; aa: boolean; priorityReview: boolean };
+  projectedFDA: string | null;
+  projectedSOC: string | null;
 }
 
 export interface WhiteSpaceRow {
@@ -108,9 +113,9 @@ export function computeKpis(data: Regimen[]): KpiData {
 }
 
 export function biomarkerMatches(regimenBm: string, filterBm: string): boolean {
-  if (filterBm === "All Biomarkers") return true;
+  if (!filterBm || filterBm === "All Biomarkers") return true;
   if (regimenBm === filterBm) return true;
-  // Grouped biomarkers: e.g. "EGFR Exon 20" matches filter "EGFR"
+  // Grouped biomarkers: e.g. "EGFR Exon 20" matches filter "EGFR", "KRAS G12C" matches "KRAS"
   const group = BIOMARKER_GROUP[filterBm];
   if (group && group.includes(regimenBm)) return true;
   return false;
@@ -346,6 +351,7 @@ export function projectTimeline(
 ): { projectedFDA: string; projectedSOC: string } | null {
   if (!pcd) return null;
   const d = new Date(pcd);
+  if (isNaN(d.getTime()) || d.getFullYear() < 2000) return null;
   const add = (n: number) => {
     const r = new Date(d);
     r.setMonth(r.getMonth() + Math.round(n));
@@ -386,11 +392,18 @@ export function inferProfile(phases: string[], pathway?: TrialPathway): TrialPro
   return { endpoint: "PFS", enrollment: "Fast", design: "RCT", pathway: pw, btd: true, aa: false, priorityReview: true };
 }
 
-export const BIOMARKERS = [
-  "All Biomarkers", "EGFR", "ALK", "ROS1", "PD-L1",
-  "KRAS G12C", "BRAF V600E", "RET", "NTRK", "MET", "HER2", "No Driver",
+export const BIOMARKER_DISPLAY_NAMES = [
+  "EGFR", "ALK", "ROS1", "PD-L1", "KRAS", "BRAF",
+  "RET", "NTRK", "MET", "HER2", "No Driver",
 ];
 
 export const BIOMARKER_GROUP: Record<string, string[]> = {
   "EGFR": ["EGFR", "EGFR Exon 20"],
+  "KRAS": ["KRAS G12C"],
+  "BRAF": ["BRAF V600E"],
 };
+
+export const RAW_TO_DISPLAY: Record<string, string> = {};
+for (const [display, raw] of Object.entries(BIOMARKER_GROUP)) {
+  for (const v of raw) RAW_TO_DISPLAY[v] = display;
+}

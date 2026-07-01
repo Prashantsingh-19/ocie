@@ -2,11 +2,10 @@
 
 import { useMemo } from "react";
 import type { PipelineRow, Regimen, TimelineWeights, TrialProfile } from "@/types";
-import { biomarkerBadgeClass, projectTimeline, profileToWeights } from "@/types";
+import { biomarkerBadgeClass, projectTimeline, profileToWeights, RAW_TO_DISPLAY } from "@/types";
 
 interface Props {
   pipeline: PipelineRow[];
-  whiteSpace: any[];
   regimens: Regimen[];
   drugProfiles: Record<string, TrialProfile>;
   drugWeights: Record<string, TimelineWeights>;
@@ -25,19 +24,21 @@ export default function InsightsTab({ pipeline, regimens, drugProfiles, drugWeig
       const dp = drugProfiles[p.nct_id];
       const dw = drugWeights[p.nct_id] || profileToWeights(dp);
       const proj = projectTimeline(p.primary_completion_date, dw);
+      if (!proj) continue;
       const key = `${p.biomarker}||${p.lot}`;
       if (!pipeByKey.has(key)) pipeByKey.set(key, []);
       pipeByKey.get(key)!.push({
         ...p,
-        projSOC: proj?.projectedSOC || null,
-        horizonMo: proj ? Math.round((new Date(proj.projectedSOC).getTime() - Date.now()) / (1000 * 60 * 60 * 24 * 30.44)) : null,
+        projSOC: proj.projectedSOC,
+        horizonMo: Math.round((new Date(proj.projectedSOC).getTime() - Date.now()) / (1000 * 60 * 60 * 24 * 30.44)),
       });
     }
 
     const regByBm = new Map<string, Regimen[]>();
     for (const r of regimens) {
-      if (!regByBm.has(r.biomarker)) regByBm.set(r.biomarker, []);
-      regByBm.get(r.biomarker)!.push(r);
+      const key = RAW_TO_DISPLAY[r.biomarker] || r.biomarker;
+      if (!regByBm.has(key)) regByBm.set(key, []);
+      regByBm.get(key)!.push(r);
     }
 
     const result: {
@@ -56,8 +57,10 @@ export default function InsightsTab({ pipeline, regimens, drugProfiles, drugWeig
       const incoming2LPlus: (PipelineRow & { projSOC: string | null; horizonMo: number | null })[] = [];
 
       for (const r of regs1L) {
+        const rawBm = r.biomarker;
         const key = `${bm}||${r.lot}`;
-        const pipeDrugs = pipeByKey.get(key);
+        const rawKey = `${rawBm}||${r.lot}`;
+        const pipeDrugs = pipeByKey.get(key) || pipeByKey.get(rawKey);
         if (pipeDrugs) {
           for (const pd of pipeDrugs) {
             if (!incoming1L.find((x) => x.nct_id === pd.nct_id)) incoming1L.push(pd);
@@ -65,8 +68,10 @@ export default function InsightsTab({ pipeline, regimens, drugProfiles, drugWeig
         }
       }
       for (const r of regs2LPlus) {
+        const rawBm = r.biomarker;
         const key = `${bm}||${r.lot}`;
-        const pipeDrugs = pipeByKey.get(key);
+        const rawKey = `${rawBm}||${r.lot}`;
+        const pipeDrugs = pipeByKey.get(key) || pipeByKey.get(rawKey);
         if (pipeDrugs) {
           for (const pd of pipeDrugs) {
             if (!incoming2LPlus.find((x) => x.nct_id === pd.nct_id)) incoming2LPlus.push(pd);

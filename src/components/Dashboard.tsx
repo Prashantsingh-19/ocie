@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo } from "react";
 import InsightsTab from "./InsightsTab";
-import type { Regimen, DashboardData, KpiData, WhiteSpaceRow, PipelineRow, TimelineWeights, TrialProfile, TrialEndpoint, TrialEnrollment, TrialDesign, TrialPathway, RiskSliders } from "@/types";
+import type { Regimen, DashboardData, PipelineRow, TimelineWeights, TrialProfile, TrialEndpoint, TrialEnrollment, TrialDesign, TrialPathway, RiskSliders } from "@/types";
 import {
   computeKpis,
   filterRegimens,
@@ -10,21 +10,18 @@ import {
   biomarkerMatches,
   tierTagClass,
   cardBorderClass,
-  gapScore,
-  gapLabel,
-  gapColor,
   projectTimeline,
   profileToWeights,
   monteCarloConfidence,
   computePhaseBreakdown,
   computeDrivers,
-  profileTagSummary,
   inferProfile,
   DEFAULT_PROFILES,
   DEFAULT_RISK,
   DEFAULT_WEIGHTS,
-  BIOMARKERS,
   BIOMARKER_GROUP,
+  BIOMARKER_DISPLAY_NAMES,
+  RAW_TO_DISPLAY,
 } from "@/types";
 
 const TABS = [
@@ -52,41 +49,74 @@ export default function Dashboard({ data, error }: Props) {
   const [drugRisks, setDrugRisks] = useState<Record<string, RiskSliders>>({});
   const [drugWeights, setDrugWeights] = useState<Record<string, TimelineWeights>>({});
   const [expandedDrug, setExpandedDrug] = useState<string | null>(null);
-  const [expandedWS, setExpandedWS] = useState<string | null>(null);
   const [inferredDone, setInferredDone] = useState(false);
   const [landingMode, setLandingMode] = useState(true);
   const [hasApplied, setHasApplied] = useState(false);
   const [pendingFilters, setPendingFilters] = useState({
-    biomarker: "All Biomarkers",
+    biomarker: "",
     combo: "All",
     hist: "All",
     lot: "All",
-    pdl1: "All",
     subtype: "All",
   });
   const [appliedFilters, setAppliedFilters] = useState({
-    biomarker: "All Biomarkers",
+    biomarker: "",
     combo: "All",
     hist: "All",
     lot: "All",
-    pdl1: "All",
     subtype: "All",
   });
 
-  const HORIZONS = ["All", "<1yr", "1-2yr", "2-4yr", ">4yr"] as const;
-  const [horizonFilter, setHorizonFilter] = useState<string>("All");
+  const HORIZONS = ["<1yr", "1-2yr", "2-4yr", ">4yr"] as const;
+  const [horizonFilter, setHorizonFilter] = useState<string>("<1yr");
 
   const regimens = data?.regimens ?? [];
-  const whiteSpace = data?.whiteSpace ?? [];
   const pipeline = data?.pipeline ?? [];
 
+  const pipelineFromProfiles = useMemo(() => {
+    const pp = data?.pipelineProfiles;
+    if (!pp || pp.length === 0) return [];
+    const socDrugs = new Set(regimens.map((r) => r.drug.toLowerCase()));
+    const today = new Date();
+    return pp
+      .filter((p) => {
+        if (socDrugs.has(p.drug.toLowerCase())) return false;
+        if (p.pcd && new Date(p.pcd) < today) return false;
+        return true;
+      })
+      .map((p) => ({
+        regimen_id: 0,
+        drug: p.drug,
+        biomarker: p.biomarker,
+        lot: "1L",
+        tier: "Pipeline",
+        nct_id: p.nctId,
+        phases: p.phases,
+        status: p.status || "Active",
+        start_date: p.startDate || null,
+        primary_completion_date: p.pcd || null,
+        enrollment: null,
+      } as PipelineRow));
+  }, [data?.pipelineProfiles, regimens]);
+
+  const pipelineSrc = useMemo(() => {
+    const src = pipeline.length > 0 ? pipeline : pipelineFromProfiles;
+    const socDrugs = new Set(regimens.map((r) => r.drug.toLowerCase()));
+    const today = new Date();
+    return src.filter((p) => {
+      if (socDrugs.has(p.drug.toLowerCase())) return false;
+      if (p.primary_completion_date && new Date(p.primary_completion_date) < today) return false;
+      return true;
+    });
+  }, [pipeline, pipelineFromProfiles, regimens]);
+
   useEffect(() => {
-    if (pipeline.length > 0 && !inferredDone) {
+    if (pipelineSrc.length > 0 && !inferredDone) {
       const profiles: Record<string, TrialProfile> = {};
       const risks: Record<string, RiskSliders> = {};
       const dw: Record<string, TimelineWeights> = {};
       const pp = data?.pipelineProfiles;
-      for (const p of pipeline) {
+      for (const p of pipelineSrc) {
         const ext = pp?.find((x) => x.nctId === p.nct_id);
         if (ext) {
           profiles[p.nct_id] = {
@@ -109,34 +139,29 @@ export default function Dashboard({ data, error }: Props) {
       setDrugWeights(dw);
       setInferredDone(true);
     }
-  }, [pipeline, inferredDone, data?.pipelineProfiles]);
+  }, [pipelineSrc, inferredDone, data?.pipelineProfiles]);
 
   const kpis = useMemo(() => computeKpis(regimens), [regimens]);
-  const filtered = useMemo(() => filterRegimens(regimens, { ...appliedFilters, pdl1: appliedFilters.pdl1 || "All", subtype: appliedFilters.subtype || "All" }), [regimens, appliedFilters]);
+  const filtered = useMemo(() => filterRegimens(regimens, {
+    biomarker: appliedFilters.biomarker,
+    combo: appliedFilters.combo || "All",
+    hist: appliedFilters.hist || "All",
+    lot: appliedFilters.lot,
+    pdl1: "All",
+    subtype: appliedFilters.subtype || "All",
+  }), [regimens, appliedFilters]);
   const selectedRegimen = useMemo(
     () => regimens.find((r) => r.drug === selected),
     [regimens, selected]
   );
-  const filteredWhiteSpace = useMemo(() => {
-    return whiteSpace.filter((w) => {
-      if (appliedFilters.biomarker !== "All Biomarkers" && !biomarkerMatches(w.biomarker, appliedFilters.biomarker)) return false;
-      if (appliedFilters.lot !== "All" && w.lot !== appliedFilters.lot) return false;
-      return true;
-    });
-  }, [whiteSpace, appliedFilters]);
-
   const filteredPipeline = useMemo(() => {
-    return pipeline.filter((p) => {
-      if (appliedFilters.biomarker !== "All Biomarkers" && !biomarkerMatches(p.biomarker, appliedFilters.biomarker)) return false;
+    const src = pipeline.length > 0 ? pipeline : pipelineFromProfiles;
+    return src.filter((p) => {
+      if (appliedFilters.biomarker && !biomarkerMatches(p.biomarker, appliedFilters.biomarker)) return false;
       if (appliedFilters.lot !== "All" && p.lot !== appliedFilters.lot) return false;
-      if (appliedFilters.hist !== "All") {
-        const pp = data?.pipelineProfiles?.find((x) => x.nctId === p.nct_id);
-        const hist = pp?.histology || "Unknown";
-        if (appliedFilters.hist !== hist && hist !== "Unknown") return false;
-      }
       return true;
     });
-  }, [pipeline, appliedFilters, data?.pipelineProfiles]);
+  }, [pipeline, pipelineFromProfiles, appliedFilters]);
 
   const pipelineYearFiltered = useMemo(() => {
     return filteredPipeline.filter((p) => {
@@ -144,10 +169,9 @@ export default function Dashboard({ data, error }: Props) {
       const dw = drugWeights[p.nct_id] || profileToWeights(dp);
       const proj = projectTimeline(p.primary_completion_date, dw);
       if (!proj) return false;
-      if (horizonFilter === "All") return true; // show everything
       const projected = new Date(proj.projectedSOC);
       const horizonMo = Math.round((projected.getTime() - Date.now()) / (1000 * 60 * 60 * 24 * 30.44));
-      if (horizonFilter === "<1yr") return horizonMo >= 0 && horizonMo < 12;
+      if (horizonFilter === "<1yr") return horizonMo < 12;
       if (horizonFilter === "1-2yr") return horizonMo >= 12 && horizonMo < 24;
       if (horizonFilter === "2-4yr") return horizonMo >= 24 && horizonMo < 48;
       if (horizonFilter === ">4yr") return horizonMo >= 48;
@@ -155,15 +179,53 @@ export default function Dashboard({ data, error }: Props) {
     });
   }, [filteredPipeline, horizonFilter, drugProfiles, drugWeights]);
 
+  const biomarkerOpportunity = useMemo(() => {
+    const socByBm = new Map<string, number>();
+    for (const r of regimens) {
+      if (appliedFilters.lot !== "All" && r.lot !== appliedFilters.lot) continue;
+      if (appliedFilters.biomarker && !biomarkerMatches(r.biomarker, appliedFilters.biomarker)) continue;
+      const key = RAW_TO_DISPLAY[r.biomarker] || r.biomarker;
+      socByBm.set(key, (socByBm.get(key) || 0) + 1);
+    }
+    const pipeByBm = new Map<string, number>();
+    const pipeSource = pipeline.length > 0 ? pipeline : pipelineFromProfiles;
+    for (const p of pipeSource) {
+      if (appliedFilters.lot !== "All" && p.lot !== appliedFilters.lot) continue;
+      if (appliedFilters.biomarker && !biomarkerMatches(p.biomarker, appliedFilters.biomarker)) continue;
+      const key = RAW_TO_DISPLAY[p.biomarker] || p.biomarker;
+      pipeByBm.set(key, (pipeByBm.get(key) || 0) + 1);
+    }
+    let allBms = BIOMARKER_DISPLAY_NAMES.filter((b) => socByBm.has(b) || pipeByBm.has(b));
+    if (appliedFilters.biomarker) {
+      allBms = allBms.filter((b) => b === appliedFilters.biomarker);
+    }
+    return allBms.map((bm) => {
+      const soc = socByBm.get(bm) || 0;
+      const pipe = pipeByBm.get(bm) || 0;
+      let label: string, color: string;
+      if (soc <= 2) { label = "Potential Entry Point"; color = "#2d6a4f"; }
+      else if (soc <= 5) { label = "Some Activity"; color = "#e09f3e"; }
+      else { label = "Saturated"; color = "#8a817c"; }
+      return { biomarker: bm, socCount: soc, pipelineCount: pipe, opportunity: { label, color } };
+    });
+  }, [regimens, pipeline, pipelineFromProfiles, appliedFilters]);
+
   const setPendingFilter = (key: string, val: string) => {
     setPendingFilters((prev) => {
       const next = { ...prev, [key]: val };
       if (key === "biomarker") {
-        if (val !== "PD-L1") next.pdl1 = "All";
-        next.subtype = "All";
+        next.subtype = val ? autoSelectSubtype(val) : "All";
       }
       return next;
     });
+  };
+
+  const autoSelectSubtype = (bm: string): string => {
+    const group = BIOMARKER_GROUP[bm] || [bm];
+    const details = [...new Set(
+      regimens.filter((r) => group.includes(r.biomarker)).map((r) => r.biomarker_detail)
+    )].filter(Boolean).sort();
+    return details.length === 1 ? details[0] : "All";
   };
 
   if (error || !data) {
@@ -272,11 +334,36 @@ export default function Dashboard({ data, error }: Props) {
               value={pendingFilters.biomarker}
               onChange={(e) => setPendingFilter("biomarker", e.target.value)}
             >
-              {BIOMARKERS.map((b) => (
-                <option key={b}>{b}</option>
+              <option value="" disabled>Select a biomarker...</option>
+              {BIOMARKER_DISPLAY_NAMES.map((b) => (
+                <option key={b} value={b}>{b}</option>
               ))}
             </select>
           </div>
+
+          {pendingFilters.biomarker && (
+            (() => {
+              const group = BIOMARKER_GROUP[pendingFilters.biomarker] || [pendingFilters.biomarker];
+              const details = [...new Set(
+                regimens.filter((r) => group.includes(r.biomarker)).map((r) => r.biomarker_detail)
+              )].filter(Boolean).sort();
+              return (
+                <div className="oc-filter-group">
+                  <span className="oc-filter-label">Target Driver</span>
+                  <select
+                    className="oc-select"
+                    value={pendingFilters.subtype}
+                    onChange={(e) => setPendingFilter("subtype", e.target.value)}
+                  >
+                    {details.length > 1 && <option>All</option>}
+                    {details.map((v) => (
+                      <option key={v}>{v}</option>
+                    ))}
+                  </select>
+                </div>
+              );
+            })()
+          )}
 
           <div className="oc-filter-group">
             <span className="oc-filter-label">Regimen Type</span>
@@ -317,58 +404,7 @@ export default function Dashboard({ data, error }: Props) {
             </select>
           </div>
 
-          {pendingFilters.biomarker !== "All Biomarkers" && (
-            (() => {
-              // Collect distinct biomarker_detail values for the selected biomarker group
-              const bmGroup = BIOMARKER_GROUP[pendingFilters.biomarker] || [pendingFilters.biomarker];
-              const details = [...new Set(
-                regimens.filter((r) => bmGroup.includes(r.biomarker)).map((r) => r.biomarker_detail)
-              )].filter(Boolean);
-
-              // PD-L1: show expression dropdown instead of biomarker detail
-              if (pendingFilters.biomarker === "PD-L1") {
-                const pdl1Vals = [...new Set(
-                  regimens.filter((r) => r.biomarker === "PD-L1").map((r) => r.pd_l1_expression)
-                )].filter(Boolean).sort();
-                if (pdl1Vals.length < 2) return null;
-                return (
-                  <div className="oc-filter-group">
-                    <span className="oc-filter-label">PD-L1 Expression</span>
-                    <select
-                      className="oc-select"
-                      value={pendingFilters.pdl1}
-                      onChange={(e) => setPendingFilter("pdl1", e.target.value)}
-                    >
-                      <option>All</option>
-                      {pdl1Vals.map((v) => (
-                        <option key={v}>{v}</option>
-                      ))}
-                    </select>
-                  </div>
-                );
-              }
-
-              // All other biomarkers: show Subtype dropdown if ≥2 distinct details
-              if (details.length < 2) return null;
-              return (
-                <div className="oc-filter-group">
-                  <span className="oc-filter-label">{pendingFilters.biomarker} Subtype</span>
-                  <select
-                    className="oc-select"
-                    value={pendingFilters.subtype}
-                    onChange={(e) => setPendingFilter("subtype", e.target.value)}
-                  >
-                    <option>All</option>
-                    {details.sort().map((v) => (
-                      <option key={v}>{v}</option>
-                    ))}
-                  </select>
-                </div>
-              );
-            })()
-          )}
-
-          <button className="oc-apply-btn" onClick={() => {
+          <button className="oc-apply-btn" disabled={!pendingFilters.biomarker} onClick={() => {
             setAppliedFilters(pendingFilters);
             setHasApplied(true);
           }}>
@@ -385,15 +421,15 @@ export default function Dashboard({ data, error }: Props) {
         {/* Main content */}
         {tab === "soc" && (
           <div className="oc-main">
-            {!hasApplied ? (
+            {!hasApplied || !appliedFilters.biomarker ? (
               <div className="oc-soc-prompt">
-                <div className="oc-soc-prompt-text">Please select a cancer type and apply filters to begin.</div>
+                <div className="oc-soc-prompt-text">Please select a biomarker and apply filters to begin.</div>
               </div>
             ) : (
             <>
             <div className="oc-section-header">
               <div className="oc-section-title">
-                Current SOC — <em>{appliedFilters.biomarker === "All Biomarkers" ? "All Biomarkers" : appliedFilters.biomarker}</em>
+                Current SOC — <em>{appliedFilters.biomarker}</em>
               </div>
               <span className="oc-count">{filtered.length} regimens</span>
             </div>
@@ -410,7 +446,7 @@ export default function Dashboard({ data, error }: Props) {
                   >
                     <span className="oc-expand-icon">↗</span>
                     <span className={`oc-card-bm ${biomarkerBadgeClass(r.biomarker)}`}>
-                      {r.biomarker}
+                      {RAW_TO_DISPLAY[r.biomarker] || r.biomarker}
                     </span>
                     <div className="oc-card-drug">{r.drug}</div>
                     <div className="oc-card-class">{r.drug_class}</div>
@@ -493,38 +529,6 @@ export default function Dashboard({ data, error }: Props) {
                       <div className="oc-soon-val">{selectedRegimen.patient_population}</div>
                     </div>
                   )}
-
-                  {(() => {
-                    const fw = selectedRegimen.drug.split(" ")[0].toLowerCase();
-                    const relatedTrials = data?.trials.filter((t) => {
-                      const tfw = t.drug_name?.split(/[;+/,]/)[0]?.trim().toLowerCase();
-                      return tfw && (tfw.includes(fw) || fw.includes(tfw));
-                    }) || [];
-                    if (relatedTrials.length === 0) return null;
-                    return relatedTrials.slice(0, 3).map((t) => {
-                      const incC = data?.inclusionCriteria?.filter((c) => c.nct_id === t.nct_id) || [];
-                      const excC = data?.exclusionCriteria?.filter((c) => c.nct_id === t.nct_id) || [];
-                      return (
-                        <div key={t.nct_id} className="oc-modal-trial">
-                          <div className="oc-soon-label">{t.nct_id} — {t.status}</div>
-                          <div className="oc-modal-trial-title">{t.title}</div>
-                          {t.patient_population && <div className="oc-modal-trial-field"><span>Population:</span> {t.patient_population}</div>}
-                          {incC.length > 0 && (
-                            <div className="oc-modal-trial-field">
-                              <span>Inclusion ({incC.length}):</span>
-                              <ul className="oc-modal-trial-list">{incC.slice(0, 5).map((c) => <li key={c.id}>{c.criterion}</li>)}</ul>
-                            </div>
-                          )}
-                          {excC.length > 0 && (
-                            <div className="oc-modal-trial-field">
-                              <span>Exclusion ({excC.length}):</span>
-                              <ul className="oc-modal-trial-list">{excC.slice(0, 5).map((c) => <li key={c.id}>{c.criterion}</li>)}</ul>
-                            </div>
-                          )}
-                        </div>
-                      );
-                    });
-                  })()}
                 </div>
               </div>
             )}
@@ -547,7 +551,7 @@ export default function Dashboard({ data, error }: Props) {
             <div className="pl-horizon-pills">
               {HORIZONS.map((h) => (
                 <button key={h} className={`pl-pill ${horizonFilter === h ? "active" : ""}`} onClick={() => setHorizonFilter(h)}>
-                  {h === "All" ? "All" : h}
+                  {h}
                 </button>
               ))}
             </div>
@@ -571,9 +575,6 @@ export default function Dashboard({ data, error }: Props) {
                   const pp = data?.pipelineProfiles?.find((x) => x.nctId === p.nct_id);
                   const sponsor = pp?.sponsor;
                   const phaseStr = p.phases?.join("/").replace(/PHASE/g, "P") || "";
-                  const trial = data?.trials.find((t) => t.nct_id === p.nct_id);
-                  const incCriteria = data?.inclusionCriteria?.filter((c) => c.nct_id === p.nct_id) || [];
-                  const excCriteria = data?.exclusionCriteria?.filter((c) => c.nct_id === p.nct_id) || [];
 
                   return (
                     <div key={p.nct_id} className={`pl-tile ${isExpanded ? "pl-tile-expanded" : ""}`}>
@@ -728,36 +729,7 @@ export default function Dashboard({ data, error }: Props) {
                               </div>
                             )}
 
-                            {trial?.patient_population && (
-                              <div className="pl-ie-clinical">
-                                <span className="oc-filter-label">Patient Population</span>
-                                <p className="pl-ie-clinical-text">{trial.patient_population}</p>
-                              </div>
-                            )}
 
-                            {incCriteria.length > 0 && (
-                              <div className="pl-ie-clinical">
-                                <span className="oc-filter-label">Inclusion Criteria ({incCriteria.length})</span>
-                                <ul className="pl-ie-clinical-list">
-                                  {incCriteria.slice(0, 10).map((c) => (
-                                    <li key={c.id}>{c.criterion}</li>
-                                  ))}
-                                  {incCriteria.length > 10 && <li className="pl-ie-clinical-more">+{incCriteria.length - 10} more</li>}
-                                </ul>
-                              </div>
-                            )}
-
-                            {excCriteria.length > 0 && (
-                              <div className="pl-ie-clinical">
-                                <span className="oc-filter-label">Exclusion Criteria ({excCriteria.length})</span>
-                                <ul className="pl-ie-clinical-list">
-                                  {excCriteria.slice(0, 10).map((c) => (
-                                    <li key={c.id}>{c.criterion}</li>
-                                  ))}
-                                  {excCriteria.length > 10 && <li className="pl-ie-clinical-more">+{excCriteria.length - 10} more</li>}
-                                </ul>
-                              </div>
-                            )}
                           </div>
                         </div>
                       )}
@@ -772,84 +744,42 @@ export default function Dashboard({ data, error }: Props) {
         {tab === "whitespace" && (
           <div className="oc-main">
             <div className="oc-section-header">
-              <div className="oc-section-title">White Space — Unmet Need by Biomarker × Line of Therapy</div>
-              <span className="oc-count">{filteredWhiteSpace.length} cells</span>
+              <div className="oc-section-title">White Space — Opportunity by Biomarker</div>
+              <span className="oc-count">{biomarkerOpportunity.length} biomarkers</span>
             </div>
 
-            <div className="ws-minimal">
-              {filteredWhiteSpace.length === 0 ? (
-                <div className="oc-empty">No white space data matches current filters.</div>
-              ) : (
-                filteredWhiteSpace.map((w) => {
-                  const wsKey = `${w.biomarker}|${w.lot}`;
-                  const score = gapScore(w);
-                  const isExpanded = expandedWS === wsKey;
-                  const incomingAll = pipeline.filter((p) => p.biomarker === w.biomarker && p.lot === w.lot);
-                  const incoming = incomingAll.filter((p) => {
-                    const dp = drugProfiles[p.nct_id] || inferProfile(p.phases || []);
-                    const dw = drugWeights[p.nct_id] || profileToWeights(dp);
-                    const proj = projectTimeline(p.primary_completion_date, dw);
-                    return proj && new Date(proj.projectedSOC) >= new Date();
-                  });
-                  return (
-                    <div key={wsKey} className={`ws-min-card ${isExpanded ? "ws-min-expanded" : ""}`}>
-                      <div className="ws-min-card-click" onClick={() => setExpandedWS(isExpanded ? null : wsKey)} style={{ cursor: "pointer" }}>
-                        <div className="ws-min-bm">
-                          <span className={`oc-card-bm ${biomarkerBadgeClass(w.biomarker)}`}>{w.biomarker}</span>
-                        </div>
-                        <div className="ws-min-lot">{w.lot}</div>
-                        <div className="ws-min-gap">
-                          <span className="ws-gap-badge" style={{ backgroundColor: gapColor(score) }}>{gapLabel(score)}</span>
-                        </div>
-                        <div className="ws-min-incoming">
-                          <span className="ws-min-label">Incoming</span>
-                          <span className="ws-min-count">{incoming.length}</span>
-                        </div>
-                        <div className="ws-min-regimens">
-                          <span className="ws-min-label">Regimens</span>
-                          <span className="ws-min-count">{w.total}</span>
-                        </div>
-                        <span className="ws-min-expand-icon">{isExpanded ? "▲" : "▸"}</span>
-                      </div>
-                      {isExpanded && (
-                        <div className="ws-min-detail">
-                          <div className="ws-min-detail-grid">
-                            <div className="ws-min-detail-field"><span className="oc-filter-label">Preferred</span><span>{w.preferred}</span></div>
-                            <div className="ws-min-detail-field"><span className="oc-filter-label">UICC</span><span>{w.uicc}</span></div>
-                            <div className="ws-min-detail-field"><span className="oc-filter-label">Subsequent</span><span>{w.subsequent}</span></div>
-                            <div className="ws-min-detail-field"><span className="oc-filter-label">Trials</span><span>{w.trials}</span></div>
-                            <div className="ws-min-detail-field"><span className="oc-filter-label">Active</span><span>{w.activeTrials}</span></div>
-                          </div>
-                          {incoming.length > 0 && (
-                            <div className="ws-min-incoming-list">
-                              <div className="oc-filter-label ws-min-incoming-title">Incoming pipeline drugs</div>
-                              {incoming.map((p) => {
-                                const dpp = drugProfiles[p.nct_id] || inferProfile(p.phases || []);
-                                const dww = drugWeights[p.nct_id] || profileToWeights(dpp);
-                                const proj = projectTimeline(p.primary_completion_date, dww);
-                                return (
-                                  <div key={p.nct_id} className="ws-min-incoming-item">
-                                    <span className="ws-min-incoming-drug">{p.drug}</span>
-                                    <span className="ws-min-incoming-date">{proj?.projectedSOC || "—"}</span>
-                                  </div>
-                                );
-                              })}
-                            </div>
-                          )}
-                        </div>
-                      )}
+            {biomarkerOpportunity.length === 0 ? (
+              <div className="oc-empty">No data matches current filters.</div>
+            ) : (
+              <div className="ws-table">
+                <div className="ws-tr ws-tr-header">
+                  <div className="ws-th">Biomarker</div>
+                  <div className="ws-th">SOC Regimens</div>
+                  <div className="ws-th">Pipeline</div>
+                  <div className="ws-th">Opportunity</div>
+                </div>
+                {biomarkerOpportunity.map((row) => (
+                  <div key={row.biomarker} className="ws-tr">
+                    <div className="ws-td">
+                      <span className={`oc-card-bm ${biomarkerBadgeClass(row.biomarker)}`}>{row.biomarker}</span>
                     </div>
-                  );
-                })
-              )}
-            </div>
+                    <div className="ws-td">{row.socCount}</div>
+                    <div className="ws-td">{row.pipelineCount}</div>
+                    <div className="ws-td">
+                      <span className="ws-opp-badge" style={{ backgroundColor: row.opportunity.color }}>
+                        {row.opportunity.label}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         )}
 
         {tab === "insights" && (
           <InsightsTab
             pipeline={filteredPipeline}
-            whiteSpace={filteredWhiteSpace}
             regimens={filtered}
             drugProfiles={drugProfiles}
             drugWeights={drugWeights}
