@@ -611,7 +611,7 @@ export default function Dashboard({ data, error }: Props) {
                         <div className="oc-card-class">{sponsor || "—"}</div>
                         <div className="oc-card-footer">
                           <span className="tag tag-lot">{phaseStr || "—"}</span>
-                          {proj && <span className="pl-tile-date">{proj.projectedSOC}</span>}
+                          {proj && <span className="pl-tile-date" title="Expected Entry Date">{proj.projectedSOC}</span>}
                         </div>
                       </div>
 
@@ -626,7 +626,7 @@ export default function Dashboard({ data, error }: Props) {
 
                           <div className="pl-tile-dates">
                             <div className="pl-tile-date-field"><span className="oc-filter-label">PCD</span><span>{p.primary_completion_date || "—"}</span></div>
-                            <div className="pl-tile-date-field"><span className="oc-filter-label">Est. Arrival</span><span>{proj?.projectedSOC || "—"}</span></div>
+                            <div className="pl-tile-date-field"><span className="oc-filter-label">Expected Entry Date</span><span>{proj?.projectedSOC || "—"}</span></div>
                           </div>
 
                           <div className="pl-ie-grid">
