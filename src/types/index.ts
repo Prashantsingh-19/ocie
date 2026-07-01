@@ -39,12 +39,7 @@ export interface Criterion {
 
 export interface DashboardData {
   regimens: Regimen[];
-  trials: Trial[];
-  whiteSpace: WhiteSpaceRow[];
-  pipeline: PipelineRow[];
   pipelineProfiles?: PipelineProfile[];
-  inclusionCriteria?: Criterion[];
-  exclusionCriteria?: Criterion[];
 }
 
 export interface PipelineProfile {

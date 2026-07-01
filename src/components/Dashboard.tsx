@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo } from "react";
 import InsightsTab from "./InsightsTab";
-import type { Regimen, DashboardData, PipelineRow, TimelineWeights, TrialProfile, TrialEndpoint, TrialEnrollment, TrialDesign, TrialPathway, RiskSliders } from "@/types";
+import type { DashboardData, PipelineRow, TimelineWeights, TrialProfile, TrialEndpoint, TrialEnrollment, TrialDesign, TrialPathway, RiskSliders } from "@/types";
 import {
   computeKpis,
   filterRegimens,
@@ -71,7 +71,6 @@ export default function Dashboard({ data, error }: Props) {
   const [horizonFilter, setHorizonFilter] = useState<string>("<1yr");
 
   const regimens = data?.regimens ?? [];
-  const pipeline = data?.pipeline ?? [];
 
   const pipelineFromProfiles = useMemo(() => {
     const pp = data?.pipelineProfiles;
@@ -100,10 +99,9 @@ export default function Dashboard({ data, error }: Props) {
   }, [data?.pipelineProfiles, regimens]);
 
   const pipelineSrc = useMemo(() => {
-    const src = pipeline.length > 0 ? pipeline : pipelineFromProfiles;
     const socDrugs = new Set(regimens.map((r) => r.drug.toLowerCase()));
     const today = new Date();
-    return src.filter((p) => {
+    return pipelineFromProfiles.filter((p) => {
       if (socDrugs.has(p.drug.toLowerCase())) return false;
       if (p.primary_completion_date) {
         const d = new Date(p.primary_completion_date);
@@ -111,7 +109,7 @@ export default function Dashboard({ data, error }: Props) {
       }
       return true;
     });
-  }, [pipeline, pipelineFromProfiles, regimens]);
+  }, [pipelineFromProfiles, regimens]);
 
   useEffect(() => {
     if (pipelineSrc.length > 0 && !inferredDone) {
