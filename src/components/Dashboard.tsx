@@ -194,10 +194,10 @@ export default function Dashboard({ data, error }: Props) {
       const soc = socByBm.get(bm) || 0;
       const pipe = pipeByBm.get(bm) || 0;
       let label: string, color: string;
-      if (soc <= 2) { label = "Potential Entry Point"; color = "#2d6a4f"; }
-      else if (soc <= 5) { label = "Some Activity"; color = "#e09f3e"; }
-      else { label = "Saturated"; color = "#8a817c"; }
-      return { biomarker: bm, socCount: soc, pipelineCount: pipe, opportunity: { label, color } };
+      if (soc <= 2) { label = "Low Density"; color = "#2d6a4f"; }
+      else if (soc <= 5) { label = "Medium Density"; color = "#e09f3e"; }
+      else { label = "High Density"; color = "#8a817c"; }
+      return { biomarker: bm, socCount: soc, pipelineCount: pipe, landscape: { label, color } };
     });
   }, [regimens, pipelineSrc, appliedFilters]);
 
@@ -728,7 +728,7 @@ export default function Dashboard({ data, error }: Props) {
         {tab === "whitespace" && (
           <div className="oc-main">
             <div className="oc-section-header">
-              <div className="oc-section-title">White Space — Opportunity by Biomarker</div>
+              <div className="oc-section-title">White Space — SOC Density by Biomarker</div>
               <span className="oc-count">{biomarkerOpportunity.length} biomarkers</span>
             </div>
 
@@ -740,7 +740,7 @@ export default function Dashboard({ data, error }: Props) {
                   <div className="ws-th">Biomarker</div>
                   <div className="ws-th">SOC Regimens</div>
                   <div className="ws-th">Pipeline</div>
-                  <div className="ws-th">Opportunity</div>
+                  <div className="ws-th">SOC Density</div>
                 </div>
                 {biomarkerOpportunity.map((row) => (
                   <div key={row.biomarker} className="ws-tr">
@@ -750,8 +750,8 @@ export default function Dashboard({ data, error }: Props) {
                     <div className="ws-td">{row.socCount}</div>
                     <div className="ws-td">{row.pipelineCount}</div>
                     <div className="ws-td">
-                      <span className="ws-opp-badge" style={{ backgroundColor: row.opportunity.color }}>
-                        {row.opportunity.label}
+                        <span className="ws-opp-badge" style={{ backgroundColor: row.landscape.color }}>
+                        {row.landscape.label}
                       </span>
                     </div>
                   </div>
