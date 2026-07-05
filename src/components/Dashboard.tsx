@@ -551,15 +551,18 @@ export default function Dashboard({ data, error }: Props) {
             </div>
 
             <div className="pl-slider-section">
-              <input type="range" min={0} max={120} value={sliderValue}
-                onChange={(e) => setSliderValue(+e.target.value)}
-                className="pl-slider" />
-              <div className="pl-slider-labels">
-                <span>0</span>
-                <span>1yr</span>
-                <span>2yr</span>
-                <span>3yr</span>
-                <span>10yr</span>
+              <div className="pl-slider-track">
+                <input type="range" min={0} max={120} value={sliderValue}
+                  onChange={(e) => setSliderValue(+e.target.value)}
+                  className="pl-slider" />
+                <div className="pl-slider-ticks">
+                  {[12,24,36,48,60,72,84,96,108,120].map((mo) => (
+                    <div key={mo} className="pl-slider-tick" style={{ left: `${(mo/120)*100}%` }}>
+                      <strong>{mo / 12}yr</strong>
+                    </div>
+                  ))}
+                </div>
+                <div className="pl-slider-arrow" style={{ left: `${(sliderValue/120)*100}%` }}>▼</div>
               </div>
               <div className="pl-slider-value">{sliderValue}mo ({sliderValue >= 12 ? Math.round(sliderValue / 12 * 10) / 10 + "yr" : sliderValue + "mo"})</div>
             </div>
@@ -755,28 +758,33 @@ export default function Dashboard({ data, error }: Props) {
             {viewMode === "company" && (companyData.length === 0 ? (
               <div className="oc-empty">No companies with pipeline in this horizon.</div>
             ) : (
-              <div className="pl-company-section">
+              <div className="pl-chart-frame">
+                <div className="pl-chart-hdr">
+                  <span className="pl-chdr-name">Company</span>
+                  <span className="pl-chdr-trials">Trials</span>
+                  <span className="pl-chdr-drugs">Drugs</span>
+                  <span className="pl-chdr-bms">Biomarkers</span>
+                  <span className="pl-chdr-arrival">Earliest Arrival</span>
+                </div>
                 {companyData.map((c) => {
                   const maxTrials = Math.max(...companyData.map(x => x.trials), 1);
                   const pct = (c.trials / maxTrials) * 100;
                   return (
-                    <div key={c.sponsor} className="pl-company-row">
-                      <div className="pl-company-header">
-                        <span className="pl-company-name">{c.sponsor}</span>
-                        <span className="pl-company-trials">{c.trials} trial{c.trials > 1 ? "s" : ""}</span>
-                      </div>
-                      <div className="pl-company-bar-wrap">
-                        <div className="pl-company-bar" style={{ width: `${pct}%` }} />
-                      </div>
-                      <div className="pl-company-details">
-                        <div className="pl-company-drugs"><span className="oc-filter-label">Drugs</span> {c.drugs}</div>
-                        <div className="pl-company-bms">
-                          {c.biomarkers.map((b) => (
-                            <span key={b} className={`oc-card-bm ${biomarkerBadgeClass(b)}`}>{b}</span>
-                          ))}
-                        </div>
-                        {c.minArrival && <div className="pl-company-arrival"><span className="oc-filter-label">Earliest Arrival</span> {c.minArrival}</div>}
-                      </div>
+                    <div key={c.sponsor} className="pl-chart-row">
+                      <span className="pl-chart-name">{c.sponsor}</span>
+                      <span className="pl-chart-bar-cell">
+                        <span className="pl-chart-bar-wrap">
+                          <span className="pl-chart-bar" style={{ width: `${pct}%` }} />
+                          <span className="pl-chart-count">{c.trials}</span>
+                        </span>
+                      </span>
+                      <span className="pl-chart-drugs">{c.drugs.length > 40 ? c.drugs.slice(0,38) + "…" : c.drugs}</span>
+                      <span className="pl-chart-bms">
+                        {c.biomarkers.map((b) => (
+                          <span key={b} className={`oc-card-bm ${biomarkerBadgeClass(b)}`} style={{fontSize:9}}>{b}</span>
+                        ))}
+                      </span>
+                      <span className="pl-chart-arrival">{c.minArrival || "—"}</span>
                     </div>
                   );
                 })}
