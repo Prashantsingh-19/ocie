@@ -27,7 +27,6 @@ import {
 const TABS = [
   { id: "soc", label: "Current SOC" },
   { id: "pipeline", label: "Pipeline / Trials" },
-  { id: "whitespace", label: "White Space" },
   { id: "insights", label: "Insights" },
 ] as const;
 
@@ -187,36 +186,6 @@ export default function Dashboard({ data, error }: Props) {
       sponsor, ...d, biomarkers: [...d.biomarkers].sort(),
     }));
   }, [pipelineYearFiltered, drugProfiles, drugWeights, data?.pipelineProfiles]);
-
-  const biomarkerOpportunity = useMemo(() => {
-    const socByBm = new Map<string, number>();
-    for (const r of regimens) {
-      if (appliedFilters.lot !== "All" && r.lot !== appliedFilters.lot) continue;
-      if (appliedFilters.biomarker && !biomarkerMatches(r.biomarker, appliedFilters.biomarker)) continue;
-      const key = RAW_TO_DISPLAY[r.biomarker] || r.biomarker;
-      socByBm.set(key, (socByBm.get(key) || 0) + 1);
-    }
-    const pipeByBm = new Map<string, number>();
-    for (const p of pipelineSrc) {
-      if (appliedFilters.lot !== "All" && p.lot !== appliedFilters.lot) continue;
-      if (appliedFilters.biomarker && !biomarkerMatches(p.biomarker, appliedFilters.biomarker)) continue;
-      const key = RAW_TO_DISPLAY[p.biomarker] || p.biomarker;
-      pipeByBm.set(key, (pipeByBm.get(key) || 0) + 1);
-    }
-    let allBms = BIOMARKER_DISPLAY_NAMES.filter((b) => socByBm.has(b) || pipeByBm.has(b));
-    if (appliedFilters.biomarker) {
-      allBms = allBms.filter((b) => b === appliedFilters.biomarker);
-    }
-    return allBms.map((bm) => {
-      const soc = socByBm.get(bm) || 0;
-      const pipe = pipeByBm.get(bm) || 0;
-      let label: string, color: string;
-      if (soc <= 2) { label = "Low Density"; color = "#2d6a4f"; }
-      else if (soc <= 5) { label = "Medium Density"; color = "#e09f3e"; }
-      else { label = "High Density"; color = "#8a817c"; }
-      return { biomarker: bm, socCount: soc, pipelineCount: pipe, landscape: { label, color } };
-    });
-  }, [regimens, pipelineSrc, appliedFilters]);
 
   const setPendingFilter = (key: string, val: string) => {
     setPendingFilters((prev) => {
@@ -562,7 +531,7 @@ export default function Dashboard({ data, error }: Props) {
                     </div>
                   ))}
                 </div>
-                <div className="pl-slider-arrow" style={{ left: `${(sliderValue/120)*100}%` }}>▼</div>
+                <div className="pl-slider-arrow" style={{ left: `${(sliderValue/120)*100}%` }} />
               </div>
               <div className="pl-slider-value">{sliderValue}mo ({sliderValue >= 12 ? Math.round(sliderValue / 12 * 10) / 10 + "yr" : sliderValue + "mo"})</div>
             </div>
@@ -790,42 +759,6 @@ export default function Dashboard({ data, error }: Props) {
                 })}
               </div>
             ))}
-          </div>
-        )}
-
-        {tab === "whitespace" && (
-          <div className="oc-main">
-            <div className="oc-section-header">
-              <div className="oc-section-title">White Space — SOC Density by Biomarker</div>
-              <span className="oc-count">{biomarkerOpportunity.length} biomarkers</span>
-            </div>
-
-            {biomarkerOpportunity.length === 0 ? (
-              <div className="oc-empty">No data matches current filters.</div>
-            ) : (
-              <div className="ws-table">
-                <div className="ws-tr ws-tr-header">
-                  <div className="ws-th">Biomarker</div>
-                  <div className="ws-th">SOC Regimens</div>
-                  <div className="ws-th">Pipeline</div>
-                  <div className="ws-th">SOC Density</div>
-                </div>
-                {biomarkerOpportunity.map((row) => (
-                  <div key={row.biomarker} className="ws-tr">
-                    <div className="ws-td">
-                      <span className={`oc-card-bm ${biomarkerBadgeClass(row.biomarker)}`}>{row.biomarker}</span>
-                    </div>
-                    <div className="ws-td">{row.socCount}</div>
-                    <div className="ws-td">{row.pipelineCount}</div>
-                    <div className="ws-td">
-                        <span className="ws-opp-badge" style={{ backgroundColor: row.landscape.color }}>
-                        {row.landscape.label}
-                      </span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
           </div>
         )}
 

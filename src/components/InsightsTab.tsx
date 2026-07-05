@@ -30,6 +30,30 @@ function horizonColor(mo: number | null): string {
 export default function InsightsTab({ pipeline, regimens, drugProfiles, drugWeights }: Props) {
   const [expandedBm, setExpandedBm] = useState<Record<string, "1L" | "2L+" | null>>({});
   const [scrollOffsets, setScrollOffsets] = useState<Record<string, number>>({});
+  const [showDensity, setShowDensity] = useState(true);
+
+  const densityData = useMemo(() => {
+    const socByBm = new Map<string, number>();
+    for (const r of regimens) {
+      const key = RAW_TO_DISPLAY[r.biomarker] || r.biomarker;
+      socByBm.set(key, (socByBm.get(key) || 0) + 1);
+    }
+    const pipeByBm = new Map<string, number>();
+    for (const p of pipeline) {
+      const key = RAW_TO_DISPLAY[p.biomarker] || p.biomarker;
+      pipeByBm.set(key, (pipeByBm.get(key) || 0) + 1);
+    }
+    const allBms = [...new Set([...socByBm.keys(), ...pipeByBm.keys()])].sort();
+    return allBms.map((bm) => {
+      const soc = socByBm.get(bm) || 0;
+      const pipe = pipeByBm.get(bm) || 0;
+      let label: string, color: string;
+      if (soc <= 2) { label = "Low Density"; color = "#2d6a4f"; }
+      else if (soc <= 5) { label = "Medium Density"; color = "#e09f3e"; }
+      else { label = "High Density"; color = "#8a817c"; }
+      return { biomarker: bm, socCount: soc, pipelineCount: pipe, density: { label, color } };
+    });
+  }, [regimens, pipeline]);
 
   const data = useMemo(() => {
     const pipeWithProj: (PipelineRow & { projSOC: string | null; horizonMo: number | null })[] = [];
@@ -151,9 +175,33 @@ export default function InsightsTab({ pipeline, regimens, drugProfiles, drugWeig
   return (
     <div className="oc-main">
       <div className="oc-section-header">
-        <div className="oc-section-title">Insights — Current SOC &amp; Incoming Pipeline</div>
+        <div className="oc-section-title">Insights — SOC &amp; Pipeline by Biomarker</div>
         <span className="oc-count">{regimens.length} SOC · {pipeline.length} pipeline</span>
       </div>
+
+      {/* ── SOC Density Summary ── */}
+      <div className="in-density-toggle" onClick={() => setShowDensity(!showDensity)}>
+        <span>{showDensity ? "▾" : "▸"} SOC Density Overview</span>
+        <span className="oc-count">{densityData.length} biomarkers</span>
+      </div>
+      {showDensity && (
+        <div className="in-density-wrap">
+          <div className="in-density-hdr">
+            <span>Biomarker</span>
+            <span>SOC</span>
+            <span>Pipeline</span>
+            <span>Density</span>
+          </div>
+          {densityData.map((d) => (
+            <div key={d.biomarker} className="in-density-row">
+              <span className={`oc-card-bm ${biomarkerBadgeClass(d.biomarker)}`}>{d.biomarker}</span>
+              <span>{d.socCount}</span>
+              <span>{d.pipelineCount}</span>
+              <span><span className="ws-opp-badge" style={{ backgroundColor: d.density.color }}>{d.density.label}</span></span>
+            </div>
+          ))}
+        </div>
+      )}
 
       {data.length === 0 ? (
         <div className="oc-empty">No data matches current filters.</div>

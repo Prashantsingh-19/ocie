@@ -457,7 +457,7 @@ body {
 .pl-slider-ticks { position: absolute; top: 6px; left: 0; right: 0; height: 6px; pointer-events: none; z-index: 1; }
 .pl-slider-tick { position: absolute; top: 0; width: 1px; height: 8px; background: #ccc; }
 .pl-slider-tick strong { position: absolute; top: 10px; left: 50%; transform: translateX(-50%); font-size: 8px; color: #aaa; font-weight: 400; font-family: 'JetBrains Mono', monospace; white-space: nowrap; }
-.pl-slider-arrow { position: absolute; top: 0; transform: translateX(-50%); z-index: 3; color: #B85C38; font-size: 14px; line-height: 1; transition: left 0.1s; }
+.pl-slider-arrow { position: absolute; top: 3px; transform: translateX(-50%); z-index: 3; width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 7px solid #B85C38; transition: left 0.1s; }
 .pl-slider-labels { display: flex; justify-content: space-between; font-size: 9px; color: #aaa; font-family: 'JetBrains Mono', monospace; margin-top: 14px; padding: 0 2px; }
 .pl-slider-value { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #B85C38; font-weight: 600; margin-top: 4px; text-align: right; }
 
@@ -489,6 +489,17 @@ body {
 .pl-chdr-drugs { width: 130px; flex-shrink: 0; }
 .pl-chdr-bms { width: 100px; flex-shrink: 0; }
 .pl-chdr-arrival { width: 90px; flex-shrink: 0; }
+
+/* ── Insights Density ── */
+.in-density-toggle { display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 12px; color: #141412; font-weight: 500; margin-bottom: 8px; padding: 6px 0; user-select: none; }
+.in-density-toggle .oc-count { margin-left: auto; }
+.in-density-wrap { margin-bottom: 20px; border: 1px solid #E8E3D8; border-radius: 6px; overflow: hidden; font-size: 11px; }
+.in-density-hdr, .in-density-row { display: flex; align-items: center; gap: 10px; padding: 5px 10px; }
+.in-density-hdr { background: #F7F6F2; font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #888; text-transform: uppercase; letter-spacing: 0.06em; }
+.in-density-hdr span, .in-density-row span { width: 80px; flex-shrink: 0; }
+.in-density-hdr span:first-child, .in-density-row span:first-child { width: 100px; }
+.in-density-hdr span:last-child, .in-density-row span:last-child { width: 100px; }
+.in-density-row:nth-child(even) { background: #FBF9F5; }
 
 /* ── Pipeline Tiles ── */
 .pl-tile { margin-bottom: 10px; }
