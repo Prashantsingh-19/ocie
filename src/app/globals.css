@@ -450,14 +450,35 @@ body {
 }
 .oc-apply-btn:hover { background: #9a4a2e; }
 
-/* ── Horizon Filter Pills ── */
-.pl-horizon-pills { display: flex; gap: 6px; margin-bottom: 16px; }
+/* ── Slider Section ── */
+.pl-slider-section { margin-bottom: 14px; }
+.pl-slider { width: 100%; accent-color: #B85C38; height: 6px; cursor: pointer; }
+.pl-slider-labels { display: flex; justify-content: space-between; font-size: 10px; color: #aaa; font-family: 'JetBrains Mono', monospace; margin-top: -2px; padding: 0 2px; }
+.pl-slider-value { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #B85C38; font-weight: 600; margin-top: 4px; }
+
+/* ── View Toggle Pills ── */
+.pl-view-pills { display: flex; gap: 6px; margin-bottom: 16px; }
 .pl-pill {
   font-family: 'DM Sans', sans-serif; font-size: 11px; padding: 5px 14px;
   border: 1px solid #E8E3D8; border-radius: 16px; background: #fff; color: #888; cursor: pointer; transition: all 0.15s;
 }
 .pl-pill.active { background: #B85C38; color: #fff; border-color: #B85C38; }
 .pl-pill:hover:not(.active) { border-color: #B85C38; color: #141412; }
+
+/* ── Company View ── */
+.pl-company-section { display: flex; flex-direction: column; gap: 12px; }
+.pl-company-row {
+  background: #FBF9F5; border: 1px solid #E8E3D8; border-radius: 6px; padding: 14px 16px;
+}
+.pl-company-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.pl-company-name { font-family: 'Cormorant Garamond', serif; font-size: 16px; font-weight: 600; color: #141412; }
+.pl-company-trials { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #888; margin-left: auto; }
+.pl-company-bar-wrap { height: 6px; background: #F0EDE4; border-radius: 3px; margin-bottom: 10px; overflow: hidden; }
+.pl-company-bar { height: 100%; background: #B85C38; border-radius: 3px; transition: width 0.3s; }
+.pl-company-details { display: flex; flex-direction: column; gap: 4px; }
+.pl-company-drugs { font-size: 12px; color: #555; }
+.pl-company-bms { display: flex; gap: 4px; flex-wrap: wrap; }
+.pl-company-arrival { font-size: 11px; color: #555; }
 
 /* ── Pipeline Tiles ── */
 .pl-tile { margin-bottom: 10px; }

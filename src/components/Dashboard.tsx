@@ -67,8 +67,8 @@ export default function Dashboard({ data, error }: Props) {
     subtype: "All",
   });
 
-  const HORIZONS = ["<1yr", "1-2yr", "2-4yr", ">4yr"] as const;
-  const [horizonFilter, setHorizonFilter] = useState<string>("<1yr");
+  const [sliderValue, setSliderValue] = useState(12);
+  const [viewMode, setViewMode] = useState<"drug" | "company">("drug");
 
   const regimens = data?.regimens ?? [];
 
@@ -163,13 +163,30 @@ export default function Dashboard({ data, error }: Props) {
       if (!proj) return false;
       const projected = new Date(proj.projectedSOC);
       const horizonMo = (projected.getTime() - Date.now()) / (1000 * 60 * 60 * 24 * 30.44);
-      if (horizonFilter === "<1yr") return horizonMo < 12;
-      if (horizonFilter === "1-2yr") return horizonMo >= 12 && horizonMo < 24;
-      if (horizonFilter === "2-4yr") return horizonMo >= 24 && horizonMo < 48;
-      if (horizonFilter === ">4yr") return horizonMo >= 48;
-      return false;
+      return horizonMo <= sliderValue;
     });
-  }, [filteredPipeline, horizonFilter, drugProfiles, drugWeights]);
+  }, [filteredPipeline, sliderValue, drugProfiles, drugWeights]);
+
+  const companyData = useMemo(() => {
+    const companies = new Map<string, { drugs: string; trials: number; biomarkers: Set<string>; minArrival: string | null }>();
+    for (const p of pipelineYearFiltered) {
+      const pp = data?.pipelineProfiles?.find((x) => x.nctId === p.nct_id);
+      const sp = pp?.sponsor || "Unknown";
+      if (!companies.has(sp)) companies.set(sp, { drugs: "", trials: 0, biomarkers: new Set(), minArrival: null });
+      const c = companies.get(sp)!;
+      c.trials++;
+      if (c.drugs) { if (!c.drugs.includes(p.drug)) c.drugs += ", " + p.drug; }
+      else c.drugs = p.drug;
+      c.biomarkers.add(p.biomarker);
+      const dp = drugProfiles[p.nct_id] || inferProfile(p.phases || []);
+      const dw = drugWeights[p.nct_id] || profileToWeights(dp);
+      const proj = projectTimeline(p.primary_completion_date, dw);
+      if (proj && (!c.minArrival || proj.projectedSOC < c.minArrival)) c.minArrival = proj.projectedSOC;
+    }
+    return [...companies.entries()].sort((a, b) => b[1].trials - a[1].trials).map(([sponsor, d]) => ({
+      sponsor, ...d, biomarkers: [...d.biomarkers].sort(),
+    }));
+  }, [pipelineYearFiltered, drugProfiles, drugWeights, data?.pipelineProfiles]);
 
   const biomarkerOpportunity = useMemo(() => {
     const socByBm = new Map<string, number>();
@@ -526,23 +543,34 @@ export default function Dashboard({ data, error }: Props) {
           <div className="oc-main">
             <div className="oc-section-header">
               <div className="oc-section-title">Pipeline — Projected Competitor Timeline</div>
-              <span className="oc-count">{pipelineYearFiltered.length} drugs</span>
+              <span className="oc-count">{viewMode === "drug" ? pipelineYearFiltered.length + " drugs" : companyData.length + " companies"}</span>
             </div>
 
             <div className="pl-instruct">
-              Click a tile to adjust per-drug parameters.
+              Drag slider to show drugs projected for SOC entry within a time horizon.
             </div>
 
-            <div className="pl-horizon-pills">
-              {HORIZONS.map((h) => (
-                <button key={h} className={`pl-pill ${horizonFilter === h ? "active" : ""}`} onClick={() => setHorizonFilter(h)}>
-                  {h}
-                </button>
-              ))}
+            <div className="pl-slider-section">
+              <input type="range" min={0} max={120} value={sliderValue}
+                onChange={(e) => setSliderValue(+e.target.value)}
+                className="pl-slider" />
+              <div className="pl-slider-labels">
+                <span>0</span>
+                <span>1yr</span>
+                <span>2yr</span>
+                <span>3yr</span>
+                <span>10yr</span>
+              </div>
+              <div className="pl-slider-value">{sliderValue}mo ({sliderValue >= 12 ? Math.round(sliderValue / 12 * 10) / 10 + "yr" : sliderValue + "mo"})</div>
             </div>
 
-            {/* ── Pipeline Tiles ── */}
-            {pipelineYearFiltered.length === 0 ? (
+            <div className="pl-view-pills">
+              <button className={`pl-pill ${viewMode === "drug" ? "active" : ""}`} onClick={() => setViewMode("drug")}>Drug View</button>
+              <button className={`pl-pill ${viewMode === "company" ? "active" : ""}`} onClick={() => setViewMode("company")}>Company View</button>
+            </div>
+
+            {/* ── Pipeline Drug View ── */}
+            {viewMode === "drug" && (pipelineYearFiltered.length === 0 ? (
               <div className="oc-empty">No drugs projected for this horizon with current filters.</div>
             ) : (
               <div className="oc-grid pl-tile-grid">
@@ -721,7 +749,39 @@ export default function Dashboard({ data, error }: Props) {
                   );
                 })}
               </div>
-            )}
+            ))}
+
+            {/* ── Pipeline Company View ── */}
+            {viewMode === "company" && (companyData.length === 0 ? (
+              <div className="oc-empty">No companies with pipeline in this horizon.</div>
+            ) : (
+              <div className="pl-company-section">
+                {companyData.map((c) => {
+                  const maxTrials = Math.max(...companyData.map(x => x.trials), 1);
+                  const pct = (c.trials / maxTrials) * 100;
+                  return (
+                    <div key={c.sponsor} className="pl-company-row">
+                      <div className="pl-company-header">
+                        <span className="pl-company-name">{c.sponsor}</span>
+                        <span className="pl-company-trials">{c.trials} trial{c.trials > 1 ? "s" : ""}</span>
+                      </div>
+                      <div className="pl-company-bar-wrap">
+                        <div className="pl-company-bar" style={{ width: `${pct}%` }} />
+                      </div>
+                      <div className="pl-company-details">
+                        <div className="pl-company-drugs"><span className="oc-filter-label">Drugs</span> {c.drugs}</div>
+                        <div className="pl-company-bms">
+                          {c.biomarkers.map((b) => (
+                            <span key={b} className={`oc-card-bm ${biomarkerBadgeClass(b)}`}>{b}</span>
+                          ))}
+                        </div>
+                        {c.minArrival && <div className="pl-company-arrival"><span className="oc-filter-label">Earliest Arrival</span> {c.minArrival}</div>}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            ))}
           </div>
         )}
 

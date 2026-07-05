@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>OCIE Timeline Projection Model</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', sans-serif; color: #141412; background: #fff; line-height: 1.6; padding: 0; }
+  .page { max-width: 900px; margin: 0 auto; padding: 50px; }
+  @media print { .page { padding: 0.5in; } }
+  h1 { font-size: 24px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 4px; color: #141412; }
+  h1 span { color: #B85C38; }
+  .subtitle { font-size: 13px; color: #888; font-family: 'JetBrains Mono', monospace; margin-bottom: 24px; }
+  .divider { height: 1px; background: #E8E3D8; margin: 20px 0; }
+  h2 { font-size: 17px; font-weight: 600; margin: 24px 0 10px; color: #141412; }
+  h3 { font-size: 13px; font-weight: 600; margin: 16px 0 6px; color: #B85C38; }
+  p { font-size: 12.5px; margin-bottom: 8px; color: #333; }
+  pre { background: #F7F6F2; border: 1px solid #E8E3D8; border-radius: 5px; padding: 12px 14px; font-family: 'JetBrains Mono', monospace; font-size: 11px; line-height: 1.7; overflow-x: auto; margin: 10px 0; color: #333; }
+  code { font-family: 'JetBrains Mono', monospace; font-size: 11px; background: #F7F6F2; padding: 1px 5px; border-radius: 3px; }
+  table { width: 100%; border-collapse: collapse; font-size: 12px; margin: 10px 0; }
+  th { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #888; text-transform: uppercase; letter-spacing: 0.06em; text-align: left; padding: 6px 10px; border-bottom: 1px solid #E8E3D8; font-weight: 400; }
+  td { padding: 6px 10px; border-bottom: 1px solid #F0EDE4; font-size: 12px; vertical-align: top; }
+  .highlight { background: #F7F6F2; border-left: 3px solid #B85C38; padding: 10px 14px; margin: 12px 0; font-size: 12.5px; color: #555; border-radius: 0 4px 4px 0; }
+  ul { font-size: 12.5px; margin: 6px 0 10px 18px; }
+  ul li { margin-bottom: 4px; }
+  strong { color: #141412; }
+  .footer { margin-top: 30px; padding-top: 16px; border-top: 1px solid #E8E3D8; font-size: 10px; color: #aaa; font-family: 'JetBrains Mono', monospace; }
+  .arch-box { background: #FBF9F5; border: 1px solid #E8E3D8; border-radius: 6px; padding: 14px; font-family: 'JetBrains Mono', monospace; font-size: 11px; line-height: 2; text-align: center; margin: 12px 0; }
+  .arch-box span.arrow { color: #B85C38; font-weight: 600; }
+  .example { background: #FBF9F5; border: 1px solid #E8E3D8; border-radius: 5px; padding: 14px; margin: 10px 0; }
+  .example h3 { margin-top: 0; }
+  .example table { margin: 6px 0; }
+  .example table td:first-child { font-weight: 500; }
+</style>
+</head>
+<body>
+<div class="page">
+
+<h1>OC<span>IE</span></h1>
+<div class="subtitle">Timeline Projection Model &mdash; Complete Mechanism &middot; July 2026</div>
+
+<div class="divider"></div>
+
+<!-- Architecture -->
+<h2>Architecture</h2>
+<div class="arch-box">
+User parameters &rarr; <strong>profileToWeights()</strong> &rarr; TimelineWeights<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&darr;<br>
+PCD + TimelineWeights &rarr; <strong>projectTimeline()</strong> &rarr; projectedSOC (Est. Arrival)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&darr;<br>
+<strong>monteCarloConfidence()</strong> &rarr; P10 / P50 / P90 percentiles
+</div>
+
+<p>Two core functions:</p>
+<ul>
+  <li><strong>profileToWeights</strong> &mdash; deterministic; converts qualitative trial characteristics into numerical month weights</li>
+  <li><strong>projectTimeline</strong> &mdash; adds those months to the Primary Completion Date (PCD) to get calendar dates</li>
+</ul>
+
+<!-- Three Components -->
+<h2>The Three Weight Components</h2>
+<table>
+  <tr><th>Weight</th><th>Meaning</th><th>Default</th></tr>
+  <tr><td><code>submission</code></td><td>Time from PCD to FDA submission (data lock, NDA/BLA prep)</td><td>2 months</td></tr>
+  <tr><td><code>review</code></td><td>FDA review clock (filing &rarr; decision)</td><td>8 (standard) / 4 (accelerated)</td></tr>
+  <tr><td><code>nccnLag</code></td><td>Time from FDA approval &rarr; NCCN guideline inclusion</td><td>5 months (fixed)</td></tr>
+</table>
+
+<div class="highlight"><strong>Formula:</strong> Est. Arrival = PCD + submission + review + nccnLag</div>
+
+<!-- Pathways -->
+<h2>Pathways (The Foundation)</h2>
+<p>Two regulatory pathways set the <strong>base review time</strong>. All adjustments are additive on top of these bases.</p>
+
+<table>
+  <tr><th>Pathway</th><th>Base Review</th><th>Rationale</th></tr>
+  <tr>
+    <td><strong>Standard</strong></td>
+    <td>8 months</td>
+    <td>Full FDA review cycle. Real-world median for standard NME reviews is ~10 months &mdash; rounded to 8 as a conservative working estimate.</td>
+  </tr>
+  <tr>
+    <td><strong>Accelerated</strong></td>
+    <td>4 months</td>
+    <td>Assumes Priority Review (PDUFA ~6 months) or Accelerated Approval based on surrogate endpoint. Cuts review clock roughly in half. Enabled by Breakthrough Therapy Designation (BTD), Accelerated Approval (AA), or Priority Review (PR).</td>
+  </tr>
+</table>
+
+<!-- Endpoint -->
+<h2>Endpoint Adjustments</h2>
+<p>Each pathway has a <strong>native baseline endpoint</strong> &mdash; the most common primary endpoint for that pathway type. Adjustments deviate from that baseline.</p>
+
+<table>
+  <tr><th>Endpoint</th><th>Standard</th><th>Accelerated</th><th>Why</th></tr>
+  <tr>
+    <td><strong>PFS</strong></td>
+    <td>0 (baseline)</td>
+    <td>&mdash;</td>
+    <td>Reference case for standard pathway (phase 3 RCT). No adjustment needed.</td>
+  </tr>
+  <tr>
+    <td><strong>ORR</strong></td>
+    <td>&minus;2</td>
+    <td>0 (baseline)</td>
+    <td><strong>Standard:</strong> ORR reads out faster than PFS &mdash; no need to wait for progression events, enabling earlier submission. <strong>Accelerated:</strong> ORR is the default assumption for accelerated approval (single-arm trials), so already priced in.</td>
+  </tr>
+  <tr>
+    <td><strong>OS</strong></td>
+    <td>+5</td>
+    <td>+3</td>
+    <td>OS takes longest to mature &mdash; requires enough death events for significance. Standard path penalty is larger (+5) because OS trials here are typically large phase 3 studies. Accelerated path gets a smaller penalty (+3) because accelerated OS trials are often smaller or single-arm with historical comparison.</td>
+  </tr>
+</table>
+
+<p><strong>Why ORR on Standard = &minus;2 but ORR on Accelerated = 0?</strong><br>
+The accelerated pathway's baseline review of 4 months <em>already assumes an ORR-based surrogate endpoint</em> (the most common basis for accelerated approval). So an ORR trial on the accelerated path is the reference case &mdash; no further discount. On the standard path, the reference is PFS, and ORR is faster, so it gets a discount.</p>
+
+<!-- Enrollment -->
+<h2>Enrollment Adjustments</h2>
+<p>PCD is the <strong>estimated</strong> date from ClinicalTrials.gov. If enrollment underperforms, real PCD slips. These adjustments account for that risk.</p>
+
+<table>
+  <tr><th>Rate</th><th>Adjustment</th><th>Why</th></tr>
+  <tr><td><strong>Fast</strong></td><td>0 (baseline)</td><td>Reference case &mdash; rapid enrollment with no delay to PCD</td></tr>
+  <tr><td><strong>Average</strong></td><td>+1</td><td>Slightly slower than ideal &mdash; adds ~1 month lag in reaching target enrollment</td></tr>
+  <tr><td><strong>Slow</strong></td><td>+4</td><td>Significantly behind schedule &mdash; 4+ extra months just to hit enrollment targets, delaying everything downstream</td></tr>
+</table>
+
+<p>Enrollment adjustments go into <code>review</code> (not <code>submission</code>) because enrollment delays push the entire timeline, including when the FDA sees the application.</p>
+
+<!-- Design -->
+<h2>Design Adjustments</h2>
+<p>Trial design affects both submission complexity (how fast you compile and file the NDA after PCD) and review complexity (how fast the FDA evaluates it).</p>
+
+<table>
+  <tr><th>Design</th><th>Standard</th><th>Accelerated</th><th>Why</th></tr>
+  <tr>
+    <td><strong>RCT</strong></td>
+    <td>0 (baseline)</td>
+    <td>+2 (submission)</td>
+    <td><strong>Standard:</strong> RCT is the norm &mdash; no adjustment. <strong>Accelerated:</strong> RCT on accelerated path is unusual &mdash; larger, more complex data package requires more submission prep time.</td>
+  </tr>
+  <tr>
+    <td><strong>SingleArm</strong></td>
+    <td>&minus;1 (submission)</td>
+    <td>0 (baseline)</td>
+    <td><strong>Standard:</strong> Simpler dataset &mdash; no comparator arm, fewer sites, less data cleaning &rarr; &minus;1 month submission prep. <strong>Accelerated:</strong> Single-arm is the default assumption for accelerated path &mdash; no adjustment.</td>
+  </tr>
+  <tr>
+    <td><strong>Adaptive</strong></td>
+    <td>&minus;1 (review)</td>
+    <td>&minus;1 (review)</td>
+    <td>Adaptive designs (seamless phase 2/3, sample size re-estimation) shorten development and may reduce regulatory complexity &mdash; &minus;1 regardless of pathway.</td>
+  </tr>
+</table>
+
+<p><strong>Why submission vs review?</strong> Submission adjustments affect NDA/BLA preparation speed after PCD. Review adjustments affect FDA evaluation speed after filing.</p>
+
+<!-- FDA Designations -->
+<h2>FDA Designations (BTD / AA / PR)</h2>
+<p>These don't directly modify months in <code>profileToWeights</code> &mdash; they determine which <strong>pathway</strong> the user selects.</p>
+
+<table>
+  <tr><th>Designation</th><th>Effect on Point Estimate</th><th>Effect on Confidence</th></tr>
+  <tr><td><strong>BTD</strong> (Breakthrough Therapy)</td><td>Enables Accelerated pathway selection</td><td>Tightens review distribution (FDA resources prioritized)</td></tr>
+  <tr><td><strong>AA</strong> (Accelerated Approval)</td><td>Enables Accelerated pathway selection</td><td>Tightens submission lower bound</td></tr>
+  <tr><td><strong>PR</strong> (Priority Review)</td><td>Enables Accelerated pathway selection</td><td>Narrows review lower bound (faster review triggered)</td></tr>
+</table>
+
+<p>Once the user selects Accelerated pathway, these designations primarily affect the <strong>Monte Carlo confidence interval</strong> (narrower distribution = higher confidence), not the point estimate.</p>
+
+<!-- Default profiles -->
+<h2>Default Profiles</h2>
+<p>When the app has no user-saved profile for a given NCT ID, it infers from available phase data using these defaults:</p>
+
+<table>
+  <tr><th>Pathway</th><th>Endpoint</th><th>Enrollment</th><th>Design</th><th>BTD</th><th>AA</th><th>PR</th></tr>
+  <tr>
+    <td><strong>Standard (default)</strong></td>
+    <td>PFS</td><td>Fast</td><td>RCT</td><td>False</td><td>False</td><td>False</td>
+  </tr>
+  <tr>
+    <td><strong>Accelerated (default)</strong></td>
+    <td>ORR</td><td>Fast</td><td>SingleArm</td><td>True</td><td>True</td><td>True</td>
+  </tr>
+</table>
+
+<p>These defaults are chosen to match the most common trial archetypes for each pathway. The <code>isDefaultStd</code> / <code>isDefaultAcc</code> check in <code>profileToWeights</code> skips all adjustments when a profile exactly matches the default &mdash; avoiding redundant calculations.</p>
+
+<!-- Core code -->
+<h2>The Core Function</h2>
+<pre>export function profileToWeights(profile: TrialProfile): TimelineWeights {
+  const isAcc = profile.pathway === "Accelerated";
+  let review = isAcc ? 4 : 8;
+  let submission = 2;
+
+  const isDefaultStd = !isAcc && profile.endpoint === "PFS" && 
+                        profile.enrollment === "Fast" && profile.design === "RCT";
+  const isDefaultAcc = isAcc && profile.endpoint === "ORR" && 
+                        profile.enrollment === "Fast" && profile.design === "SingleArm";
+
+  if (!isDefaultStd && !isDefaultAcc) {
+    if (profile.endpoint === "OS") review += isAcc ? 3 : 5;
+    else if (profile.endpoint === "ORR" && !isAcc) review -= 2;
+    if (profile.enrollment === "Slow") review += 4;
+    else if (profile.enrollment === "Average") review += 1;
+    if (!isAcc && profile.design === "SingleArm") submission -= 1;
+    else if (isAcc && profile.design === "RCT") submission += 2;
+    else if (profile.design === "Adaptive") review -= 1;
+  }
+
+  return { submission, review, nccnLag: 5 };
+}</pre>
+
+<!-- Worked Examples -->
+<h2>Worked Examples</h2>
+
+<div class="example">
+<h3>Example A: Standard, OS, Slow, RCT (most conservative)</h3>
+<table>
+  <tr><td>Base submission</td><td>2</td></tr>
+  <tr><td>Base review (Standard)</td><td>8</td></tr>
+  <tr><td>OS adjustment &rarr; review +5</td><td>13</td></tr>
+  <tr><td>Slow enrollment &rarr; review +4</td><td>17</td></tr>
+  <tr><td>RCT (Standard baseline) &rarr; no adjustment</td><td>&mdash;</td></tr>
+  <tr><td><strong>Effective review</strong></td><td><strong>17</strong></td></tr>
+  <tr><td><strong>Effective submission</strong></td><td><strong>2</strong></td></tr>
+  <tr><td>NCCN lag</td><td>5</td></tr>
+  <tr><td><strong>Total from PCD</strong></td><td><strong>24 months</strong></td></tr>
+</table>
+<p><strong>PCD = 2027-06-01 &rarr; Est. Arrival = 2029-06-01</strong></p>
+</div>
+
+<div class="example">
+<h3>Example B: Accelerated, ORR, Fast, SingleArm (most optimistic)</h3>
+<table>
+  <tr><td>Base submission</td><td>2</td></tr>
+  <tr><td>Base review (Accelerated)</td><td>4</td></tr>
+  <tr><td>ORR (Accelerated baseline) &rarr; no adjustment</td><td>&mdash;</td></tr>
+  <tr><td>Fast enrollment &rarr; no adjustment</td><td>&mdash;</td></tr>
+  <tr><td>SingleArm (Accelerated baseline) &rarr; no adjustment</td><td>&mdash;</td></tr>
+  <tr><td><strong>Effective review</strong></td><td><strong>4</strong></td></tr>
+  <tr><td><strong>Effective submission</strong></td><td><strong>2</strong></td></tr>
+  <tr><td>NCCN lag</td><td>5</td></tr>
+  <tr><td><strong>Total from PCD</strong></td><td><strong>11 months</strong></td></tr>
+</table>
+<p><strong>PCD = 2027-06-01 &rarr; Est. Arrival = 2028-05-01</strong></p>
+</div>
+
+<div class="example">
+<h3>Example C: Standard, ORR, Average, SingleArm (mixed)</h3>
+<table>
+  <tr><td>Base submission</td><td>2</td></tr>
+  <tr><td>Base review (Standard)</td><td>8</td></tr>
+  <tr><td>ORR (Standard, not baseline) &rarr; review &minus;2</td><td>6</td></tr>
+  <tr><td>Average enrollment &rarr; review +1</td><td>7</td></tr>
+  <tr><td>SingleArm (Standard) &rarr; submission &minus;1</td><td>1</td></tr>
+  <tr><td><strong>Effective review</strong></td><td><strong>7</strong></td></tr>
+  <tr><td><strong>Effective submission</strong></td><td><strong>1</strong></td></tr>
+  <tr><td>NCCN lag</td><td>5</td></tr>
+  <tr><td><strong>Total from PCD</strong></td><td><strong>13 months</strong></td></tr>
+</table>
+<p><strong>PCD = 2027-06-01 &rarr; Est. Arrival = 2028-07-01</strong></p>
+</div>
+
+<!-- Design Principle -->
+<h2>Why Additive?</h2>
+<p>The model uses <strong>additive</strong> adjustments because real-world timeline drivers are largely independent:</p>
+<ul>
+  <li>Enrollment speed doesn't affect endpoint maturation rate</li>
+  <li>FDA pathway doesn't affect NCCN lag</li>
+  <li>Trial design complexity is independent of enrollment pace</li>
+</ul>
+<p>Each factor stacks its own month delta on the base. Multiplicative models would incorrectly create compounding effects between independent variables. The defaults are set so that a "typical" trial (PFS, Fast, RCT, Standard <em>or</em> ORR, Fast, SingleArm, Accelerated) produces realistic timelines with zero adjustment &mdash; non-default cases push the date earlier or later from that anchor.</p>
+
+<!-- Monte Carlo -->
+<h2>Monte Carlo Simulation</h2>
+<p><code>monteCarloConfidence</code> runs 10,000 iterations sampling each weight from a <strong>triangular distribution</strong>:</p>
+
+<pre>submission ~ Triangular(min, mode, max)
+review     ~ Triangular(min, mode, max)
+nccnLag    ~ Triangular(min, mode, max)
+
+Total = submission + review + nccnLag  (sampled per iteration)
+
+Results sorted to produce P10, P50, P90 percentiles
+Confidence score = 1 - ((P90 - P10) / P50)</pre>
+
+<p><strong>Distribution bounds are adjusted by:</strong></p>
+<ul>
+  <li><code>enrollment</code> risk slider &rarr; widens all bounds</li>
+  <li><code>CMC</code> risk slider &rarr; widens review upper bound</li>
+  <li><code>urgency</code> risk slider &rarr; widens NCCN lag upper bound</li>
+  <li>BTD &rarr; tightens submission mode and review max</li>
+  <li>Priority Review &rarr; tightens review min</li>
+  <li>AA &rarr; tightens submission min</li>
+</ul>
+
+<div class="footer">OCIE &mdash; Oncology Competitive Intelligence Engine &bull; Timeline Projection Model &bull; July 2026</div>
+
+</div>
+</body>
+</html>
