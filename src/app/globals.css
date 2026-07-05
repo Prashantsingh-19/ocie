@@ -460,7 +460,7 @@ body {
 .pl-tick-major { width: 2px; height: 14px; background: #555; border-radius: 1px; }
 .pl-tick-minor-wrap { position: absolute; top: 18px; transform: translateX(-50%); pointer-events: none; }
 .pl-tick-minor { display: block; width: 1.5px; height: 8px; background: #999; }
-.pl-slider-arrow { position: absolute; top: 32px; transform: translateX(-50%); z-index: 3; width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-top: 14px solid #B85C38; transition: left 0.08s; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.15)); }
+.pl-slider-arrow { position: absolute; top: 32px; transform: translateX(-50%); z-index: 3; width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-bottom: 14px solid #B85C38; transition: left 0.08s; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.15)); }
 .pl-slider-value { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #B85C38; font-weight: 600; text-align: right; margin-top: 2px; }
 
 /* ── View Toggle Pills ── */
