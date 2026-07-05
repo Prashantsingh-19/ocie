@@ -68,6 +68,7 @@ export default function Dashboard({ data, error }: Props) {
 
   const [sliderValue, setSliderValue] = useState(12);
   const [viewMode, setViewMode] = useState<"drug" | "company">("drug");
+  const [expandedCompany, setExpandedCompany] = useState<string | null>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
 
@@ -769,22 +770,113 @@ export default function Dashboard({ data, error }: Props) {
                 {companyData.map((c) => {
                   const maxTrials = Math.max(...companyData.map(x => x.trials), 1);
                   const pct = (c.trials / maxTrials) * 100;
+                  const isExp = expandedCompany === c.sponsor;
+                  const companyDrugs = pipelineYearFiltered.filter((p) => {
+                    const pp = data?.pipelineProfiles?.find((x) => x.nctId === p.nct_id);
+                    return pp?.sponsor === c.sponsor;
+                  });
                   return (
-                    <div key={c.sponsor} className="pl-chart-row">
-                      <span className="pl-chart-name">{c.sponsor}</span>
-                      <span className="pl-chart-bar-cell">
-                        <span className="pl-chart-bar-wrap">
-                          <span className="pl-chart-bar" style={{ width: `${pct}%` }} />
-                          <span className="pl-chart-count">{c.trials}</span>
+                    <div key={c.sponsor} className="pl-chart-row-wrap">
+                      <div className={`pl-chart-row ${isExp ? "pl-chart-row-exp" : ""}`} onClick={() => setExpandedCompany(isExp ? null : c.sponsor)} style={{cursor:"pointer"}}>
+                        <span className="pl-chart-name">
+                          {isExp ? <span className="pl-chart-exp-icon">▾</span> : <span className="pl-chart-exp-icon">▸</span>}
+                          {c.sponsor}
                         </span>
-                      </span>
-                      <span className="pl-chart-drugs">{c.drugs.length > 40 ? c.drugs.slice(0,38) + "…" : c.drugs}</span>
-                      <span className="pl-chart-bms">
-                        {c.biomarkers.map((b) => (
-                          <span key={b} className={`oc-card-bm ${biomarkerBadgeClass(b)}`} style={{fontSize:9}}>{b}</span>
-                        ))}
-                      </span>
-                      <span className="pl-chart-arrival">{c.minArrival || "—"}</span>
+                        <span className="pl-chart-bar-cell">
+                          <span className="pl-chart-bar-wrap">
+                            <span className="pl-chart-bar" style={{ width: `${pct}%` }} />
+                            <span className="pl-chart-count">{c.trials}</span>
+                          </span>
+                        </span>
+                        <span className="pl-chart-drugs">{c.drugs.length > 40 ? c.drugs.slice(0,38) + "…" : c.drugs}</span>
+                        <span className="pl-chart-bms">
+                          {c.biomarkers.map((b) => (
+                            <span key={b} className={`oc-card-bm ${biomarkerBadgeClass(b)}`} style={{fontSize:9}}>{b}</span>
+                          ))}
+                        </span>
+                        <span className="pl-chart-arrival">{c.minArrival || "—"}</span>
+                      </div>
+                      {isExp && (
+                        <div className="pl-chart-detail">
+                          {companyDrugs.map((p) => {
+                            const dp = drugProfiles[p.nct_id] || inferProfile(p.phases || []);
+                            const computedW = profileToWeights(dp);
+                            const dw = drugWeights[p.nct_id] || computedW;
+                            const isCustomW = drugWeights[p.nct_id] !== undefined && (drugWeights[p.nct_id].submission !== computedW.submission || drugWeights[p.nct_id].review !== computedW.review || drugWeights[p.nct_id].nccnLag !== computedW.nccnLag);
+                            const proj = projectTimeline(p.primary_completion_date, dw);
+                            const conf = monteCarloConfidence(dw, dp, drugRisks[p.nct_id] || DEFAULT_RISK);
+                            const phaseStr = p.phases?.join("/").replace(/PHASE/g, "P") || "";
+                            return (
+                              <div key={p.nct_id} className="pl-chart-drug-detail">
+                                <div className="pl-ie-header">
+                                  <span className="pl-ie-comp">Drug</span>
+                                  <span className="pl-ie-drug">{p.drug}</span>
+                                  {phaseStr && <span className="pl-ie-phase">{phaseStr}</span>}
+                                </div>
+                                <div className="pl-tile-dates">
+                                  <div className="pl-tile-date-field"><span className="oc-filter-label">PCD</span><span>{p.primary_completion_date || "—"}</span></div>
+                                  <div className="pl-tile-date-field"><span className="oc-filter-label">Est. Arrival</span><span>{proj?.projectedSOC || "—"}</span></div>
+                                </div>
+                                <div className="pl-ie-grid">
+                                  <div className="pl-field">
+                                    <span className="oc-filter-label">Endpoint</span>
+                                    <select className="oc-select" value={dp.endpoint}
+                                      onChange={(e) => setDrugProfiles({ ...drugProfiles, [p.nct_id]: { ...dp, endpoint: e.target.value as TrialEndpoint } })}>
+                                      <option>PFS</option><option>ORR</option><option>OS</option>
+                                    </select>
+                                  </div>
+                                  <div className="pl-field">
+                                    <span className="oc-filter-label">Enrollment</span>
+                                    <select className="oc-select" value={dp.enrollment}
+                                      onChange={(e) => setDrugProfiles({ ...drugProfiles, [p.nct_id]: { ...dp, enrollment: e.target.value as TrialEnrollment } })}>
+                                      <option>Fast</option><option>Average</option><option>Slow</option>
+                                    </select>
+                                  </div>
+                                  <div className="pl-field">
+                                    <span className="oc-filter-label">Design</span>
+                                    <select className="oc-select" value={dp.design}
+                                      onChange={(e) => setDrugProfiles({ ...drugProfiles, [p.nct_id]: { ...dp, design: e.target.value as TrialDesign } })}>
+                                      <option>RCT</option><option>SingleArm</option><option>Adaptive</option>
+                                    </select>
+                                  </div>
+                                  <div className="pl-field">
+                                    <span className="oc-filter-label">FDA</span>
+                                    <div className="pl-ie-toggles">
+                                      {([["btd","BTD"],["aa","AA"],["priorityReview","PR"]] as const).map(([k,l]) => (
+                                        <label key={k} className="pl-toggle">
+                                          <input type="checkbox" checked={dp[k as keyof TrialProfile] as boolean}
+                                            onChange={() => setDrugProfiles({ ...drugProfiles, [p.nct_id]: { ...dp, [k]: !dp[k as keyof TrialProfile] } })} />
+                                          <span>{l}</span>
+                                        </label>
+                                      ))}
+                                    </div>
+                                  </div>
+                                </div>
+                                {conf && (
+                                  <div className="pl-ie-metrics" style={{marginTop:8}}>
+                                    <div className="pl-metric">
+                                      <span className="pl-metric-label">P10</span>
+                                      <span className="pl-metric-val">{conf.p10}mo</span>
+                                    </div>
+                                    <div className="pl-metric">
+                                      <span className="pl-metric-label">P50</span>
+                                      <span className="pl-metric-val">{conf.p50}mo</span>
+                                    </div>
+                                    <div className="pl-metric">
+                                      <span className="pl-metric-label">P90</span>
+                                      <span className="pl-metric-val">{conf.p90}mo</span>
+                                    </div>
+                                    <div className="pl-metric">
+                                      <span className="pl-metric-label">Confidence</span>
+                                      <span className="pl-metric-val" style={{color:conf.color}}>{conf.confidence}</span>
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
                     </div>
                   );
                 })}
