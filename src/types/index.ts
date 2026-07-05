@@ -59,6 +59,10 @@ export interface PipelineProfile {
   fda: { btd: boolean; aa: boolean; priorityReview: boolean };
   projectedFDA: string | null;
   projectedSOC: string | null;
+  title?: string | null;
+  eligibilityText?: string | null;
+  conditions?: string[] | null;
+  enrollmentCount?: number | null;
 }
 
 export interface WhiteSpaceRow {

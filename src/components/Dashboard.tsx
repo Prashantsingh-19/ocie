@@ -69,6 +69,7 @@ export default function Dashboard({ data, error }: Props) {
   const [sliderValue, setSliderValue] = useState(12);
   const [viewMode, setViewMode] = useState<"drug" | "company">("drug");
   const [expandedCompany, setExpandedCompany] = useState<string | null>(null);
+  const [selectedDetail, setSelectedDetail] = useState<string | null>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
 
@@ -798,44 +799,62 @@ export default function Dashboard({ data, error }: Props) {
                 const pp = data?.pipelineProfiles?.find((x) => x.nctId === p.nct_id);
                 return pp?.sponsor === expandedCompany;
               });
+              const detailProfile = selectedDetail ? data?.pipelineProfiles?.find((x) => x.nctId === selectedDetail) : null;
               return (
-                <div className="oc-overlay" onClick={() => setExpandedCompany(null)}>
+                <div className="oc-overlay" onClick={() => { setExpandedCompany(null); setSelectedDetail(null); }}>
                   <div className="oc-overlay-panel pl-company-overlay" onClick={(e) => e.stopPropagation()}>
                     <div className="oc-overlay-header">
                       <span className="pl-ie-drug">{expandedCompany}</span>
-                      <button className="oc-overlay-close" onClick={() => setExpandedCompany(null)}>✕</button>
+                      <button className="oc-overlay-close" onClick={() => { setExpandedCompany(null); setSelectedDetail(null); }}>✕</button>
                     </div>
-                    <div className="pl-company-drug-grid">
-                      {companyDrugs.map((p) => {
-                        const dp = drugProfiles[p.nct_id] || inferProfile(p.phases || []);
-                        const computedW = profileToWeights(dp);
-                        const dw = drugWeights[p.nct_id] || computedW;
-                        const proj = projectTimeline(p.primary_completion_date, dw);
-                        const conf = monteCarloConfidence(dw, dp, drugRisks[p.nct_id] || DEFAULT_RISK);
-                        const phaseStr = p.phases?.join("/").replace(/PHASE/g, "P") || "";
-                        const pp = data?.pipelineProfiles?.find((x) => x.nctId === p.nct_id);
-                        const sponsor = pp?.sponsor;
-                        const horizonMo = proj ? (new Date(proj.projectedSOC).getTime() - Date.now()) / (1000 * 60 * 60 * 24 * 30.44) : null;
-                        return (
-                          <div key={p.nct_id} className="pl-tile">
-                            <div className="oc-card" onClick={() => { setExpandedTile(expandedTile === p.drug ? null : p.drug); setExpandedCompany(null); }} style={{cursor:"pointer"}}>
-                              <span className="pl-tile-horizon" style={{
-                                backgroundColor: horizonMo !== null && horizonMo < 12 ? "#2d6a4f" : horizonMo !== null && horizonMo < 24 ? "#e09f3e" : horizonMo !== null && horizonMo < 48 ? "#d00000" : "#aa80a0",
-                              }}>
-                                {horizonMo !== null ? horizonMo < 12 ? "<1yr" : horizonMo < 24 ? "1-2yr" : horizonMo < 48 ? "2-4yr" : ">4yr" : "—"}
-                              </span>
-                              <span className={`oc-card-bm ${biomarkerBadgeClass(p.biomarker)}`}>{p.biomarker}</span>
-                              <div className="oc-card-drug">{p.drug}</div>
-                              <div className="oc-card-class">{sponsor || "—"}</div>
-                              <div className="oc-card-footer">
-                                <span className="tag tag-lot">{phaseStr || "—"}</span>
-                                {proj && <span className="pl-tile-date">{proj.projectedSOC}</span>}
+
+                    {!selectedDetail ? (
+                      <div className="pl-company-drug-grid">
+                        {companyDrugs.map((p) => {
+                          const proj = projectTimeline(p.primary_completion_date, drugWeights[p.nct_id] || profileToWeights(drugProfiles[p.nct_id] || inferProfile(p.phases || [])));
+                          const phaseStr = p.phases?.join("/").replace(/PHASE/g, "P") || "";
+                          const pp = data?.pipelineProfiles?.find((x) => x.nctId === p.nct_id);
+                          const sponsor = pp?.sponsor;
+                          const horizonMo = proj ? (new Date(proj.projectedSOC).getTime() - Date.now()) / (1000 * 60 * 60 * 24 * 30.44) : null;
+                          return (
+                            <div key={p.nct_id} className="pl-tile">
+                              <div className="oc-card" onClick={() => setSelectedDetail(p.nct_id)} style={{cursor:"pointer"}}>
+                                <span className="pl-tile-horizon" style={{
+                                  backgroundColor: horizonMo !== null && horizonMo < 12 ? "#2d6a4f" : horizonMo !== null && horizonMo < 24 ? "#e09f3e" : horizonMo !== null && horizonMo < 48 ? "#d00000" : "#aa80a0",
+                                }}>
+                                  {horizonMo !== null ? horizonMo < 12 ? "<1yr" : horizonMo < 24 ? "1-2yr" : horizonMo < 48 ? "2-4yr" : ">4yr" : "—"}
+                                </span>
+                                <span className={`oc-card-bm ${biomarkerBadgeClass(p.biomarker)}`}>{p.biomarker}</span>
+                                <div className="oc-card-drug">{p.drug}</div>
+                                <div className="oc-card-class">{sponsor || "—"}</div>
+                                <div className="oc-card-footer">
+                                  <span className="tag tag-lot">{phaseStr || "—"}</span>
+                                  {proj && <span className="pl-tile-date">{proj.projectedSOC}</span>}
+                                </div>
                               </div>
                             </div>
-                          </div>
-                        );
-                      })}
-                    </div>
+                          );
+                        })}
+                      </div>
+                    ) : detailProfile ? (
+                      <div className="pl-trial-detail">
+                        <button className="pl-trial-back" onClick={() => setSelectedDetail(null)}>← Back to drugs</button>
+                        <div className="pl-trial-title">{detailProfile.title || "—"}</div>
+                        <div className="pl-trial-meta">
+                          <span><span className="oc-filter-label">NCT</span> {detailProfile.nctId}</span>
+                          <span><span className="oc-filter-label">Status</span> {detailProfile.status}</span>
+                          <span><span className="oc-filter-label">Phases</span> {detailProfile.phases?.join(", ") || "—"}</span>
+                          <span><span className="oc-filter-label">Enrollment</span> {detailProfile.enrollmentCount ?? "—"}</span>
+                          <span><span className="oc-filter-label">Conditions</span> {detailProfile.conditions?.join(", ") || "—"}</span>
+                        </div>
+                        {detailProfile.eligibilityText && (
+                          <details className="pl-trial-criteria" open>
+                            <summary className="pl-trial-criteria-summary">Eligibility Criteria</summary>
+                            <div className="pl-trial-criteria-text">{detailProfile.eligibilityText}</div>
+                          </details>
+                        )}
+                      </div>
+                    ) : null}
                   </div>
                 </div>
               );

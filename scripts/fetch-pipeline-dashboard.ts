@@ -287,6 +287,10 @@ interface DrugEntry {
   projectedFDA: string | null;
   projectedSOC: string | null;
   horizon: string | null;
+  title: string | null;
+  eligibilityText: string | null;
+  conditions: string[] | null;
+  enrollmentCount: number | null;
 }
 
 // ─────────────────────────────────────────
@@ -406,6 +410,10 @@ async function main() {
       projectedFDA: pFDA,
       projectedSOC: pSOC,
       horizon: hz,
+      title: trial.title || null,
+      eligibilityText: trial.eligibilityText || null,
+      conditions: trial.conditions || null,
+      enrollmentCount: trial.enrollmentCount || null,
     });
   }
 
