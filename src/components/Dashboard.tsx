@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef, useCallback } from "react";
 import InsightsTab from "./InsightsTab";
 import type { DashboardData, PipelineRow, TimelineWeights, TrialProfile, TrialEndpoint, TrialEnrollment, TrialDesign, TrialPathway, RiskSliders } from "@/types";
 import {
@@ -68,6 +68,23 @@ export default function Dashboard({ data, error }: Props) {
 
   const [sliderValue, setSliderValue] = useState(12);
   const [viewMode, setViewMode] = useState<"drug" | "company">("drug");
+  const trackRef = useRef<HTMLDivElement>(null);
+  const [isDragging, setIsDragging] = useState(false);
+
+  const getValueFromPos = useCallback((clientX: number) => {
+    if (!trackRef.current) return sliderValue;
+    const rect = trackRef.current.getBoundingClientRect();
+    return Math.round(Math.max(0, Math.min(1, (clientX - rect.left) / rect.width)) * 120);
+  }, [sliderValue]);
+
+  useEffect(() => {
+    if (!isDragging) return;
+    const onMove = (e: MouseEvent) => setSliderValue(getValueFromPos(e.clientX));
+    const onUp = () => setIsDragging(false);
+    window.addEventListener("mousemove", onMove);
+    window.addEventListener("mouseup", onUp);
+    return () => { window.removeEventListener("mousemove", onMove); window.removeEventListener("mouseup", onUp); };
+  }, [isDragging, getValueFromPos]);
 
   const regimens = data?.regimens ?? [];
 
@@ -520,20 +537,34 @@ export default function Dashboard({ data, error }: Props) {
             </div>
 
             <div className="pl-slider-section">
-              <div className="pl-slider-track">
-                <input type="range" min={0} max={120} value={sliderValue}
-                  onChange={(e) => setSliderValue(+e.target.value)}
-                  className="pl-slider" />
-                <div className="pl-slider-ticks">
-                  {[12,24,36,48,60,72,84,96,108,120].map((mo) => (
-                    <div key={mo} className="pl-slider-tick" style={{ left: `${(mo/120)*100}%` }}>
-                      <strong>{mo / 12}yr</strong>
-                    </div>
-                  ))}
+              <div className="pl-slider-track"
+                ref={trackRef}
+                onClick={(e) => setSliderValue(getValueFromPos(e.clientX))}
+                onMouseDown={(e) => { setSliderValue(getValueFromPos(e.clientX)); setIsDragging(true); }}>
+                <div className="pl-tick-layer">
+                  {Array.from({ length: 10 }, (_, i) => {
+                    const yr = i + 1;
+                    const leftPct = (yr * 12 / 120) * 100;
+                    return (
+                      <div key={yr} className="pl-tick-group" style={{ left: `${leftPct}%` }}>
+                        <span className="pl-tick-year">{yr}yr</span>
+                        <span className="pl-tick-major" />
+                      </div>
+                    );
+                  })}
+                  {Array.from({ length: 40 }, (_, i) => {
+                    const mo = (i + 1) * 3;
+                    if (mo % 12 === 0) return null;
+                    return (
+                      <div key={mo} className="pl-tick-minor-wrap" style={{ left: `${(mo / 120) * 100}%` }}>
+                        <span className="pl-tick-minor" />
+                      </div>
+                    );
+                  })}
                 </div>
-                <div className="pl-slider-arrow" style={{ left: `${(sliderValue/120)*100}%` }} />
+                <div className="pl-slider-arrow" style={{ left: `${(sliderValue / 120) * 100}%` }} />
               </div>
-              <div className="pl-slider-value">{sliderValue}mo ({sliderValue >= 12 ? Math.round(sliderValue / 12 * 10) / 10 + "yr" : sliderValue + "mo"})</div>
+              <div className="pl-slider-value">{sliderValue}mo</div>
             </div>
 
             <div className="pl-view-pills">
