@@ -452,14 +452,15 @@ body {
 
 /* ── Slider Section (Ruler Scale) ── */
 .pl-slider-section { margin-bottom: 14px; }
-.pl-slider-track { position: relative; height: 40px; cursor: pointer; user-select: none; padding-top: 16px; }
-.pl-tick-layer { position: absolute; top: 16px; left: 0; right: 0; height: 24px; pointer-events: none; }
+.pl-slider-track { position: relative; height: 54px; cursor: pointer; user-select: none; }
+.pl-scale-baseline { position: absolute; top: 18px; left: 0; right: 0; height: 1px; background: #ddd; pointer-events: none; }
+.pl-tick-layer { position: absolute; top: 0; left: 0; right: 0; height: 32px; pointer-events: none; }
 .pl-tick-group { position: absolute; top: 0; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; }
-.pl-tick-year { position: absolute; bottom: 18px; font-size: 9px; color: #888; font-family: 'JetBrains Mono', monospace; white-space: nowrap; font-weight: 500; }
-.pl-tick-major { width: 1px; height: 10px; background: #aaa; }
-.pl-tick-minor-wrap { position: absolute; top: 0; transform: translateX(-50%); pointer-events: none; }
-.pl-tick-minor { display: block; width: 1px; height: 5px; background: #ccc; }
-.pl-slider-arrow { position: absolute; bottom: 0; transform: translateX(-50%); z-index: 3; width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 7px solid #B85C38; transition: left 0.08s; }
+.pl-tick-year { font-size: 10px; color: #555; font-family: 'JetBrains Mono', monospace; font-weight: 600; line-height: 1; margin-bottom: 5px; }
+.pl-tick-major { width: 2px; height: 14px; background: #555; border-radius: 1px; }
+.pl-tick-minor-wrap { position: absolute; top: 18px; transform: translateX(-50%); pointer-events: none; }
+.pl-tick-minor { display: block; width: 1.5px; height: 8px; background: #999; }
+.pl-slider-arrow { position: absolute; top: 32px; transform: translateX(-50%); z-index: 3; width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-top: 14px solid #B85C38; transition: left 0.08s; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.15)); }
 .pl-slider-value { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #B85C38; font-weight: 600; text-align: right; margin-top: 2px; }
 
 /* ── View Toggle Pills ── */
