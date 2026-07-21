@@ -72,6 +72,7 @@ interface RegimenRow {
   patient_population: string;
   source_sheet: string;
   single_or_combination: string;
+  stage: string;
 }
 
 function parseXLSX(): RegimenRow[] {
@@ -102,6 +103,7 @@ function parseXLSX(): RegimenRow[] {
       patient_population: r[12] ? String(r[12]).trim() : "",
       source_sheet: String(r[13] || "").trim(),
       single_or_combination: String(r[1] || "").trim(),
+      stage: "Metastatic",
     });
   }
   return results;
@@ -148,8 +150,8 @@ async function seed() {
   await pool.query("DELETE FROM regimens");
 
   console.log("Inserting regimens...");
-  const regColumns = ["drug", "type", "single_or_combination", "drug_class", "mechanism", "biomarker", "biomarker_detail", "histology", "lot", "tier", "setting", "route", "notes", "pd_l1_expression", "patient_population", "source_sheet"];
-  const regRows = regimens.map((r) => [r.drug, r.type, r.single_or_combination, r.drug_class, r.mechanism, r.biomarker, r.biomarker_detail, r.histology, r.lot, r.tier, r.setting, r.route, r.notes, r.pd_l1_expression, r.patient_population, r.source_sheet]);
+  const regColumns = ["drug", "type", "single_or_combination", "drug_class", "mechanism", "biomarker", "biomarker_detail", "histology", "lot", "tier", "setting", "route", "notes", "pd_l1_expression", "patient_population", "source_sheet", "stage"];
+  const regRows = regimens.map((r) => [r.drug, r.type, r.single_or_combination, r.drug_class, r.mechanism, r.biomarker, r.biomarker_detail, r.histology, r.lot, r.tier, r.setting, r.route, r.notes, r.pd_l1_expression, r.patient_population, r.source_sheet, r.stage]);
   await batchInsert(pool, "regimens", regColumns, regRows);
   console.log(`  ${regimens.length} inserted`);
 

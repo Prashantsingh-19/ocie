@@ -57,6 +57,7 @@ export default function Dashboard({ data, error }: Props) {
     hist: "All",
     lot: "All",
     subtype: "All",
+    stage: "Metastatic",
   });
   const [appliedFilters, setAppliedFilters] = useState({
     biomarker: "",
@@ -64,6 +65,7 @@ export default function Dashboard({ data, error }: Props) {
     hist: "All",
     lot: "All",
     subtype: "All",
+    stage: "Metastatic",
   });
 
   const [sliderValue, setSliderValue] = useState(12);
@@ -160,6 +162,7 @@ export default function Dashboard({ data, error }: Props) {
     lot: appliedFilters.lot,
     pdl1: "All",
     subtype: appliedFilters.subtype || "All",
+    stage: appliedFilters.stage || "All",
   }), [regimens, appliedFilters]);
   const selectedRegimen = useMemo(
     () => regimens.find((r) => r.drug === selected),
@@ -400,7 +403,20 @@ export default function Dashboard({ data, error }: Props) {
             </select>
           </div>
 
-          <button className="oc-apply-btn" disabled={!pendingFilters.biomarker} onClick={() => {
+          <div className="oc-filter-group">
+            <span className="oc-filter-label">Stage</span>
+            <select
+              className="oc-select"
+              value={pendingFilters.stage}
+              onChange={(e) => setPendingFilter("stage", e.target.value)}
+            >
+              <option>Metastatic</option>
+              <option>Stage III</option>
+              <option>All</option>
+            </select>
+          </div>
+
+          <button className="oc-apply-btn" disabled={pendingFilters.stage !== "Stage III" && !pendingFilters.biomarker} onClick={() => {
             setAppliedFilters(pendingFilters);
             setHasApplied(true);
           }}>
@@ -408,7 +424,7 @@ export default function Dashboard({ data, error }: Props) {
           </button>
 
           <div className="oc-sidebar-note">
-            Stage: Metastatic<br />
+            Stage: {appliedFilters.stage || "Metastatic"}<br />
             Source: NCCN 2025 · ASCO<br />
             Filters apply across all tabs
           </div>

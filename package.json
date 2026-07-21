@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "db:seed": "tsx scripts/seed.ts"
+    "db:seed": "tsx scripts/seed.ts",
+    "db:migrate-stage3": "tsx scripts/migrate-stage3.ts",
+    "db:seed-stage3": "tsx scripts/seed-stage3.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.108.2",

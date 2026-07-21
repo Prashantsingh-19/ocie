@@ -21,6 +21,7 @@ CREATE TABLE IF NOT EXISTS regimens (
   patient_population TEXT,
   source_sheet TEXT,
   fda_approved BOOLEAN DEFAULT FALSE,
+  stage TEXT DEFAULT 'Metastatic',
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 

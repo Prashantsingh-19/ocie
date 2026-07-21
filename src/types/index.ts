@@ -16,6 +16,7 @@ export interface Regimen {
   pd_l1_expression: string;
   patient_population: string;
   source_sheet: string;
+  stage: string;
 }
 
 export interface Trial {
@@ -127,6 +128,7 @@ export function filterRegimens(data: Regimen[], filters: {
   lot: string;
   pdl1: string;
   subtype: string;
+  stage: string;
 }): Regimen[] {
   return data.filter((r) => {
     if (!biomarkerMatches(r.biomarker, filters.biomarker)) return false;
@@ -135,6 +137,7 @@ export function filterRegimens(data: Regimen[], filters: {
     if (filters.lot !== "All" && r.lot !== filters.lot) return false;
     if (filters.pdl1 !== "All" && r.pd_l1_expression !== filters.pdl1) return false;
     if (filters.subtype !== "All" && r.biomarker_detail !== filters.subtype) return false;
+    if (filters.stage !== "All" && r.stage !== filters.stage) return false;
     return true;
   });
 }
