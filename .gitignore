@@ -48,3 +48,6 @@ docs/
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# source data (sensitive, not for public repo)
+*.xlsx
