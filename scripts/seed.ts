@@ -1,5 +1,5 @@
 import * as XLSX from "xlsx";
-import { Pool } from "pg";
+import { createClient } from "@supabase/supabase-js";
 import { config } from "dotenv";
 import { readFileSync, existsSync } from "fs";
 import path from "path";
@@ -114,25 +114,22 @@ function loadNctMapping(): Record<string, any> {
   return JSON.parse(readFileSync(NCT_MAPPING_PATH, "utf-8"));
 }
 
-async function batchInsert(pool: Pool, table: string, columns: string[], rows: any[][], onConflict = "") {
+async function batchInsert(supabase: any, table: string, rows: any[]) {
   if (rows.length === 0) return;
   const BATCH = 50;
-  const suffix = onConflict ? ` ON CONFLICT ${onConflict}` : "";
   for (let i = 0; i < rows.length; i += BATCH) {
     const batch = rows.slice(i, i + BATCH);
-    const placeholders = batch
-      .map((_, rIdx) => `(${columns.map((_, cIdx) => `$${rIdx * columns.length + cIdx + 1}`).join(",")})`)
-      .join(",");
-    const params = batch.flat();
-    await pool.query(`INSERT INTO ${table} (${columns.join(",")}) VALUES ${placeholders}${suffix}`, params);
+    const { error } = await supabase.from(table).insert(batch);
+    if (error) throw error;
   }
 }
 
 async function seed() {
-  const connectionString = process.env.DATABASE_URL;
-  if (!connectionString) { console.error("DATABASE_URL not set."); process.exit(1); }
+  const url = process.env.SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!url || !key) { console.error("SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY not set."); process.exit(1); }
 
-  const pool = new Pool({ connectionString, ssl: { rejectUnauthorized: false } });
+  const supabase = createClient(url, key);
 
   console.log("Parsing xlsx...");
   const regimens = parseXLSX();
@@ -143,55 +140,68 @@ async function seed() {
   console.log(`  ${Object.keys(nctMapping).length} drugs mapped`);
 
   console.log("Clearing existing data...");
-  await pool.query("DELETE FROM regimen_trials");
-  await pool.query("DELETE FROM inclusion_criteria");
-  await pool.query("DELETE FROM exclusion_criteria");
-  await pool.query("DELETE FROM trials");
-  await pool.query("DELETE FROM regimens");
+  await supabase.from("regimen_trials").delete().neq("id", 0);
+  await supabase.from("inclusion_criteria").delete().neq("id", 0);
+  await supabase.from("exclusion_criteria").delete().neq("id", 0);
+  await supabase.from("trials").delete().neq("id", 0);
+  await supabase.from("regimens").delete().neq("id", 0);
 
   console.log("Inserting regimens...");
-  const regColumns = ["drug", "type", "single_or_combination", "drug_class", "mechanism", "biomarker", "biomarker_detail", "histology", "lot", "tier", "setting", "route", "notes", "pd_l1_expression", "patient_population", "source_sheet", "stage"];
-  const regRows = regimens.map((r) => [r.drug, r.type, r.single_or_combination, r.drug_class, r.mechanism, r.biomarker, r.biomarker_detail, r.histology, r.lot, r.tier, r.setting, r.route, r.notes, r.pd_l1_expression, r.patient_population, r.source_sheet, r.stage]);
-  await batchInsert(pool, "regimens", regColumns, regRows);
+  const regRows = regimens.map((r) => ({
+    drug: r.drug, type: r.type, single_or_combination: r.single_or_combination,
+    drug_class: r.drug_class, mechanism: r.mechanism, biomarker: r.biomarker,
+    biomarker_detail: r.biomarker_detail, histology: r.histology, lot: r.lot,
+    tier: r.tier, setting: r.setting, route: r.route, notes: r.notes,
+    pd_l1_expression: r.pd_l1_expression, patient_population: r.patient_population,
+    source_sheet: r.source_sheet, stage: r.stage,
+  }));
+  await batchInsert(supabase, "regimens", regRows);
   console.log(`  ${regimens.length} inserted`);
 
   console.log("Inserting trials...");
   const seenNcts = new Set<string>();
-  const trialRows: any[][] = [];
+  const trialRows: any[] = [];
   const trialDrugMap: { nctId: string; drugName: string }[] = [];
 
   for (const [drugName, mapping] of Object.entries(nctMapping)) {
     for (const t of mapping.trials) {
       if (seenNcts.has(t.nctId)) { trialDrugMap.push({ nctId: t.nctId, drugName }); continue; }
       seenNcts.add(t.nctId);
-      trialRows.push([t.nctId, drugName, t.title, t.phases, t.status, t.startDate, t.primaryCompletionDate, t.enrollment]);
+      trialRows.push({
+        nct_id: t.nctId, drug_name: drugName, title: t.title,
+        phases: t.phases, status: t.status, start_date: t.startDate,
+        primary_completion_date: t.primaryCompletionDate, enrollment: t.enrollment,
+      });
       trialDrugMap.push({ nctId: t.nctId, drugName });
     }
   }
-  await batchInsert(pool, "trials", ["nct_id", "drug_name", "title", "phases", "status", "start_date", "primary_completion_date", "enrollment"], trialRows);
+  await batchInsert(supabase, "trials", trialRows);
   console.log(`  ${seenNcts.size} trials inserted`);
 
   console.log("Linking regimens to trials...");
-  const regResult = await pool.query("SELECT id, drug FROM regimens");
+  const { data: regData, error: regErr } = await supabase.from("regimens").select("id, drug");
+  if (regErr) throw regErr;
   const regimenMap = new Map<string, number>();
-  for (const r of regResult.rows) regimenMap.set((r.drug as string).toLowerCase(), r.id as number);
+  for (const r of regData) regimenMap.set((r.drug as string).toLowerCase(), r.id as number);
 
-  const pairs: { regId: number; nctId: string }[] = [];
+  const seenLinks = new Set<string>();
+  const linkRows: any[] = [];
   for (const { nctId, drugName } of trialDrugMap) {
     const firstWord = drugName.split(" ")[0].toLowerCase();
     for (const [regDrug, regId] of regimenMap) {
-      if (regDrug.includes(firstWord) || firstWord.includes(regDrug)) pairs.push({ regId, nctId });
+      if (!(regDrug.includes(firstWord) || firstWord.includes(regDrug))) continue;
+      const key = `${regId}:${nctId}`;
+      if (seenLinks.has(key)) continue;
+      seenLinks.add(key);
+      linkRows.push({ regimen_id: regId, nct_id: nctId });
     }
   }
+  await batchInsert(supabase, "regimen_trials", linkRows);
+  console.log(`  ${linkRows.length} links created`);
 
-  const linkRows = pairs.map((p) => [p.regId, p.nctId]);
-  await batchInsert(pool, "regimen_trials", ["regimen_id", "nct_id"], linkRows, "(regimen_id, nct_id) DO NOTHING");
-  console.log(`  ${pairs.length} links created`);
-
-  const s1 = await pool.query("SELECT COUNT(*) FROM regimens");
-  const s2 = await pool.query("SELECT COUNT(*) FROM trials");
-  console.log(`\nDone. Regimens: ${s1.rows[0].count}, Trials: ${s2.rows[0].count}`);
-  await pool.end();
+  const { count: regCount } = await supabase.from("regimens").select("*", { count: "exact", head: true });
+  const { count: trialCount } = await supabase.from("trials").select("*", { count: "exact", head: true });
+  console.log(`\nDone. Regimens: ${regCount}, Trials: ${trialCount}`);
 }
 
 seed().catch((err) => { console.error("Seed failed:", err); process.exit(1); });

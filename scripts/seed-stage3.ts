@@ -1,5 +1,5 @@
 import * as XLSX from "xlsx";
-import { Pool } from "pg";
+import { createClient } from "@supabase/supabase-js";
 import { config } from "dotenv";
 import path from "path";
 
@@ -21,17 +21,6 @@ function simplifyType(t: string): string {
   const l = t.toLowerCase();
   if (l.includes("combination") || (l.includes("+") && !l.includes("+/-"))) return "Combination";
   return "Single";
-}
-
-function extractLotFromSetting(setting: string): string {
-  const s = setting.toLowerCase();
-  if (
-    s.includes("neoadjuvant") || s.includes("adjuvant") ||
-    s.includes("perioperative") || s.includes("definitive") ||
-    s.includes("consolidation") || s.includes("sequential") ||
-    s.includes("rt alone")
-  ) return "1L";
-  return "1L";
 }
 
 interface Stage3Row {
@@ -60,7 +49,6 @@ function parseStage3(): Stage3Row[] {
   const rows = XLSX.utils.sheet_to_json<any>(ws, { header: 1 });
   const results: Stage3Row[] = [];
 
-  // Row 0 = title, Row 1 = header, Data from Row 2
   for (let i = 2; i < rows.length; i++) {
     const r = rows[i];
     if (!r || !r[0]) continue;
@@ -70,7 +58,6 @@ function parseStage3(): Stage3Row[] {
     const biomarkerDetail = String(r[4] || "").trim();
     const biomarkerHigh = String(r[5] || "").trim();
 
-    // Build notes: col 13 + link (col 15) + flag (col 16)
     let notes = String(r[13] || "").trim();
     const link = String(r[15] || "").trim();
     if (link) notes += notes ? ` | ${link}` : link;
@@ -86,7 +73,7 @@ function parseStage3(): Stage3Row[] {
       biomarker: STAGE3_BIOMARKER_MAP[biomarkerHigh] || "No Driver",
       biomarker_detail: biomarkerDetail,
       histology: String(r[6] || "").trim(),
-      lot: extractLotFromSetting(String(r[7] || "")),
+      lot: "1L",
       tier: String(r[8] || "Other").trim(),
       setting: String(r[7] || "").trim(),
       route: String(r[12] || "").trim(),
@@ -100,63 +87,41 @@ function parseStage3(): Stage3Row[] {
   return results;
 }
 
-async function batchInsert(
-  pool: Pool, table: string, columns: string[], rows: any[][],
-  onConflict = "",
-) {
+async function batchInsert(supabase: any, table: string, rows: any[]) {
   if (rows.length === 0) return;
   const BATCH = 50;
-  const suffix = onConflict ? ` ON CONFLICT ${onConflict}` : "";
   for (let i = 0; i < rows.length; i += BATCH) {
     const batch = rows.slice(i, i + BATCH);
-    const placeholders = batch
-      .map((_, rIdx) =>
-        `(${columns.map((_, cIdx) => `$${rIdx * columns.length + cIdx + 1}`).join(",")})`
-      )
-      .join(",");
-    const params = batch.flat();
-    await pool.query(
-      `INSERT INTO ${table} (${columns.join(",")}) VALUES ${placeholders}${suffix}`,
-      params,
-    );
+    const { error } = await supabase.from(table).insert(batch);
+    if (error) throw error;
   }
 }
 
 async function seed() {
-  const connectionString = process.env.DATABASE_URL;
-  if (!connectionString) {
-    console.error("DATABASE_URL not set.");
-    process.exit(1);
-  }
+  const url = process.env.SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!url || !key) { console.error("SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY not set."); process.exit(1); }
 
-  const pool = new Pool({
-    connectionString,
-    ssl: { rejectUnauthorized: false },
-  });
+  const supabase = createClient(url, key);
 
   console.log("Parsing Stage 3 xlsx...");
   const regimens = parseStage3();
   console.log(`  ${regimens.length} rows`);
 
   console.log("Inserting Stage 3 regimens...");
-  const columns = [
-    "drug", "type", "single_or_combination", "drug_class", "mechanism",
-    "biomarker", "biomarker_detail", "histology", "lot", "tier", "setting",
-    "route", "notes", "pd_l1_expression", "patient_population", "source_sheet",
-    "stage",
-  ];
-  const values = regimens.map((r) => [
-    r.drug, r.type, r.single_or_combination, r.drug_class, r.mechanism,
-    r.biomarker, r.biomarker_detail, r.histology, r.lot, r.tier, r.setting,
-    r.route, r.notes, r.pd_l1_expression, r.patient_population, r.source_sheet,
-    r.stage,
-  ]);
-  await batchInsert(pool, "regimens", columns, values);
+  const rows = regimens.map((r) => ({
+    drug: r.drug, type: r.type, single_or_combination: r.single_or_combination,
+    drug_class: r.drug_class, mechanism: r.mechanism, biomarker: r.biomarker,
+    biomarker_detail: r.biomarker_detail, histology: r.histology, lot: r.lot,
+    tier: r.tier, setting: r.setting, route: r.route, notes: r.notes,
+    pd_l1_expression: r.pd_l1_expression, patient_population: r.patient_population,
+    source_sheet: r.source_sheet, stage: r.stage,
+  }));
+  await batchInsert(supabase, "regimens", rows);
   console.log(`  ${regimens.length} inserted`);
 
-  const { rows: count } = await pool.query("SELECT COUNT(*) FROM regimens");
-  console.log(`\nDone. Total regimens: ${count[0].count}`);
-  await pool.end();
+  const { count } = await supabase.from("regimens").select("*", { count: "exact", head: true });
+  console.log(`\nDone. Total regimens: ${count}`);
 }
 
 seed().catch((err) => {
