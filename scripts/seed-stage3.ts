@@ -58,11 +58,7 @@ function parseStage3(): Stage3Row[] {
     const biomarkerDetail = String(r[4] || "").trim();
     const biomarkerHigh = String(r[5] || "").trim();
 
-    let notes = String(r[13] || "").trim();
-    const link = String(r[15] || "").trim();
-    if (link) notes += notes ? ` | ${link}` : link;
-    const flag = String(r[16] || "").trim();
-    if (flag) notes += notes ? ` | Flag: ${flag}` : `Flag: ${flag}`;
+    const notes = String(r[13] || "").trim();
 
     results.push({
       drug,
