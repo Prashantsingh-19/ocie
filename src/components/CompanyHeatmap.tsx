@@ -11,21 +11,12 @@ interface Props {
   drugWeights: Record<string, TimelineWeights>;
 }
 
-interface HeatCell {
-  /** Unique trial count for this company × biomarker */
-  count: number;
-  /** Drug names (comma-separated) */
-  drugs: string;
-  /** Earliest projected SOC date among these drugs */
-  earliestArrival: string | null;
-}
-
 export default function CompanyHeatmap({ pipeline, profiles, drugProfiles, drugWeights }: Props) {
-  // Build company × biomarker matrix
+  // Build company × biomarker matrix (count = unique trials, not drug arms)
   const matrix = useMemo(() => {
-    const m = new Map<string, Map<string, HeatCell>>();
+    const m = new Map<string, Map<string, { count: number; drugs: string; earliestArrival: string | null; seenNcts: Set<string> }>>();
     const allBiomarkers = new Set<string>();
-    const companyOrder = new Map<string, number>(); // total trials per company for ordering
+    const companyTotalTrials = new Map<string, Set<string>>();
 
     for (const p of pipeline) {
       const pp = profiles.find((x) => x.nctId === p.nct_id);
@@ -36,38 +27,52 @@ export default function CompanyHeatmap({ pipeline, profiles, drugProfiles, drugW
       if (!m.has(sponsor)) m.set(sponsor, new Map());
       const row = m.get(sponsor)!;
 
-      const existing = row.get(biomarker);
-      if (existing) {
-        existing.count++;
-        if (!existing.drugs.includes(p.drug)) existing.drugs += ", " + p.drug;
-        // Update earliest arrival
-        const dp = drugProfiles[p.nct_id] || inferProfile(p.phases || []);
-        const dw = drugWeights[p.nct_id] || profileToWeights(dp);
-        const proj = projectTimeline(p.primary_completion_date, dw);
-        if (proj && (!existing.earliestArrival || proj.projectedSOC < existing.earliestArrival)) {
-          existing.earliestArrival = proj.projectedSOC;
-        }
-      } else {
-        // Compute arrival
-        let arrival: string | null = null;
-        const dp = drugProfiles[p.nct_id] || inferProfile(p.phases || []);
-        const dw = drugWeights[p.nct_id] || profileToWeights(dp);
-        const proj = projectTimeline(p.primary_completion_date, dw);
-        if (proj) arrival = proj.projectedSOC;
+      if (!row.has(biomarker)) {
+        row.set(biomarker, { count: 0, drugs: "", earliestArrival: null, seenNcts: new Set() });
+      }
+      const cell = row.get(biomarker)!;
 
-        row.set(biomarker, { count: 1, drugs: p.drug, earliestArrival: arrival });
+      // Deduplicate by trial ID
+      if (!cell.seenNcts.has(p.nct_id)) {
+        cell.seenNcts.add(p.nct_id);
+        cell.count++;
+      }
+      if (!cell.drugs.includes(p.drug)) {
+        cell.drugs = cell.drugs ? cell.drugs + ", " + p.drug : p.drug;
+      }
+      // Update earliest arrival
+      const dp = drugProfiles[p.nct_id] || inferProfile(p.phases || []);
+      const dw = drugWeights[p.nct_id] || profileToWeights(dp);
+      const proj = projectTimeline(p.primary_completion_date, dw);
+      if (proj && (!cell.earliestArrival || proj.projectedSOC < cell.earliestArrival)) {
+        cell.earliestArrival = proj.projectedSOC;
       }
 
-      companyOrder.set(sponsor, (companyOrder.get(sponsor) || 0) + 1);
+      if (!companyTotalTrials.has(sponsor)) companyTotalTrials.set(sponsor, new Set());
+      companyTotalTrials.get(sponsor)!.add(p.nct_id);
+    }
+
+    // Clean up internal Sets before passing to render
+    const cleaned = new Map<string, Map<string, { count: number; drugs: string; earliestArrival: string | null }>>();
+    for (const [sponsor, row] of m) {
+      const cleanedRow = new Map<string, { count: number; drugs: string; earliestArrival: string | null }>();
+      for (const [bm, cell] of row) {
+        cleanedRow.set(bm, { count: cell.count, drugs: cell.drugs, earliestArrival: cell.earliestArrival });
+      }
+      cleaned.set(sponsor, cleanedRow);
     }
 
     // Sort biomarkers
     const sortedBiomarkers = [...allBiomarkers].sort();
-    // Sort companies by total trials descending
-    const sortedCompanies = [...m.entries()]
-      .sort((a, b) => (companyOrder.get(b[0]) || 0) - (companyOrder.get(a[0]) || 0));
+    // Sort companies by unique trial count descending
+    const sortedCompanies = [...cleaned.entries()]
+      .sort((a, b) => {
+        const aTotal = [...a[1].values()].reduce((s, c) => s + c.count, 0);
+        const bTotal = [...b[1].values()].reduce((s, c) => s + c.count, 0);
+        return bTotal - aTotal;
+      });
 
-    return { sortedCompanies, sortedBiomarkers, m, companyOrder };
+    return { sortedCompanies, sortedBiomarkers };
   }, [pipeline, profiles, drugProfiles, drugWeights]);
 
   if (matrix.sortedCompanies.length === 0) {
@@ -101,7 +106,7 @@ export default function CompanyHeatmap({ pipeline, profiles, drugProfiles, drugW
 
         {/* Data rows */}
         {matrix.sortedCompanies.map(([sponsor, row]) => {
-          const companyTotal = matrix.companyOrder.get(sponsor) || 0;
+          const companyTotal = [...row.values()].reduce((s, c) => s + c.count, 0);
           return (
             <div key={sponsor} className="pl-heatmap-row pl-heatmap-data">
               <div className="pl-heatmap-company-cell" title={sponsor}>

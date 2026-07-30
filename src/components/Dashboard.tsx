@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useMemo, useRef, useCallback } from "react";
 import InsightsTab from "./InsightsTab";
-import CompanyHeatmap from "./CompanyHeatmap";
 import type { DashboardData, PipelineRow, TimelineWeights, TrialProfile, TrialEndpoint, TrialEnrollment, TrialDesign, TrialPathway, RiskSliders } from "@/types";
 import {
   computeKpis,
@@ -98,9 +97,16 @@ export default function Dashboard({ data, error }: Props) {
     if (!pp || pp.length === 0) return [];
     const socDrugs = new Set(regimens.map((r) => r.drug.toLowerCase()));
     const today = new Date();
+    // Filter out generic chemo agents that aren't real pipeline drugs
+    const genericChemo = new Set(["carboplatin", "cisplatin", "gemcitabine", "pemetrexed", "docetaxel",
+      "paclitaxel", "fluorouracil", "oxaliplatin", "leucovorin", "bevacizumab"]);
     return pp
       .filter((p) => {
         if (socDrugs.has(p.drug.toLowerCase())) return false;
+        // Skip generic/SOC chemo agents masquerading as pipeline drugs
+        const drugLower = p.drug.toLowerCase().replace(/\s*\(.*?\)\s*/, "").trim();
+        if (genericChemo.has(drugLower)) return false;
+        if (drugLower.startsWith("chemotherapy")) return false;
         if (p.pcd) {
           const d = new Date(p.pcd);
           if (isNaN(d.getTime())) return true;
@@ -651,6 +657,12 @@ export default function Dashboard({ data, error }: Props) {
                             <div className="pl-tile-date-field"><span className="oc-filter-label">Expected Entry Date</span><span>{proj?.projectedSOC || "—"}</span></div>
                           </div>
 
+                          {pp?.title && (
+                            <div style={{ fontSize: 11, color: "#555", marginBottom: 8, lineHeight: 1.4 }}>
+                              {pp.title}
+                            </div>
+                          )}
+
                           <div className="pl-ie-grid">
                             <div className="pl-field">
                               <span className="oc-filter-label">Endpoint</span>
@@ -779,14 +791,41 @@ export default function Dashboard({ data, error }: Props) {
             ))}
 
             {/* ── Pipeline Company View ── */}
-            {viewMode === "company" && (
-              <CompanyHeatmap
-                pipeline={pipelineYearFiltered}
-                profiles={data?.pipelineProfiles || []}
-                drugProfiles={drugProfiles}
-                drugWeights={drugWeights}
-              />
-            )}
+            {viewMode === "company" && (companyData.length === 0 ? (
+              <div className="oc-empty">No companies with pipeline in this horizon.</div>
+            ) : (
+              <div className="pl-chart-frame">
+                <div className="pl-chart-hdr">
+                  <span className="pl-chdr-name">Company</span>
+                  <span className="pl-chdr-trials">Trials</span>
+                  <span className="pl-chdr-drugs">Drugs</span>
+                  <span className="pl-chdr-bms">Biomarkers</span>
+                  <span className="pl-chdr-arrival">Earliest Arrival</span>
+                </div>
+                {companyData.map((c) => {
+                  const maxTrials = Math.max(...companyData.map(x => x.trials), 1);
+                  const pct = (c.trials / maxTrials) * 100;
+                  return (
+                    <div key={c.sponsor} className="pl-chart-row" onClick={() => setExpandedCompany(c.sponsor)} style={{cursor:"pointer"}}>
+                      <span className="pl-chart-name">{c.sponsor}</span>
+                      <span className="pl-chart-bar-cell">
+                        <span className="pl-chart-bar-wrap">
+                          <span className="pl-chart-bar" style={{ width: `${pct}%` }} />
+                          <span className="pl-chart-count">{c.trials}</span>
+                        </span>
+                      </span>
+                      <span className="pl-chart-drugs">{c.drugs.length > 40 ? c.drugs.slice(0,38) + "…" : c.drugs}</span>
+                      <span className="pl-chart-bms">
+                        {c.biomarkers.map((b) => (
+                          <span key={b} className={`oc-card-bm ${biomarkerBadgeClass(b)}`} style={{fontSize:9}}>{b}</span>
+                        ))}
+                      </span>
+                      <span className="pl-chart-arrival">{c.minArrival || "—"}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            ))}
 
             {/* ── Company Detail Overlay ── */}
             {expandedCompany && (() => {
