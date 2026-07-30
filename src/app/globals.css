@@ -545,6 +545,9 @@ body {
 /* ── Pipeline Tiles ── */
 .pl-tile { margin-bottom: 10px; }
 .pl-tile .oc-card { padding-bottom: 8px; }
+.pl-stage-badge { font-family: 'JetBrains Mono', monospace; font-size: 9px; font-weight: 600; padding: 1px 6px; border-radius: 4px; display: inline-block; margin-bottom: 4px; }
+.pl-stage-badge.meta { background: #E8F0FE; color: #1967D2; }
+.pl-stage-badge.stage3 { background: #FCE8E6; color: #C5221F; }
 .pl-tile-meta { font-size: 10px; color: #888; margin: 4px 0 6px; display: flex; align-items: center; gap: 4px; flex-wrap: wrap; line-height: 1.4; }
 .pl-tile-meta-dot { color: #ccc; }
 .pl-tile-fda-badge { font-family: 'JetBrains Mono', monospace; font-size: 8px; font-weight: 600; padding: 1px 5px; border-radius: 3px; letter-spacing: 0.04em; }

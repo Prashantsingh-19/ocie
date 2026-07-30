@@ -57,7 +57,7 @@ export default function Dashboard({ data, error }: Props) {
     hist: "All",
     lot: "All",
     subtype: "All",
-    stage: "Metastatic",
+    stage: "All",
   });
   const [appliedFilters, setAppliedFilters] = useState({
     biomarker: "",
@@ -65,7 +65,7 @@ export default function Dashboard({ data, error }: Props) {
     hist: "All",
     lot: "All",
     subtype: "All",
-    stage: "Metastatic",
+    stage: "All",
   });
 
   const [sliderValue, setSliderValue] = useState(12);
@@ -436,7 +436,7 @@ export default function Dashboard({ data, error }: Props) {
           </button>
 
           <div className="oc-sidebar-note">
-            Stage: {appliedFilters.stage || "Metastatic"}<br />
+            Stage: {appliedFilters.stage || "All"}<br />
             Source: NCCN 2025 · ASCO<br />
             Filters apply across all tabs
           </div>
@@ -635,6 +635,11 @@ export default function Dashboard({ data, error }: Props) {
                         <span className={`oc-card-bm ${biomarkerBadgeClass(p.biomarker)}`}>
                           {p.biomarker}
                         </span>
+                        {pp?.stages && pp.stages.length > 0 && (
+                          <span className={`pl-stage-badge ${pp.stages[0] === "Stage III" ? "stage3" : "meta"}`}>
+                            {pp.stages[0]}
+                          </span>
+                        )}
                         <div className="oc-card-drug">{p.drug}</div>
                         <div className="oc-card-class">{sponsor || "—"}</div>
                         <div className="pl-tile-meta">
