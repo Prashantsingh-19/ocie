@@ -1,0 +1,483 @@
+[
+  {
+    "biomarker": "ALK",
+    "stage": "Metastatic",
+    "segment": "TOTAL",
+    "p25": 45,
+    "p50": 55,
+    "p75": 72,
+    "sample_size": 6,
+    "source_drugs": [
+      "Crizotinib",
+      "Ceritinib",
+      "Alectinib",
+      "Brigatinib",
+      "Lorlatinib",
+      "Ensartinib"
+    ]
+  },
+  {
+    "biomarker": "ALK",
+    "stage": "Metastatic",
+    "segment": "P3→FDA",
+    "p25": 14.3,
+    "p50": 24,
+    "p75": 35.8,
+    "sample_size": 6,
+    "source_drugs": [
+      "Crizotinib",
+      "Ceritinib",
+      "Alectinib",
+      "Brigatinib",
+      "Lorlatinib",
+      "Ensartinib"
+    ]
+  },
+  {
+    "biomarker": "ALK",
+    "stage": "Metastatic",
+    "segment": "FDA→SOC",
+    "p25": 2.1,
+    "p50": 2.5,
+    "p75": 2.7,
+    "sample_size": 6,
+    "source_drugs": [
+      "Crizotinib",
+      "Ceritinib",
+      "Alectinib",
+      "Brigatinib",
+      "Lorlatinib",
+      "Ensartinib"
+    ]
+  },
+  {
+    "biomarker": "BRAF",
+    "stage": "Metastatic",
+    "segment": "TOTAL",
+    "p25": 44,
+    "p50": 44,
+    "p75": 44,
+    "sample_size": 1,
+    "source_drugs": [
+      "Dabrafenib + Trametinib"
+    ]
+  },
+  {
+    "biomarker": "BRAF",
+    "stage": "Metastatic",
+    "segment": "P3→FDA",
+    "p25": 13.7,
+    "p50": 13.7,
+    "p75": 13.7,
+    "sample_size": 1,
+    "source_drugs": [
+      "Dabrafenib + Trametinib"
+    ]
+  },
+  {
+    "biomarker": "BRAF",
+    "stage": "Metastatic",
+    "segment": "FDA→SOC",
+    "p25": 2.3,
+    "p50": 2.3,
+    "p75": 2.3,
+    "sample_size": 1,
+    "source_drugs": [
+      "Dabrafenib + Trametinib"
+    ]
+  },
+  {
+    "biomarker": "EGFR",
+    "stage": "Metastatic",
+    "segment": "TOTAL",
+    "p25": 32,
+    "p50": 67,
+    "p75": 82,
+    "sample_size": 5,
+    "source_drugs": [
+      "Osimertinib",
+      "Erlotinib",
+      "Afatinib",
+      "Necitumumab",
+      "Lazertinib"
+    ]
+  },
+  {
+    "biomarker": "EGFR",
+    "stage": "Metastatic",
+    "segment": "P3→FDA",
+    "p25": 10.4,
+    "p50": 42.3,
+    "p75": 50.6,
+    "sample_size": 5,
+    "source_drugs": [
+      "Osimertinib",
+      "Erlotinib",
+      "Afatinib",
+      "Necitumumab",
+      "Lazertinib"
+    ]
+  },
+  {
+    "biomarker": "EGFR",
+    "stage": "Metastatic",
+    "segment": "FDA→SOC",
+    "p25": 1.6,
+    "p50": 2.3,
+    "p75": 2.4,
+    "sample_size": 5,
+    "source_drugs": [
+      "Osimertinib",
+      "Erlotinib",
+      "Afatinib",
+      "Necitumumab",
+      "Lazertinib"
+    ]
+  },
+  {
+    "biomarker": "EGFR",
+    "stage": "Stage III",
+    "segment": "TOTAL",
+    "p25": 140,
+    "p50": 140,
+    "p75": 140,
+    "sample_size": 1,
+    "source_drugs": [
+      "Osimertinib"
+    ]
+  },
+  {
+    "biomarker": "EGFR",
+    "stage": "Stage III",
+    "segment": "P3→FDA",
+    "p25": 63.9,
+    "p50": 63.9,
+    "p75": 63.9,
+    "sample_size": 1,
+    "source_drugs": [
+      "Osimertinib"
+    ]
+  },
+  {
+    "biomarker": "EGFR",
+    "stage": "Stage III",
+    "segment": "FDA→SOC",
+    "p25": 3.2,
+    "p50": 3.2,
+    "p75": 3.2,
+    "sample_size": 1,
+    "source_drugs": [
+      "Osimertinib"
+    ]
+  },
+  {
+    "biomarker": "EGFR Exon 20",
+    "stage": "Metastatic",
+    "segment": "TOTAL",
+    "p25": 49,
+    "p50": 49,
+    "p75": 49,
+    "sample_size": 1,
+    "source_drugs": [
+      "Amivantamab"
+    ]
+  },
+  {
+    "biomarker": "EGFR Exon 20",
+    "stage": "Metastatic",
+    "segment": "FDA→SOC",
+    "p25": 1.3,
+    "p50": 1.3,
+    "p75": 1.3,
+    "sample_size": 1,
+    "source_drugs": [
+      "Amivantamab"
+    ]
+  },
+  {
+    "biomarker": "HER2",
+    "stage": "Metastatic",
+    "segment": "TOTAL",
+    "p25": 58,
+    "p50": 61,
+    "p75": 61,
+    "sample_size": 2,
+    "source_drugs": [
+      "Trastuzumab Deruxtecan",
+      "Zongertinib"
+    ]
+  },
+  {
+    "biomarker": "HER2",
+    "stage": "Metastatic",
+    "segment": "P3→FDA",
+    "p25": 24.3,
+    "p50": 30.5,
+    "p75": 30.5,
+    "sample_size": 2,
+    "source_drugs": [
+      "Trastuzumab Deruxtecan",
+      "Zongertinib"
+    ]
+  },
+  {
+    "biomarker": "HER2",
+    "stage": "Metastatic",
+    "segment": "FDA→SOC",
+    "p25": 2.5,
+    "p50": 2.7,
+    "p75": 2.7,
+    "sample_size": 2,
+    "source_drugs": [
+      "Trastuzumab Deruxtecan",
+      "Zongertinib"
+    ]
+  },
+  {
+    "biomarker": "KRAS G12C",
+    "stage": "Metastatic",
+    "segment": "TOTAL",
+    "p25": 31,
+    "p50": 47.1,
+    "p75": 47.1,
+    "sample_size": 2,
+    "source_drugs": [
+      "Sotorasib",
+      "Adagrasib"
+    ]
+  },
+  {
+    "biomarker": "KRAS G12C",
+    "stage": "Metastatic",
+    "segment": "P3→FDA",
+    "p25": 18.4,
+    "p50": 18.4,
+    "p75": 18.4,
+    "sample_size": 1,
+    "source_drugs": [
+      "Adagrasib"
+    ]
+  },
+  {
+    "biomarker": "KRAS G12C",
+    "stage": "Metastatic",
+    "segment": "FDA→SOC",
+    "p25": 1.7,
+    "p50": 2.1,
+    "p75": 2.1,
+    "sample_size": 2,
+    "source_drugs": [
+      "Sotorasib",
+      "Adagrasib"
+    ]
+  },
+  {
+    "biomarker": "MET",
+    "stage": "Metastatic",
+    "segment": "TOTAL",
+    "p25": 73,
+    "p50": 80,
+    "p75": 80,
+    "sample_size": 2,
+    "source_drugs": [
+      "Capmatinib",
+      "Tepotinib"
+    ]
+  },
+  {
+    "biomarker": "MET",
+    "stage": "Metastatic",
+    "segment": "FDA→SOC",
+    "p25": 1.8,
+    "p50": 2.9,
+    "p75": 2.9,
+    "sample_size": 2,
+    "source_drugs": [
+      "Capmatinib",
+      "Tepotinib"
+    ]
+  },
+  {
+    "biomarker": "NTRK",
+    "stage": "Metastatic",
+    "segment": "TOTAL",
+    "p25": 49,
+    "p50": 49,
+    "p75": 49,
+    "sample_size": 1,
+    "source_drugs": [
+      "Larotrectinib"
+    ]
+  },
+  {
+    "biomarker": "NTRK",
+    "stage": "Metastatic",
+    "segment": "FDA→SOC",
+    "p25": 2.2,
+    "p50": 2.2,
+    "p75": 2.2,
+    "sample_size": 1,
+    "source_drugs": [
+      "Larotrectinib"
+    ]
+  },
+  {
+    "biomarker": "PD-L1",
+    "stage": "Metastatic",
+    "segment": "TOTAL",
+    "p25": 48,
+    "p50": 76,
+    "p75": 91,
+    "sample_size": 4,
+    "source_drugs": [
+      "Pembrolizumab",
+      "Cemiplimab",
+      "Atezolizumab",
+      "Nivolumab + Ipilimumab"
+    ]
+  },
+  {
+    "biomarker": "PD-L1",
+    "stage": "Metastatic",
+    "segment": "P3→FDA",
+    "p25": 14.6,
+    "p50": 42.7,
+    "p75": 55.8,
+    "sample_size": 4,
+    "source_drugs": [
+      "Pembrolizumab",
+      "Cemiplimab",
+      "Atezolizumab",
+      "Nivolumab + Ipilimumab"
+    ]
+  },
+  {
+    "biomarker": "PD-L1",
+    "stage": "Metastatic",
+    "segment": "FDA→SOC",
+    "p25": 2.2,
+    "p50": 2.5,
+    "p75": 3,
+    "sample_size": 4,
+    "source_drugs": [
+      "Pembrolizumab",
+      "Cemiplimab",
+      "Atezolizumab",
+      "Nivolumab + Ipilimumab"
+    ]
+  },
+  {
+    "biomarker": "PD-L1",
+    "stage": "Stage III",
+    "segment": "TOTAL",
+    "p25": 51.9,
+    "p50": 51.9,
+    "p75": 51.9,
+    "sample_size": 1,
+    "source_drugs": [
+      "Durvalumab"
+    ]
+  },
+  {
+    "biomarker": "PD-L1",
+    "stage": "Stage III",
+    "segment": "P3→FDA",
+    "p25": 25.5,
+    "p50": 25.5,
+    "p75": 25.5,
+    "sample_size": 1,
+    "source_drugs": [
+      "Durvalumab"
+    ]
+  },
+  {
+    "biomarker": "PD-L1",
+    "stage": "Stage III",
+    "segment": "FDA→SOC",
+    "p25": 2.4,
+    "p50": 2.4,
+    "p75": 2.4,
+    "sample_size": 1,
+    "source_drugs": [
+      "Durvalumab"
+    ]
+  },
+  {
+    "biomarker": "RET",
+    "stage": "Metastatic",
+    "segment": "TOTAL",
+    "p25": 35,
+    "p50": 42,
+    "p75": 42,
+    "sample_size": 2,
+    "source_drugs": [
+      "Selpercatinib",
+      "Pralsetinib"
+    ]
+  },
+  {
+    "biomarker": "RET",
+    "stage": "Metastatic",
+    "segment": "P3→FDA",
+    "p25": 11.1,
+    "p50": 11.1,
+    "p75": 11.1,
+    "sample_size": 1,
+    "source_drugs": [
+      "Selpercatinib"
+    ]
+  },
+  {
+    "biomarker": "RET",
+    "stage": "Metastatic",
+    "segment": "FDA→SOC",
+    "p25": 2.9,
+    "p50": 2.9,
+    "p75": 2.9,
+    "sample_size": 2,
+    "source_drugs": [
+      "Selpercatinib",
+      "Pralsetinib"
+    ]
+  },
+  {
+    "biomarker": "ROS1",
+    "stage": "Metastatic",
+    "segment": "TOTAL",
+    "p25": 70,
+    "p50": 72,
+    "p75": 82,
+    "sample_size": 3,
+    "source_drugs": [
+      "Entrectinib",
+      "Repotrectinib",
+      "Taletrectinib"
+    ]
+  },
+  {
+    "biomarker": "ROS1",
+    "stage": "Metastatic",
+    "segment": "P3→FDA",
+    "p25": 36.4,
+    "p50": 36.4,
+    "p75": 36.4,
+    "sample_size": 1,
+    "source_drugs": [
+      "Entrectinib"
+    ]
+  },
+  {
+    "biomarker": "ROS1",
+    "stage": "Metastatic",
+    "segment": "FDA→SOC",
+    "p25": 1.5,
+    "p50": 2.5,
+    "p75": 2.6,
+    "sample_size": 3,
+    "source_drugs": [
+      "Entrectinib",
+      "Repotrectinib",
+      "Taletrectinib"
+    ]
+  }
+]

@@ -64,6 +64,10 @@ export interface PipelineProfile {
   eligibilityText?: string | null;
   conditions?: string[] | null;
   enrollmentCount?: number | null;
+  isPivotal?: boolean;
+  stages?: ("Metastatic" | "Stage III")[];
+  inclusionText?: string | null;
+  exclusionText?: string | null;
 }
 
 export interface WhiteSpaceRow {

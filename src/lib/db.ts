@@ -1,27 +1,69 @@
-import { createClient } from "@supabase/supabase-js";
+import fs from "fs";
+import path from "path";
 import type { DashboardData, Regimen } from "@/types";
 
-function getSupabase() {
-  const url = process.env.SUPABASE_URL;
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!url || !key) {
-    throw new Error("Missing SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY env vars");
-  }
-  return createClient(url, key);
-}
+const SOC_DATA_PATH = path.join(process.cwd(), "data", "soc_data.json");
+const PIPELINE_DASHBOARD_PATH = path.join(process.cwd(), "data", "pipeline_dashboard.json");
+const PHASE_LOOKUPS_PATH = path.join(process.cwd(), "data", "phase_duration_lookups.json");
+const BENCHMARKS_PATH = path.join(process.cwd(), "data", "timeline_benchmarks.json");
 
+/**
+ * Load dashboard data from local JSON files (no Supabase dependency).
+ *
+ * Regimen data: `data/soc_data.json` (58 entries)
+ * Pipeline data: `data/pipeline_dashboard.json`
+ */
 export async function getDashboardData(): Promise<DashboardData> {
-  const supabase = getSupabase();
-
-  const { data: regimens, error } = await supabase
-    .from("regimens")
-    .select("*")
-    .order("biomarker")
-    .order("drug");
-
-  if (error) throw error;
+  // Load regimens
+  let regimens: Regimen[] = [];
+  try {
+    const raw = JSON.parse(fs.readFileSync(SOC_DATA_PATH, "utf-8"));
+    if (Array.isArray(raw)) {
+      regimens = raw.map((r: Record<string, unknown>, i: number) => ({
+        id: i + 1,
+        drug: (r.drug as string) || "",
+        type: r.type as string || "",
+        single_or_combination: (r.type as string) === "Combination" ? "Combination" : "Single",
+        drug_class: (r.drugClass as string) || (r.drug_class as string) || "",
+        mechanism: (r.mechanism as string) || "",
+        biomarker: (r.biomarker as string) || "",
+        biomarker_detail: (r.biomarker_detail as string) || "",
+        histology: (r.histology as string) || "",
+        lot: (r.lot as string) || "",
+        tier: (r.tier as string) || "",
+        setting: (r.setting as string) || "",
+        route: (r.route as string) || "",
+        notes: (r.notes as string) || "",
+        pd_l1_expression: (r.pd_l1_expression as string) || (r.pdl1 as string) || "N/A",
+        patient_population: (r.patient_population as string) || (r.setting as string) || "",
+        source_sheet: (r.source_sheet as string) || "NCCN 2025",
+        stage: (r.stage as string) || "Metastatic",
+      }));
+    }
+  } catch {
+    // If no soc_data.json, return empty regimens
+  }
 
   return {
-    regimens: regimens as Regimen[],
+    regimens,
   };
+}
+
+/** Lookup tables for timeline estimator */
+export function loadPhaseDurationLookups(): Record<string, unknown>[] {
+  try {
+    if (!fs.existsSync(PHASE_LOOKUPS_PATH)) return [];
+    return JSON.parse(fs.readFileSync(PHASE_LOOKUPS_PATH, "utf-8"));
+  } catch {
+    return [];
+  }
+}
+
+export function loadTimelineBenchmarks(): Record<string, unknown>[] {
+  try {
+    if (!fs.existsSync(BENCHMARKS_PATH)) return [];
+    return JSON.parse(fs.readFileSync(BENCHMARKS_PATH, "utf-8"));
+  } catch {
+    return [];
+  }
 }

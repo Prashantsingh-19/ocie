@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useMemo, useRef, useCallback } from "react";
 import InsightsTab from "./InsightsTab";
+import CompanyHeatmap from "./CompanyHeatmap";
 import type { DashboardData, PipelineRow, TimelineWeights, TrialProfile, TrialEndpoint, TrialEnrollment, TrialDesign, TrialPathway, RiskSliders } from "@/types";
 import {
   computeKpis,
@@ -172,9 +173,14 @@ export default function Dashboard({ data, error }: Props) {
     return pipelineSrc.filter((p) => {
       if (appliedFilters.biomarker && !biomarkerMatches(p.biomarker, appliedFilters.biomarker)) return false;
       if (appliedFilters.lot !== "All" && p.lot !== appliedFilters.lot) return false;
+      if (appliedFilters.stage && appliedFilters.stage !== "All") {
+        const pp = data?.pipelineProfiles?.find((x) => x.nctId === p.nct_id);
+        const stages = pp?.stages || [];
+        if (!stages.includes(appliedFilters.stage as "Metastatic" | "Stage III")) return false;
+      }
       return true;
     });
-  }, [pipelineSrc, appliedFilters]);
+  }, [pipelineSrc, appliedFilters, data?.pipelineProfiles]);
 
   const pipelineYearFiltered = useMemo(() => {
     return filteredPipeline.filter((p) => {
@@ -235,7 +241,7 @@ export default function Dashboard({ data, error }: Props) {
         </div>
         <p style={{ color: "#888", fontSize: 14, marginBottom: 8 }}>Database connection required</p>
         <p style={{ color: "#aaa", fontSize: 12 }}>
-          {error || "Set SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY in your environment variables"}
+          {error || "No data found. Ensure data/*.json files exist."}
         </p>
       </div>
     );
@@ -324,6 +330,19 @@ export default function Dashboard({ data, error }: Props) {
             </select>
           </div>
 
+          <div className="oc-filter-group">
+            <span className="oc-filter-label">Stage</span>
+            <select
+              className="oc-select"
+              value={pendingFilters.stage}
+              onChange={(e) => setPendingFilter("stage", e.target.value)}
+            >
+              <option>Metastatic</option>
+              <option>Stage III</option>
+              <option>All</option>
+            </select>
+          </div>
+
           <div className="oc-sidebar-section">Global Filters</div>
 
           <div className="oc-filter-group">
@@ -403,20 +422,7 @@ export default function Dashboard({ data, error }: Props) {
             </select>
           </div>
 
-          <div className="oc-filter-group">
-            <span className="oc-filter-label">Stage</span>
-            <select
-              className="oc-select"
-              value={pendingFilters.stage}
-              onChange={(e) => setPendingFilter("stage", e.target.value)}
-            >
-              <option>Metastatic</option>
-              <option>Stage III</option>
-              <option>All</option>
-            </select>
-          </div>
-
-          <button className="oc-apply-btn" disabled={pendingFilters.stage !== "Stage III" && !pendingFilters.biomarker} onClick={() => {
+          <button className="oc-apply-btn" disabled={!pendingFilters.biomarker} onClick={() => {
             setAppliedFilters(pendingFilters);
             setHasApplied(true);
           }}>
@@ -773,41 +779,14 @@ export default function Dashboard({ data, error }: Props) {
             ))}
 
             {/* ── Pipeline Company View ── */}
-            {viewMode === "company" && (companyData.length === 0 ? (
-              <div className="oc-empty">No companies with pipeline in this horizon.</div>
-            ) : (
-              <div className="pl-chart-frame">
-                <div className="pl-chart-hdr">
-                  <span className="pl-chdr-name">Company</span>
-                  <span className="pl-chdr-trials">Trials</span>
-                  <span className="pl-chdr-drugs">Drugs</span>
-                  <span className="pl-chdr-bms">Biomarkers</span>
-                  <span className="pl-chdr-arrival">Earliest Arrival</span>
-                </div>
-                {companyData.map((c) => {
-                  const maxTrials = Math.max(...companyData.map(x => x.trials), 1);
-                  const pct = (c.trials / maxTrials) * 100;
-                  return (
-                    <div key={c.sponsor} className="pl-chart-row" onClick={() => setExpandedCompany(c.sponsor)} style={{cursor:"pointer"}}>
-                      <span className="pl-chart-name">{c.sponsor}</span>
-                      <span className="pl-chart-bar-cell">
-                        <span className="pl-chart-bar-wrap">
-                          <span className="pl-chart-bar" style={{ width: `${pct}%` }} />
-                          <span className="pl-chart-count">{c.trials}</span>
-                        </span>
-                      </span>
-                      <span className="pl-chart-drugs">{c.drugs.length > 40 ? c.drugs.slice(0,38) + "…" : c.drugs}</span>
-                      <span className="pl-chart-bms">
-                        {c.biomarkers.map((b) => (
-                          <span key={b} className={`oc-card-bm ${biomarkerBadgeClass(b)}`} style={{fontSize:9}}>{b}</span>
-                        ))}
-                      </span>
-                      <span className="pl-chart-arrival">{c.minArrival || "—"}</span>
-                    </div>
-                  );
-                })}
-              </div>
-            ))}
+            {viewMode === "company" && (
+              <CompanyHeatmap
+                pipeline={pipelineYearFiltered}
+                profiles={data?.pipelineProfiles || []}
+                drugProfiles={drugProfiles}
+                drugWeights={drugWeights}
+              />
+            )}
 
             {/* ── Company Detail Overlay ── */}
             {expandedCompany && (() => {

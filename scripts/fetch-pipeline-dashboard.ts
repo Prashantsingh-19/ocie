@@ -156,6 +156,76 @@ function extractHistology(conditions: string[] | null, eligibilityText: string |
   return "Unknown";
 }
 
+/** Extract stage from conditions, title, and eligibility text */
+function extractStage(conditions: string[] | null, title: string | null, eligibilityText: string | null): "Metastatic" | "Stage III" | "Unknown" {
+  // Prioritize title then conditions; use eligibility only as fallback
+  const titleText = (title || "").toLowerCase();
+  const condText = (conditions || []).map(c => c.toLowerCase()).join(" ");
+  const eligText = (eligibilityText || "").toLowerCase();
+
+  const titleOrCond = titleText + " " + condText;
+  const allText = titleOrCond + " " + eligText;
+
+  // Check title first for strong Stage III signals
+  const titleHasStageIII = /\bstage\s*(iii|3)\b/.test(titleText);
+  const titleHasLocallyAdvanced = /\blocally\s*advanced\b/.test(titleText);
+  const titleHasConsolidation = /\bconsolidation\b/.test(titleText);
+  const titleHasCRT = /\b(chemoradi|crt|radiation)\b/.test(titleText) && /\b(prior|before|sequential)\b/.test(titleText);
+
+  // Check title for strong Metastatic signals
+  const titleHasMetastatic = /\bmetastatic\b/.test(titleText);
+  const titleHasStageIV = /\bstage\s*(iv|4)\b/.test(titleText);
+
+  // Title-only signals (strongest)
+  if (titleHasStageIII) return "Stage III";
+  if (titleHasStageIV) return "Metastatic";
+  if (titleHasMetastatic) return "Metastatic";
+  if (titleHasLocallyAdvanced && !titleHasMetastatic) return "Stage III";
+  if (titleHasConsolidation || titleHasCRT) return "Stage III";
+
+  // Conditions fallback
+  const condHasStageIII = /\bstage\s*(iii|3)\b/.test(condText);
+  const condHasMetastatic = /\bmetastatic\b/.test(condText);
+  const condHasStageIV = /\bstage\s*(iv|4)\b/.test(condText);
+
+  if (condHasStageIII) return "Stage III";
+  if (condHasStageIV) return "Metastatic";
+  if (condHasMetastatic) return "Metastatic";
+
+  // Eligibility fallback (weakest signal, often ambiguous)
+  const eligHasMetastatic = /\bmetastatic\b/.test(eligText);
+  const eligHasStageIII = /\bstage\s*(iii|3)\b/.test(eligText);
+  const eligHasLocallyAdvanced = /\blocally\s*advanced\b/.test(eligText);
+  const eligHasConsolidation = /\bconsolidation\b/.test(eligText);
+
+  if (eligHasStageIII || (eligHasLocallyAdvanced && !eligHasMetastatic) || eligHasConsolidation) return "Stage III";
+  if (eligHasMetastatic) return "Metastatic";
+
+  // "Advanced" alone - conservative: default Metastatic
+  if (/\badvanced\b/.test(titleOrCond)) return "Metastatic";
+
+  return "Unknown";
+}
+
+/** Split eligibility text into inclusion and exclusion criteria */
+function splitEligibility(text: string | null): { inclusionText: string | null; exclusionText: string | null } {
+  if (!text) return { inclusionText: null, exclusionText: null };
+  const idx = text.search(/\b(Exclusion Criteria|Exclusion Criterion)\b/i);
+  if (idx === -1) return { inclusionText: text, exclusionText: null };
+  return {
+    inclusionText: text.slice(0, idx).trim(),
+    exclusionText: text.slice(idx).trim(),
+  };
+}
+
+/** Infer pivotal trial status from phases and title */
+function inferPivotal(phases: string[], title: string | null): boolean {
+  if (phases.some((p) => p.includes("PHASE3"))) return true;
+  if (phases.some((p) => p === "PHASE2/PHASE3")) return true;
+  if (phases.some((p) => p.includes("PHASE2")) && title?.toLowerCase().includes("pivotal")) return true;
+  return false;
+}
+
 /** Check if trial has at least one US site */
 function hasUSLocation(locations: any[] | null): boolean {
   if (!locations?.length) return false;
@@ -191,11 +261,18 @@ async function searchBiomarker(biomarker: string, term: string, pageSize = 100):
     const condMod = p.conditionsModule || {};
     const eligMod = p.eligibilityModule || {};
 
+    const conditions = condMod.conditions || null;
+    const title = idMod.briefTitle || idMod.officialTitle || "";
+    const eligibilityText = eligMod.eligibilityCriteria || eligMod.studyPopulation || null;
+    const { inclusionText, exclusionText } = splitEligibility(eligibilityText);
+    const phases = dm.phases || [];
+
     return {
       nctId: idMod.nctId,
-      title: idMod.briefTitle || idMod.officialTitle || "",
+      title,
       biomarker,
-      phases: dm.phases || [],
+      stages: [extractStage(conditions, title, eligibilityText)],
+      phases,
       status: sm.overallStatus,
       startDate: sm.startDateStruct?.date || null,
       pcd: sm.primaryCompletionDateStruct?.date || null,
@@ -213,8 +290,11 @@ async function searchBiomarker(biomarker: string, term: string, pageSize = 100):
       designType: extractDesign(dm.designInfo?.allocation || null),
       endpoint: extractEndpoint(om.primaryOutcomes || null),
       enrollmentCount: dm.enrollmentInfo?.count || null,
-      conditions: condMod.conditions || null,
-      eligibilityText: eligMod.eligibilityCriteria || eligMod.studyPopulation || null,
+      conditions,
+      eligibilityText,
+      inclusionText,
+      exclusionText,
+      isPivotal: inferPivotal(phases, title),
       fda: null,
       enrollmentRate: null,
     };
@@ -273,6 +353,7 @@ interface DrugEntry {
   sponsor: string;
   sponsorClass: string;
   usBased: boolean;
+  stages: ("Metastatic" | "Stage III" | "Unknown")[];
   phases: string[];
   status: string;
   startDate: string | null;
@@ -287,8 +368,11 @@ interface DrugEntry {
   projectedFDA: string | null;
   projectedSOC: string | null;
   horizon: string | null;
+  isPivotal: boolean;
   title: string | null;
   eligibilityText: string | null;
+  inclusionText: string | null;
+  exclusionText: string | null;
   conditions: string[] | null;
   enrollmentCount: number | null;
 }
@@ -299,18 +383,24 @@ interface DrugEntry {
 
 async function main() {
   const args = process.argv.slice(2);
+  const skipSupabase = args.includes("--skip-supabase");
   const skipFDA = args.includes("--skip-fda");
 
   console.log("OCIE Pipeline Dashboard Fetcher v3\n");
-  console.log(`Filters: INDUSTRY sponsor only, US sites only${skipFDA ? ", FDA API check disabled" : ""}\n`);
+  console.log(`Filters: INDUSTRY sponsor only, US sites only${skipFDA ? ", FDA API check disabled" : ""}${skipSupabase ? ", Supabase SOC check disabled" : ""}\n`);
 
   // ── Step 1: Load SOC drugs from Supabase + FDA list ──
   console.log("1. Loading known SOC drugs...");
-  const { createClient } = await import("@supabase/supabase-js");
-  const supabase = createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
-  const { data: soc } = await supabase.from("regimens").select("drug, biomarker, tier");
-  const socSet = new Set((soc || []).map((r: any) => r.drug.toLowerCase()));
-  console.log(`   Supabase SOC: ${socSet.size} unique drugs`);
+  let socSet = new Set<string>();
+  if (!skipSupabase) {
+    const { createClient } = await import("@supabase/supabase-js");
+    const supabase = createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
+    const { data: soc } = await supabase.from("regimens").select("drug, biomarker, tier");
+    socSet = new Set((soc || []).map((r: any) => r.drug.toLowerCase()));
+    console.log(`   Supabase SOC: ${socSet.size} unique drugs`);
+  } else {
+    console.log("   (SKIPPED)");
+  }
 
   // Fetch FDA-approved NSCLC drugs
   let fdaApproved = new Set<string>();
@@ -343,8 +433,10 @@ async function main() {
       enrollmentRate: extractEnrollmentRate(t.enrollmentCount, t.startDate, t.pcd),
       histology: extractHistology(t.conditions, t.eligibilityText, t.title),
     }));
-    allTrials.push(...enriched);
-    console.log(`   ${bm}: ${raw.length} total, ${usTrials.length} US-based`);
+    // Filter to Metastatic / Stage III only
+    const kept = enriched.filter((t) => t.stages.some((s: string) => s === "Metastatic" || s === "Stage III"));
+    allTrials.push(...kept);
+    console.log(`   ${bm}: ${raw.length} total, ${usTrials.length} US-based, ${kept.length} after stage filter`);
   }
   console.log(`   Total US-based industry trials: ${allTrials.length}`);
 
@@ -396,6 +488,7 @@ async function main() {
       sponsor: trial.sponsor,
       sponsorClass: trial.sponsorClass,
       usBased: true,
+      stages: trial.stages || [],
       phases: trial.phases,
       status: trial.status,
       startDate: trial.startDate,
@@ -410,8 +503,11 @@ async function main() {
       projectedFDA: pFDA,
       projectedSOC: pSOC,
       horizon: hz,
+      isPivotal: trial.isPivotal || false,
       title: trial.title || null,
       eligibilityText: trial.eligibilityText || null,
+      inclusionText: trial.inclusionText || null,
+      exclusionText: trial.exclusionText || null,
       conditions: trial.conditions || null,
       enrollmentCount: trial.enrollmentCount || null,
     });
@@ -462,19 +558,36 @@ async function main() {
   // ── Step 8: Print ──
   const phaseStr = (p: string[]) => p.join("/").replace(/PHASE/g, "P") || "—";
   const profileSig = (e: DrugEntry) =>
-    `${e.endpoint}·${e.designType === "RCT" ? "RCT" : e.designType === "SingleArm" ? "SA" : "Adpt"}·${e.enrollmentRate === "Fast" ? "Fast" : e.enrollmentRate === "Average" ? "Avg" : "Slow"}${e.fda.btd ? "·BTD" : ""}${e.fda.aa ? "·AA" : ""}${e.fda.priorityReview ? "·PR" : ""}`;
+    `${e.endpoint}·${e.designType === "RCT" ? "RCT" : e.designType === "SingleArm" ? "SA" : "Adpt"}·${e.enrollmentRate === "Fast" ? "Fast" : e.enrollmentRate === "Average" ? "Avg" : "Slow"}${e.fda.btd ? "·BTD" : ""}${e.fda.aa ? "·AA" : ""}${e.fda.priorityReview ? "·PR" : ""}${e.isPivotal ? "·PIV" : ""}`;
 
-  console.log(`\n── Pipeline Drugs (not yet approved) ──`);
+  const stageStr = (e: DrugEntry) => {
+    const s = e.stages || [];
+    if (s.includes("Metastatic") && s.includes("Stage III")) return "M+III";
+    if (s.includes("Metastatic")) return "M";
+    if (s.includes("Stage III")) return "III";
+    return "?";
+  };
+
+  console.log(`\n── Pipeline Drugs (not yet approved) [${pipeline.length}] ──`);
   for (const e of pipeline) {
-    console.log(`  ${e.drug.padEnd(20)} ${e.biomarker.padEnd(12)} ${phaseStr(e.phases).padEnd(8)} ${e.sponsor.slice(0, 20).padEnd(22)} ${(e.pcd || "—").padEnd(12)} ${(e.projectedSOC || "—").padEnd(12)} ${(e.horizon || "—").padEnd(8)} ${profileSig(e)}`);
+    console.log(`  ${e.drug.padEnd(22)} ${e.biomarker.padEnd(12)} ${phaseStr(e.phases).padEnd(8)} ${stageStr(e).padEnd(6)} ${e.endpoint.padEnd(5)} ${e.isPivotal ? "PIV" : "   "} ${e.sponsor.slice(0, 16).padEnd(18)} ${(e.pcd || "—").padEnd(12)} ${(e.projectedSOC || "—").padEnd(12)} ${(e.horizon || "—").padEnd(8)} ${profileSig(e)}`);
   }
 
-  console.log(`\n── Approved Drugs (model validation) ──`);
+  console.log(`\n── Approved Drugs (model validation) [${approved.length}] ──`);
   for (const e of approved) {
-    console.log(`  ${e.drug.padEnd(20)} ${e.biomarker.padEnd(12)} ${phaseStr(e.phases).padEnd(8)} ${e.sponsor.slice(0, 20).padEnd(22)} ${(e.pcd || "—").padEnd(12)} ${(e.projectedSOC || "—").padEnd(12)} ${(e.horizon || "—").padEnd(8)} ${profileSig(e)}`);
+    console.log(`  ${e.drug.padEnd(22)} ${e.biomarker.padEnd(12)} ${phaseStr(e.phases).padEnd(8)} ${stageStr(e).padEnd(6)} ${e.endpoint.padEnd(5)} ${e.isPivotal ? "PIV" : "   "} ${e.sponsor.slice(0, 16).padEnd(18)} ${(e.pcd || "—").padEnd(12)} ${(e.projectedSOC || "—").padEnd(12)} ${(e.horizon || "—").padEnd(8)} ${profileSig(e)}`);
   }
 
-  console.log(`\nSummary: ${pipeline.length} pipeline + ${approved.length} approved = ${entries.length} total drugs from ${allTrials.length} US industry trials`);
+  const counts = { M: 0, III: 0, Both: 0, Unknown: 0 };
+  for (const e of pipeline) {
+    const s = e.stages || [];
+    if (s.includes("Metastatic") && s.includes("Stage III")) counts.Both++;
+    else if (s.includes("Metastatic")) counts.M++;
+    else if (s.includes("Stage III")) counts.III++;
+    else counts.Unknown++;
+  }
+  console.log(`\nStage breakdown: ${counts.M} Met, ${counts.III} III, ${counts.Both} Both, ${counts.Unknown} ?`);
+  console.log(`Summary: ${pipeline.length} pipeline + ${approved.length} approved = ${entries.length} total drugs from ${allTrials.length} US industry trials`);
   console.log("Done.");
 }
 

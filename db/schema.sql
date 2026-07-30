@@ -123,3 +123,46 @@ ORDER BY r.id,
     ELSE 3
   END,
   t.start_date DESC NULLS LAST;
+
+-- ── Timeline Predictor: Lookup Tables ──
+
+-- Phase duration lookups: p25/p50/p75 months from similar approved drugs
+-- Used by timeline-estimator.ts to project phase durations for pipeline drugs
+CREATE TABLE IF NOT EXISTS phase_duration_lookups (
+  id SERIAL PRIMARY KEY,
+  phase TEXT NOT NULL CHECK (phase IN ('PHASE1','PHASE2','PHASE3','SUBMISSION','REVIEW','NCCN_LAG')),
+  stage TEXT NOT NULL CHECK (stage IN ('Metastatic','Stage III','Any')),
+  -- p25/p50/p75 in months (e.g. from PCD to end of phase)
+  p25 NUMERIC(6,2),
+  p50 NUMERIC(6,2) NOT NULL,
+  p75 NUMERIC(6,2),
+  -- How many approved drugs contributed to this estimate
+  sample_size INTEGER DEFAULT 0,
+  -- Which approved drugs contributed (for auditability)
+  source_drugs TEXT[] DEFAULT '{}',
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW(),
+  UNIQUE (phase, stage)
+);
+
+-- Overall timeline benchmarks: historical durations from phase start → FDA → SOC
+-- Used as primary lookups; phase_duration_lookups is fallback
+CREATE TABLE IF NOT EXISTS timeline_benchmarks (
+  id SERIAL PRIMARY KEY,
+  -- e.g. "EGFR" "Metastatic" "P3→FDA"
+  biomarker TEXT,
+  stage TEXT NOT NULL CHECK (stage IN ('Metastatic','Stage III','Any')),
+  segment TEXT NOT NULL,  -- 'P1→P2', 'P2→P3', 'P3→FDA', 'FDA→SOC', 'TOTAL'
+  p25 NUMERIC(6,2),
+  p50 NUMERIC(6,2) NOT NULL,
+  p75 NUMERIC(6,2),
+  sample_size INTEGER DEFAULT 0,
+  source_drugs TEXT[] DEFAULT '{}',
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW(),
+  UNIQUE (biomarker, stage, segment)
+);
+
+-- Index for fast lookups
+CREATE INDEX IF NOT EXISTS idx_phase_lookups_phase_stage ON phase_duration_lookups(phase, stage);
+CREATE INDEX IF NOT EXISTS idx_timeline_benchmarks_biomarker_stage_segment ON timeline_benchmarks(biomarker, stage, segment);
