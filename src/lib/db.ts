@@ -1,12 +1,13 @@
 import fs from "fs";
 import path from "path";
+import os from "os";
 import type { DashboardData, Regimen } from "@/types";
 
 const SOC_DATA_PATH = path.join(process.cwd(), "data", "soc_data.json");
 const PIPELINE_DASHBOARD_PATH = path.join(process.cwd(), "data", "pipeline_dashboard.json");
 const PHASE_LOOKUPS_PATH = path.join(process.cwd(), "data", "phase_duration_lookups.json");
 const BENCHMARKS_PATH = path.join(process.cwd(), "data", "timeline_benchmarks.json");
-const GUIDELINES_PATH = path.join(process.cwd(), "..", "..", "Desktop", "nsclc_guidelines.json");
+const GUIDELINES_PATH = path.join(os.homedir(), "Desktop", "nsclc_guidelines.json");
 
 /** Build drug → biomarker_detail map from NCCN guidelines */
 function loadBiomarkerDetailMap(): Record<string, string> {
