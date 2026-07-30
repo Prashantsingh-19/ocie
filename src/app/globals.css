@@ -95,6 +95,7 @@ body {
   color: #141412;
   outline: none;
   cursor: pointer;
+  color-scheme: light;
 }
 .oc-select:focus { border-color: #B85C38; }
 .oc-sidebar-section { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #B85C38; text-transform: uppercase; letter-spacing: 0.1em; margin: 16px 0 8px; padding-top: 10px; border-top: 1px solid #D8D3C8; }
@@ -544,6 +545,13 @@ body {
 /* ── Pipeline Tiles ── */
 .pl-tile { margin-bottom: 10px; }
 .pl-tile .oc-card { padding-bottom: 8px; }
+.pl-tile-meta { font-size: 10px; color: #888; margin: 4px 0 6px; display: flex; align-items: center; gap: 4px; flex-wrap: wrap; line-height: 1.4; }
+.pl-tile-meta-dot { color: #ccc; }
+.pl-tile-fda-badge { font-family: 'JetBrains Mono', monospace; font-size: 8px; font-weight: 600; padding: 1px 5px; border-radius: 3px; letter-spacing: 0.04em; }
+.pl-tile-fda-badge.btd { background: #E8F0FE; color: #1967D2; }
+.pl-tile-fda-badge.aa { background: #FEF7E0; color: #E37400; }
+.pl-tile-fda-badge.pr { background: #E6F4EA; color: #137333; }
+.pl-tile-fda-badge.piv { background: #FCE8E6; color: #C5221F; }
 .pl-tile-horizon {
   position: absolute; top: 8px; right: 8px;
   font-family: 'JetBrains Mono', monospace; font-size: 9px; font-weight: 600;

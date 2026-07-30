@@ -637,6 +637,18 @@ export default function Dashboard({ data, error }: Props) {
                         </span>
                         <div className="oc-card-drug">{p.drug}</div>
                         <div className="oc-card-class">{sponsor || "—"}</div>
+                        <div className="pl-tile-meta">
+                          <span>{dp.endpoint}</span>
+                          <span className="pl-tile-meta-dot">·</span>
+                          <span>{dp.design === "SingleArm" ? "SA" : dp.design}</span>
+                          <span className="pl-tile-meta-dot">·</span>
+                          <span>{dp.enrollment}</span>
+                          {(dp.btd || dp.aa || dp.priorityReview) && <span className="pl-tile-meta-dot">·</span>}
+                          {dp.btd && <span className="pl-tile-fda-badge btd">BTD</span>}
+                          {dp.aa && <span className="pl-tile-fda-badge aa">AA</span>}
+                          {dp.priorityReview && <span className="pl-tile-fda-badge pr">PR</span>}
+                          {pp?.isPivotal && <><span className="pl-tile-meta-dot">·</span><span className="pl-tile-fda-badge piv">PIV</span></>}
+                        </div>
                         <div className="oc-card-footer">
                           <span className="tag tag-lot">{phaseStr || "—"}</span>
                           {proj && <span className="pl-tile-date" title="Expected Entry Date">{proj.projectedSOC}</span>}
