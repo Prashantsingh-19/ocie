@@ -57,7 +57,7 @@ OCIE is a **single-pane-of-glass dashboard** that ingests structured SOC data (N
 ### Data Pipeline
 
 ```
-SOC XLSX ──> Supabase (regimens, 62 rows)
+SOC XLSX ──> data/soc_data.json (82 rows: 62 Metastatic + 20 Stage III)
                   │
 ClinicalTrials.gov API ──> Fetcher ──> pipeline_dashboard.json (50 pipeline drugs)
        │                              │
@@ -134,10 +134,10 @@ OCIE is a **strategic visualization and alerting layer**, not a decision-making 
 | Component | Technology |
 |-----------|------------|
 | Frontend | Next.js 16 (React), TypeScript |
-| Backend | Supabase (PostgreSQL) |
-| Data Fetching | ClinicalTrials.gov v2 API, FDA Drugs@FDA API |
-| Deployment | Vercel / Node.js |
-| Data Storage | Supabase (regimens), JSON (pipeline) |
+| Backend | None (local JSON data files) |
+| Data Fetching | ClinicalTrials.gov v2 API, FDA Drugs@FDA API (one-time fetch, committed) |
+| Deployment | Any Node.js/Next.js host (Vercel, Railway, Docker, etc.) |
+| Data Storage | Local JSON files in data/*.json |
 | Timeline Engine | Custom profileToWeights + projectTimeline functions |
 
 ---

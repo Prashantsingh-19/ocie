@@ -1,46 +1,106 @@
 # OCIE — Oncology Guidelines Intelligence Engine
 
-NSCLC drug-to-guideline mapping by biomarker and line of therapy. Displays current SOC (NCCN/ASCO) with pipeline/white space/insights modules in development.
+Interactive dashboard for NSCLC drug-to-guideline mapping by **stage**, **biomarker**, and **line of therapy**. Shows current Standard of Care (NCCN/ASCO), pipeline trials, white-space gaps, and FDA timeline projections.
 
-## Stack
-
-- **Next.js 16** (App Router) + **TypeScript**
-- **Postgres** via `DATABASE_URL` (Supabase, Neon, or Vercel Postgres)
-- **No ORM** — plain `pg` with typed queries
-- **Seed**: Node/TypeScript reads xlsx + NCT mapping → Postgres
+**Fully self-contained** — runs 100% on committed local data. No database, no cloud services, no API keys.
 
 ## Quick start
 
 ```bash
 npm install
-
-# 1. Set up Postgres (Supabase recommended)
-cp .env.example .env.local
-# Edit .env.local with your DATABASE_URL
-
-# 2. Apply schema
-# Paste db/schema.sql into Supabase SQL editor, or:
-psql "$DATABASE_URL" -f db/schema.sql
-
-# 3. Seed data
-npm run db:seed
-
-# 4. Run
 npm run dev
 ```
 
-## Schema
+Open http://localhost:3000
 
-- **regimens** — drug/regimen data from NCCN/ASCO xlsx
-- **trials** — NCT IDs and metadata from ClinicalTrials.gov
-- **regimen_trials** — junction linking regimens to trials
-- **inclusion_criteria / exclusion_criteria** — trial criteria (populated later)
+That's it. All data is in `data/*.json` and committed to the repo.
 
-## Deploy to Vercel
+## Stack
 
-1. Push to GitHub
-2. Import into Vercel
-3. Add `DATABASE_URL` environment variable in Vercel project settings
-4. Deploy
+- **Next.js 16** (App Router) + **TypeScript** + React 19
+- **Tailwind CSS 4** for styling
+- **No database** — data loaded from local JSON files at runtime
+- **No env vars required**
 
-Built for the data/Current Treatment mapping(NCCN_ASCO) for NSCLC.xlsx source file.
+## Dashboard modules
+
+| Tab | What it shows |
+|---|---|
+| Current SOC | NCCN/ASCO guideline regimens, filterable by Stage (Metastatic / Stage III / All), biomarker, regimen type, histology, line of therapy |
+| Pipeline / Trials | Industry-sponsored NSCLC trials from ClinicalTrials.gov, with FDA approval timeline projections |
+| White Space | Biomarker × line-of-therapy gaps with gap scoring (preferred coverage + active trials) |
+| Insights | Data-derived insights across SOC and pipeline |
+
+## Data files (all committed)
+
+| File | Contents |
+|---|---|
+| `data/soc_data.json` | **82 SOC regimens** — 62 Metastatic (Stage IV) + 20 Stage III, each tagged with `stage`, biomarker, tier, histology, notes, PD-L1, patient population |
+| `data/pipeline_dashboard.json` | 186 pipeline trials / 50 drugs from ClinicalTrials.gov (fetched 2026-07-30) |
+| `data/stage3_pipeline.json` | 5 hand-curated Stage III trials |
+| `data/timeline_benchmarks.json` | 36 benchmark rows: months-to-SOC by biomarker × stage × segment |
+| `data/phase_duration_lookups.json` | 12 rows: phase-duration lookup tables (p25/p50/p75) |
+| `data/nct_mapping.json` | Drug → NCT ID mapping |
+| `data/Clinical_Trials_NSCLC_with_PatientPop.xlsx` | Raw clinical trials source data |
+| `data/Current Treatment mapping(NCCN_ASCO) for NSCLC.xlsx` | Raw Stage IV SOC source mapping |
+| `data/NSCLC_Treatment_Mapping_with_PDL1.xlsx` | Raw SOC mapping with PD-L1 detail |
+
+## Regenerating data (optional)
+
+The committed data is up to date; refresh only if you want to re-pull or re-derive it.
+
+```bash
+# Re-fetch pipeline data from ClinicalTrials.gov (needs internet, no keys)
+npm run data:refresh-pipeline
+
+# Rebuild timeline benchmark lookups from approved-drug timelines
+npm run data:refresh-benchmarks
+
+# Validate lookup tables and model integrity
+npm run data:validate
+```
+
+## Timeline estimator
+
+The Pipeline tab projects when a trial drug reaches SOC using a JSON-backed lookup chain (no ML runtime):
+
+1. `timeline_benchmarks.json` — biomarker + stage + segment match
+2. `timeline_benchmarks.json` — Any + stage + segment match
+3. `phase_duration_lookups.json` — phase + stage match
+4. `phase_duration_lookups.json` — phase + Any match
+5. Static default values
+
+The underlying model research (additive model vs Bayesian) lives in `timeline-ml/` in a separate repo.
+
+## Project structure
+
+```
+src/
+  app/          # Next.js App Router (page.tsx loads local data)
+  components/   # Dashboard, InsightsTab, CompanyHeatmap
+  lib/
+    db.ts                 # Loads all data from data/*.json
+    timeline-estimator.ts # Timeline projection lookup chain
+  types/        # Shared TypeScript types + filter logic
+data/           # All source + derived data (committed)
+scripts/        # Data validation & refresh scripts
+```
+
+## How the data flows
+
+```
+data/*.json ──> src/lib/db.ts (fs.readFileSync) ──> page.tsx ──> Dashboard components
+```
+
+No network calls at runtime. The dashboard works offline.
+
+## Production deploy
+
+Because there is no backend, the app deploys anywhere Next.js runs:
+
+```bash
+npm run build
+npm run start
+```
+
+Or deploy to any static/hosting platform (Vercel, Netlify, Railway, Docker, etc.) with zero configuration — no env vars, no database setup.

@@ -15,11 +15,8 @@
  * Output: data/pipeline_dashboard.json
  */
 
-import { config } from "dotenv";
-import { writeFileSync } from "fs";
+import { writeFileSync, readFileSync } from "fs";
 import path from "path";
-
-config({ path: path.resolve(__dirname, "../.env.local") });
 
 const CTGOV_BASE = "https://clinicaltrials.gov/api/v2/studies";
 const FDA_BASE = "https://api.fda.gov/drug/drugsfda.json";
@@ -383,23 +380,22 @@ interface DrugEntry {
 
 async function main() {
   const args = process.argv.slice(2);
-  const skipSupabase = args.includes("--skip-supabase");
   const skipFDA = args.includes("--skip-fda");
 
   console.log("OCIE Pipeline Dashboard Fetcher v3\n");
-  console.log(`Filters: INDUSTRY sponsor only, US sites only${skipFDA ? ", FDA API check disabled" : ""}${skipSupabase ? ", Supabase SOC check disabled" : ""}\n`);
+  console.log(`Filters: INDUSTRY sponsor only, US sites only${skipFDA ? ", FDA API check disabled" : ""}\n`);
 
-  // ── Step 1: Load SOC drugs from Supabase + FDA list ──
+  // ── Step 1: Load SOC drugs from local soc_data.json + FDA list ──
   console.log("1. Loading known SOC drugs...");
   let socSet = new Set<string>();
-  if (!skipSupabase) {
-    const { createClient } = await import("@supabase/supabase-js");
-    const supabase = createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
-    const { data: soc } = await supabase.from("regimens").select("drug, biomarker, tier");
-    socSet = new Set((soc || []).map((r: any) => r.drug.toLowerCase()));
-    console.log(`   Supabase SOC: ${socSet.size} unique drugs`);
-  } else {
-    console.log("   (SKIPPED)");
+  try {
+    const socRaw = JSON.parse(readFileSync(path.resolve(__dirname, "../data/soc_data.json"), "utf-8"));
+    if (Array.isArray(socRaw)) {
+      for (const r of socRaw) if (r.drug) socSet.add(String(r.drug).toLowerCase());
+    }
+    console.log(`   Local SOC: ${socSet.size} unique drugs`);
+  } catch {
+    console.log("   (no local soc_data.json)");
   }
 
   // Fetch FDA-approved NSCLC drugs
